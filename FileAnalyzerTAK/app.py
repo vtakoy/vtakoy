@@ -12,6 +12,7 @@ import ssl
 import urllib3
 import httpx
 import ssl
+
 ssl._create_default_https_context = ssl._create_unverified_context
 # ФУНДАМЕНТАЛЬНОЕ отключение проверки SSL-сертификатов на всех уровнях
 # 1. Для стандартной библиотеки Python
@@ -417,4 +418,4 @@ def parse_response(response):
 
 if __name__ == '__main__':
     print("Запуск веб-интерфейса анализатора документов с GigaChat RAG...")
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True) 
+    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)

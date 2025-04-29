@@ -1,0 +1,133 @@
+2025-04-30 00:53:52,752 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 00:53:52,752 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 00:53:52,753 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 00:53:52,763 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 00:53:52,769 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 00:53:53,120 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 00:53:53,122 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 00:53:53,126 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:53:54,364 - DocumentAnalyzer - INFO - Создание векторного хранилища...
+2025-04-30 00:53:54,821 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 00:53:56,824 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:53:56,827 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:53:58,830 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:54:00,835 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:00,838 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:54:02,841 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:54:02,844 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x1ca1a8fb510 state=finished raised PermissionError>]
+2025-04-30 00:54:06,304 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 00:54:06,305 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 00:54:06,306 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 00:54:06,316 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 00:54:06,323 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 00:54:06,616 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 00:54:06,617 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 00:54:06,619 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:06,620 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:54:08,622 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:54:10,626 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:10,629 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:54:12,632 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:54:14,637 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:14,640 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:54:16,643 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:54:16,646 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x20ea1682a10 state=finished raised PermissionError>]
+2025-04-30 00:54:40,478 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 00:54:40,479 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 00:54:40,479 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 00:54:40,490 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 00:54:40,496 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 00:54:40,787 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 00:54:40,788 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 00:54:40,789 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:42,037 - DocumentAnalyzer - INFO - Создание векторного хранилища...
+2025-04-30 00:54:42,507 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 00:54:44,509 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:44,512 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:54:46,516 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:54:48,520 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:48,521 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:54:57,360 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 00:54:57,361 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 00:54:57,361 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 00:54:57,372 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 00:54:57,377 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 00:54:57,673 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 00:54:57,674 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 00:54:57,675 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:54:58,915 - DocumentAnalyzer - INFO - Создание векторного хранилища...
+2025-04-30 00:54:59,395 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 00:59:21,167 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 00:59:21,167 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 00:59:21,168 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 00:59:21,180 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 00:59:21,186 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 00:59:21,481 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 00:59:21,482 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 00:59:21,483 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:59:22,713 - DocumentAnalyzer - INFO - Создание векторного хранилища...
+2025-04-30 00:59:23,192 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 00:59:25,194 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:59:25,197 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:59:27,200 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:59:29,204 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:59:29,205 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:59:31,208 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:59:31,211 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x1fda97ab590 state=finished raised PermissionError>]
+2025-04-30 00:59:34,783 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 00:59:34,784 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 00:59:34,785 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 00:59:34,794 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 00:59:34,801 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 00:59:35,100 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 00:59:35,102 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 00:59:35,103 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:59:35,104 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:59:37,106 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:59:39,110 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:59:39,112 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:59:41,115 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:59:43,119 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 00:59:43,122 - DocumentAnalyzer - WARNING - Файл занят, повторная попытка...
+2025-04-30 00:59:45,125 - DocumentAnalyzer - ERROR - Ошибка создания векторного хранилища: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-30 00:59:45,128 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x2dfb2be0b50 state=finished raised PermissionError>]
+2025-04-30 01:03:02,285 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:03:02,285 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:03:02,286 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:03:02,298 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:03:02,305 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:03:02,736 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:03:02,737 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:03:02,739 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:03:09,974 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:03:09,975 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:03:10,503 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:03:12,507 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:03:20,489 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:03:20,489 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:03:20,489 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:03:20,500 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:03:20,506 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:03:20,792 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:03:20,793 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:03:20,794 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:03:22,017 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:03:22,018 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:03:22,512 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:03:24,514 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:03:47,567 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:03:47,567 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:03:47,568 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:03:47,578 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:03:47,584 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:03:47,870 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:03:47,871 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:03:47,872 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:03:49,111 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:03:49,112 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:03:49,629 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:03:51,632 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:03:58,739 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:03:58,741 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:03:58,918 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:04:00,922 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
