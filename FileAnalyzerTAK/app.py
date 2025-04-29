@@ -2,6 +2,10 @@ from flask import Flask, render_template, request, jsonify
 import os
 from dotenv import load_dotenv
 from auth import GigaChatAuth
+# Дополнительные настройки SSL
+import certifi
+os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
+os.environ['SSL_CERT_FILE'] = certifi.where()
 from document_analyzer import DocumentAnalyzer
 import re
 import sys
@@ -61,7 +65,12 @@ app = Flask(__name__)
 
 # Загружаем переменные окружения
 load_dotenv()
-
+# Дополнительные настройки SSL
+ssl_context = ssl.create_default_context()
+ssl_context.check_hostname = False
+ssl_context.verify_mode = ssl.CERT_NONE
+ssl_context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1  # Отключаем старые версии TLS
+ssl_context.set_ciphers('DEFAULT@SECLEVEL=1')  # Понижаем уровень безопасности для совместимости
 # Инициализируем GigaChat клиент
 client_id = os.getenv("GIGACHAT_CLIENT_ID")
 client_secret = os.getenv("GIGACHAT_CLIENT_SECRET")

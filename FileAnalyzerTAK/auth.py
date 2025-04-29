@@ -66,9 +66,14 @@ class GigaChatAuth:
     def _initialize_session(self) -> None:
         """Инициализация HTTP-сессии с повторными попытками"""
         self.session = requests.Session()
-        self.session.verify = self.verify_ssl
-        adapter = requests.adapters.HTTPAdapter(max_retries=self.max_retries)
+        self.session.verify = False  # Полное отключение проверки SSL
+        
+        # Настройка адаптера с повторными попытками
+        adapter = requests.adapters.HTTPAdapter(
+            max_retries=self.max_retries
+        )
         self.session.mount("https://", adapter)
+        self.session.mount("http://", adapter)
 
     @retry(
         stop=stop_after_attempt(3),
@@ -94,12 +99,11 @@ class GigaChatAuth:
             }
 
             response = self.session.post(
-            self.auth_url,
-            headers=headers,
-            data={"scope": self.scope},
-            timeout=self.timeout,
-            verify=False  # Добавлено
-        )
+                self.auth_url,
+                headers=headers,
+                data={"scope": self.scope},
+                timeout=self.timeout
+            )
 
             response.raise_for_status()
             
@@ -175,34 +179,6 @@ class GigaChatAuth:
         except Exception as e:
             logger.error(f"Общая ошибка: {str(e)}")
             raise
-
-    def get_models(self) -> Optional[Dict[str, Any]]:
-        """Получение списка доступных моделей"""
-        try:
-            response = self.session.get(
-                f"{self.api_base_url}/models",
-                headers=self.get_headers(),
-                timeout=self.timeout
-            )
-            response.raise_for_status()
-            return response.json()
-        except Exception as e:
-            logger.error(f"Ошибка получения моделей: {str(e)}")
-            return None
-
-    def get_balance(self) -> Optional[Dict[str, Any]]:
-        """Проверка баланса токенов"""
-        try:
-            response = self.session.get(
-                f"{self.api_base_url}/tokens/balance",
-                headers=self.get_headers(),
-                timeout=self.timeout
-            )
-            response.raise_for_status()
-            return response.json()
-        except Exception as e:
-            logger.error(f"Ошибка проверки баланса: {str(e)}")
-            return None
 
     def __enter__(self):
         return self

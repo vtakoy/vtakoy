@@ -1,7 +1,7 @@
 """
 DocumentAnalyzer - полная реализация с исправлениями ошибок
 """
-
+import ssl
 import os
 import time
 import shutil
@@ -77,7 +77,12 @@ class DocumentAnalyzer:
     def _init_llm_components(self):
         """Инициализация компонентов LangChain"""
         try:
-            # Кодируем учетные данные в base64
+            # Добавляем SSL контекст
+            ssl_context = ssl.create_default_context()
+            ssl_context.check_hostname = False
+            ssl_context.verify_mode = ssl.CERT_NONE
+            ssl_context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1
+            
             credentials = base64.b64encode(
                 f"{self.client.client_id}:{self.client.client_secret}".encode()
             ).decode()
@@ -86,7 +91,8 @@ class DocumentAnalyzer:
                 credentials=credentials,
                 verify_ssl_certs=False,
                 scope="GIGACHAT_API_PERS",
-                timeout=30
+                timeout=30,
+                ssl_context=ssl_context  # Передаем контекст
             )
             
             self.llm = GigaChat(
@@ -94,7 +100,8 @@ class DocumentAnalyzer:
                 verify_ssl_certs=False,
                 scope="GIGACHAT_API_PERS",
                 temperature=0.7,
-                max_tokens=1500
+                max_tokens=1500,
+                ssl_context=ssl_context  # Передаем контекст
             )
             
             self.logger.info("Компоненты LangChain инициализированы")
@@ -251,57 +258,53 @@ class DocumentAnalyzer:
             return []
 
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+    @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     def _create_vector_store(self, documents: List[LangchainDocument]) -> Chroma:
-        """Создание векторного хранилища с обработкой блокировок"""
+        """Создание векторного хранилища с обработкой SSL ошибок"""
         try:
             # 1. Полная очистка предыдущей базы
             if os.path.exists(persist_directory):
-                self.logger.info("Попытка удаления старой базы Chroma")
+                self.logger.info("Удаление старой базы Chroma...")
                 try:
-                    for _ in range(3):  # 3 попытки удаления
-                        try:
-                            shutil.rmtree(persist_directory)
-                            break
-                        except PermissionError:
-                            time.sleep(2)  # Увеличиваем задержку между попытками
-                    time.sleep(1)  # Дополнительная пауза после удаления
+                    shutil.rmtree(persist_directory, ignore_errors=True)
+                    time.sleep(1)  # Даем время на завершение операций
                 except Exception as e:
-                    self.logger.error(f"Не удалось удалить базу: {str(e)}")
+                    self.logger.error(f"Ошибка удаления базы: {str(e)}")
                     raise
-            
-            # 2. Создание новой базы с обработкой SSL ошибок
-            chroma_client = chromadb.PersistentClient(
-                path=persist_directory,
-                settings=Settings(
-                    anonymized_telemetry=False,
-                    allow_reset=True,
-                    is_persistent=True
-                )
-            )
-            
-            # 3. Настройка SSL контекста для GigaChat
+
+            # 2. Создание SSL контекста
             ssl_context = ssl.create_default_context()
             ssl_context.check_hostname = False
             ssl_context.verify_mode = ssl.CERT_NONE
+            ssl_context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1  # Только TLS 1.2+
             
+            # 3. Настройки клиента Chroma
+            client_settings = {
+                "ssl": False,  # Полное отключение SSL проверки для Chroma
+                "headers": {"Accept-Encoding": "gzip"},
+                "anonymized_telemetry": False  # Отключаем телеметрию
+            }
+
             # 4. Создание хранилища
-            return Chroma.from_documents(
+            self.logger.info("Создание нового векторного хранилища...")
+            vector_store = Chroma.from_documents(
                 documents=documents,
                 embedding=self.embeddings,
-                client=chroma_client,
+                persist_directory=persist_directory,
                 collection_name=collection_name,
-                collection_metadata={"hnsw:space": "cosine"},
-                client_settings={
-                    "ssl_context": ssl_context
-                }
+                client_settings=client_settings,
+                collection_metadata={"hnsw:space": "cosine"}
             )
             
+            self.logger.info("Векторное хранилище успешно создано")
+            return vector_store
+
         except Exception as e:
-            self.logger.error(f"Критическая ошибка создания хранилища: {str(e)}")
+            self.logger.error(f"Критическая ошибка при создании хранилища: {str(e)}")
+            self.logger.error("Попытка создать временное хранилище в памяти...")
             
-            # Попытка создать временное хранилище в памяти
             try:
-                self.logger.warning("Создание временного хранилища в памяти")
+                # Fallback: создание хранилища в памяти
                 return Chroma.from_documents(
                     documents=documents,
                     embedding=self.embeddings,
@@ -310,7 +313,6 @@ class DocumentAnalyzer:
             except Exception as fallback_error:
                 self.logger.critical(f"Не удалось создать временное хранилище: {str(fallback_error)}")
                 raise RuntimeError("Не удалось инициализировать векторное хранилище") from fallback_error
-
     def _create_rag_chain(self) -> RetrievalQA:
         """Создание RAG цепочки"""
         prompt_template = """

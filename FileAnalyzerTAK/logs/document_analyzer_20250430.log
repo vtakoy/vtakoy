@@ -131,3 +131,409 @@
 2025-04-30 01:03:58,741 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
 2025-04-30 01:03:58,918 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
 2025-04-30 01:04:00,922 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:05:27,083 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:05:27,083 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:05:27,083 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:05:27,093 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:05:27,098 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:05:27,411 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:05:27,412 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:05:27,413 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:05:28,611 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:05:28,611 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:05:29,129 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:05:31,131 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:05:38,205 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:05:38,206 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:05:38,372 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:05:40,374 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:05:47,455 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:05:47,456 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:05:47,636 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:05:47,637 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x111807f0650 state=finished raised RuntimeError>]
+2025-04-30 01:05:51,237 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:05:51,238 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:05:51,240 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:05:51,256 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:05:51,262 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:05:51,616 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:05:51,617 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:05:51,619 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:05:58,875 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:05:58,876 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:05:59,404 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:06:01,406 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:06:08,487 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:06:08,487 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:06:08,638 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:06:10,641 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:06:17,713 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:06:17,714 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:06:17,905 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:06:17,908 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x2c0f3bf0310 state=finished raised RuntimeError>]
+2025-04-30 01:07:36,682 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:07:36,684 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:07:36,684 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:07:36,695 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:07:36,700 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:07:36,993 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:07:36,994 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:07:36,996 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:07:44,378 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:07:44,379 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:07:44,892 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:07:46,894 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:07:53,976 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:07:53,976 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:07:54,141 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:07:56,142 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:08:03,197 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: name 'ssl' is not defined
+2025-04-30 01:08:03,198 - DocumentAnalyzer - WARNING - Создание временного хранилища в памяти
+2025-04-30 01:08:03,415 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:08:03,416 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x23339262bd0 state=finished raised RuntimeError>]
+2025-04-30 01:08:54,891 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:08:54,891 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:08:54,892 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:08:54,905 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:08:54,910 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:08:55,202 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:08:55,203 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:08:55,205 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:09:03,737 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:09:05,741 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:09:12,945 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:09:14,948 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:09:22,149 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:09:22,150 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x28a800f1ad0 state=finished raised RuntimeError>]
+2025-04-30 01:10:01,571 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:10:01,571 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:10:01,572 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:10:01,581 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:10:01,588 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:10:01,890 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:10:01,890 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:10:01,891 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:10:03,575 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:10:05,577 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:10:12,774 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:10:14,777 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:10:21,955 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:10:21,956 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x1e25ce50f50 state=finished raised RuntimeError>]
+2025-04-30 01:10:25,570 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:10:25,570 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:10:25,571 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:10:25,581 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:10:25,589 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:10:25,889 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:10:25,890 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:10:25,891 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:10:33,550 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:10:35,552 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:10:42,737 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:10:44,740 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:10:51,953 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:10:51,954 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x20fbd3c0390 state=finished raised RuntimeError>]
+2025-04-30 01:18:01,630 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:18:01,631 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:18:01,632 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:18:01,643 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:18:01,649 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:18:02,077 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:18:02,100 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:18:02,108 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:18:03,828 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:18:05,830 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:18:13,093 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:18:15,097 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:18:22,253 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:18:22,254 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x2743c94d8d0 state=finished raised RuntimeError>]
+2025-04-30 01:18:25,902 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:18:25,903 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:18:25,904 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:18:25,915 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:18:25,922 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:18:26,229 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:18:26,230 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:18:26,231 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:18:33,950 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:18:35,954 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:18:43,165 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:18:45,169 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:18:52,352 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:18:52,354 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x2877b2e1c10 state=finished raised RuntimeError>]
+2025-04-30 01:20:16,079 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:20:16,080 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:20:16,081 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:20:16,092 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:20:16,097 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:20:16,446 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:20:16,447 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:20:16,449 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:20:24,168 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:20:26,172 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:20:33,451 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:20:35,455 - DocumentAnalyzer - INFO - Попытка удаления старой базы Chroma
+2025-04-30 01:20:42,834 - DocumentAnalyzer - ERROR - Критическая ошибка создания хранилища: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:20:42,836 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x25ff5481ad0 state=finished raised RuntimeError>]
+2025-04-30 01:30:43,454 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:30:43,455 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:30:43,456 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:30:43,466 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:30:43,473 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:30:43,793 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:30:43,793 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:30:43,795 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:30:44,873 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:30:44,874 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:30:44,874 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:30:45,565 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:30:47,573 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:30:48,651 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:30:48,652 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:30:48,653 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:30:48,805 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:30:50,812 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:30:51,880 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:30:51,881 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:30:51,882 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:30:52,041 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:30:54,045 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:30:55,111 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:30:55,112 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:30:55,113 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:30:55,296 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:30:57,305 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:30:58,337 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:30:58,338 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:30:58,339 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:30:58,635 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:31:00,639 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:31:01,725 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:31:01,726 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:31:01,727 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:31:01,897 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:31:03,899 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:31:04,933 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:31:04,934 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:31:04,935 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:31:05,097 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:31:07,100 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:31:08,140 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:31:08,141 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:31:08,142 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:31:08,309 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:31:10,313 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:31:11,349 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:31:11,350 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:31:11,350 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:31:11,534 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:31:11,536 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x23f23f3a450 state=finished raised RetryError>]
+2025-04-30 01:37:03,434 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:37:03,435 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:37:03,436 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:37:03,447 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:37:03,453 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:37:03,837 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:37:03,838 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:37:03,839 - DocumentAnalyzer - INFO - Удаление старой базы Chroma...
+2025-04-30 01:37:04,915 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:04,916 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:04,917 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:05,899 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:05 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '1e0eaf7a-bcfd-48a4-9844-b59b2db0ea17', 'x-session-id': '5968065c-5f25-48e5-96b6-c1a0c0ffb680', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:07,998 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:07,999 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:08,000 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:08,157 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:07 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '85c477fe-f5e6-45ee-a53f-979ecc216ad5', 'x-session-id': '22fd3a26-2086-4d56-9f80-d11cf5d1c549', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:10,225 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:10,226 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:10,227 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:10,393 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:10 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'aea86cba-520f-4fa7-bfc4-1049cbc71784', 'x-session-id': '84d7f921-913c-4f32-9923-bef2a7c9d29c', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:12,466 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:12,467 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:12,468 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:12,621 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:12 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '30958948-a259-4f0d-b650-af71b3a2d81e', 'x-session-id': 'b354ed62-2e21-4ad7-abdc-6dca807e29c3', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:14,693 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:14,694 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:14,695 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:14,836 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:14 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '221af32e-d78a-4114-b877-34db023bac8a', 'x-session-id': 'ccf20194-afb2-42a6-a069-9ef4f6c121e8', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:16,902 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:16,903 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:16,903 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:17,124 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:16 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'adc154af-c36e-4515-9409-370b228225dc', 'x-session-id': '587557b1-36a8-497c-b8f3-4ebdd0cefbfb', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:19,214 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:19,215 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:19,215 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:19,359 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:19 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '5feb6d92-8cbc-4822-a749-251b3dff8be3', 'x-session-id': 'b1b0e433-5fbe-4c91-8980-984ed729b603', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:21,445 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:21,446 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:21,446 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:21,597 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:21 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'c329291d-29dd-4268-91c4-1586981837d8', 'x-session-id': 'd2449d14-b910-419e-a874-a3d3f95386fd', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:23,712 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:23,713 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:23,714 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:23,875 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:23 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '1bd37f2d-86b5-46f8-b83a-191380ba22d7', 'x-session-id': '5011468d-a1c3-430f-8604-8ca04d65e0e4', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:23,882 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x1db1619c510 state=finished raised RetryError>]
+2025-04-30 01:37:27,744 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:37:27,744 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:37:27,745 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:37:27,757 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:37:27,762 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:37:28,117 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:37:28,118 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:37:28,152 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:28,153 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:28,153 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:34,062 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:37:34,063 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:37:34,064 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:37:34,074 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:37:34,079 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:37:34,395 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:37:34,396 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:37:34,431 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:34,433 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:34,434 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:35,543 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:35 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '5fdf3ef9-0875-4924-a957-8c2733d2dd97', 'x-session-id': 'e11e8b05-98f9-4e03-9d13-3ca6ef3e6909', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:37,624 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:37,625 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:37,626 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:37,784 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:37 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'aa9297f5-9516-46b4-bfb9-319a119d0387', 'x-session-id': '7d86e0a9-a5b5-4281-8eef-6db05d7ca193', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:39,854 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:39,856 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:39,857 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:40,024 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:39 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '4238c99c-ef40-4b8f-b7e0-f7b06296b40e', 'x-session-id': '7b1e5c35-86d5-452b-8743-df49834fc948', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:42,081 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:42,082 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:42,083 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:42,370 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:42 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '317f0bb8-5ea1-49ec-bcf7-a2bdbd7b973c', 'x-session-id': 'd8bfdd3d-f7b7-466a-ab20-e7d78fc4f0d8', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:44,407 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:44,408 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:44,408 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:44,571 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:44 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'a78e5101-a7a8-4494-9937-6846ccf38253', 'x-session-id': 'fd0cc6af-592e-4e6a-adb4-6bff7b29f837', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:46,643 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:46,644 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:46,645 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:46,811 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:46 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'dd2638a9-e54e-450d-8598-3d567f97fef3', 'x-session-id': 'c779ada1-7c0f-45b5-8cda-5cee57e77c54', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:48,928 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:48,928 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:48,929 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:49,094 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:48 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '1495ef6d-f6cc-4436-95a9-b3a38f78fe0c', 'x-session-id': '54ea1f0d-b013-4752-adc4-2e8958ae1e83', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:51,197 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:51,198 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:51,199 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:51,377 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:51 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'a1807f3b-15f0-4d32-b3b9-6e2383a02683', 'x-session-id': 'c0457a83-9f82-4388-8d77-3a5d85d64388', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:53,463 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:53,464 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:53,465 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:53,612 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:53 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '1ed5d825-7f78-413b-a22f-337b9e7c37a4', 'x-session-id': '4cf95c71-fa73-4c7c-98bc-9722d8c8c471', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:37:53,614 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x274da400250 state=finished raised RetryError>]
+2025-04-30 01:37:57,647 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:37:57,648 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:37:57,650 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:37:57,661 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:37:57,666 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:37:57,987 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:37:57,989 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:37:58,025 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:37:58,026 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:37:58,027 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:37:58,979 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:37:58 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '0fc48d87-ef4f-4d7a-88c6-f2206c0b4b35', 'x-session-id': '161aeace-2538-4c3b-af79-c780ce710a4e', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:01,093 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:01,095 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:01,095 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:01,262 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:01 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'b9e52037-1dde-43e2-a9c9-4c35add7f5b2', 'x-session-id': 'aada962e-08ef-4731-9a53-85ef81351ca4', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:03,356 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:03,357 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:03,358 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:03,514 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:03 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'df74cf4a-4af3-4845-8308-a20035ecbfb2', 'x-session-id': '749bf5be-fd42-4398-b3bc-9455eb778f7f', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:05,604 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:05,605 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:05,606 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:05,766 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:05 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '055c679a-50d0-40fc-b4f4-d93a765be541', 'x-session-id': 'd4965691-1198-4850-ac7c-bc43ba03edef', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:07,850 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:07,851 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:07,852 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:07,995 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:07 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'dcb2815f-de56-4203-a942-ba29f771ed13', 'x-session-id': '2e6c1941-07c9-4749-835d-aabb16284793', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:10,065 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:10,066 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:10,067 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:10,213 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:10 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '6d4bdfdc-0680-4de2-9645-f37675b7583d', 'x-session-id': '20413dcc-897f-47ac-b0fc-a1dca2cfc821', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:12,291 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:12,292 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:12,292 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:12,447 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:12 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': 'd7ae6f33-cc51-4e7a-a8b5-5aa29a061072', 'x-session-id': '7dde86c0-b074-406d-b0e4-1c9b12b41446', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:14,489 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:14,490 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:14,491 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:14,646 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:14 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '5d1eac71-39ca-4899-8307-4e164fbfb459', 'x-session-id': '4d26096d-0739-470f-acab-54b6b57e81c8', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:16,706 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:16,707 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:16,707 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:16,868 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 402, b'{"status":402,"message":"Payment Required"}\n', Headers({'server': 'SynGX', 'date': 'Tue, 29 Apr 2025 22:38:16 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '44', 'connection': 'keep-alive', 'access-control-allow-credentials': 'true', 'access-control-allow-headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization', 'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS', 'access-control-allow-origin': 'https://beta.saluteai.sberdevices.ru', 'x-request-id': '70d801e4-4e7b-41ac-b2b0-47088acc7463', 'x-session-id': 'd72850f9-778c-41ee-b939-ec1bf7af1ec1', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-04-30 01:38:16,870 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x1cbe8ea4250 state=finished raised RetryError>]
+2025-04-30 01:38:56,580 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:38:56,581 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:38:56,582 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:38:56,592 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:38:56,598 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:38:56,915 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:38:56,916 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:38:56,951 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:56,951 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:56,952 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:57,576 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:38:59,679 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:38:59,680 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:38:59,681 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:38:59,850 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:01,909 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:01,910 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:01,912 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:02,063 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:04,129 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:04,130 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:04,131 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:04,280 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:06,356 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:06,357 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:06,358 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:06,508 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:08,592 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:08,593 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:08,594 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:08,770 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:10,847 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:10,848 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:10,849 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:11,078 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:13,175 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:13,177 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:13,178 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:13,332 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:15,407 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:15,408 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:15,409 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:15,645 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:15,647 - DocumentAnalyzer - ERROR - Ошибка индексации документов: RetryError[<Future at 0x1a9d031ff50 state=finished raised RetryError>]
+2025-04-30 01:39:19,472 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-04-30 01:39:19,472 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-04-30 01:39:19,474 - DocumentAnalyzer - INFO - Начало индексации документов из documents
+2025-04-30 01:39:19,483 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word по заказу.docx - секций: 4
+2025-04-30 01:39:19,490 - DocumentAnalyzer - INFO - Обработан файл: Документ Microsoft Word.docx - секций: 5
+2025-04-30 01:39:19,819 - DocumentAnalyzer - INFO - Обработан файл: Лист Microsoft Excel.xlsx - секций: 2
+2025-04-30 01:39:19,820 - DocumentAnalyzer - INFO - Обработан файл: создание_заказа.txt - секций: 1
+2025-04-30 01:39:19,857 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:19,858 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:19,859 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:20,588 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:22,682 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:22,683 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:22,684 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:22,857 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:24,950 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:24,951 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:24,952 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
+2025-04-30 01:39:25,106 - DocumentAnalyzer - CRITICAL - Не удалось создать временное хранилище: [SSL: TLSV1_UNRECOGNIZED_NAME] tlsv1 unrecognized name (_ssl.c:992)
+2025-04-30 01:39:27,152 - DocumentAnalyzer - INFO - Создание нового векторного хранилища...
+2025-04-30 01:39:27,155 - DocumentAnalyzer - ERROR - Критическая ошибка при создании хранилища: 'dict' object has no attribute 'persist_directory'
+2025-04-30 01:39:27,158 - DocumentAnalyzer - ERROR - Попытка создать временное хранилище в памяти...
