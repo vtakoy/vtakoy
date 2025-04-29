@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анализатор документов</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Интеллектуальный анализатор документов</h1>
+            <p class="subtitle">Задайте вопрос о содержимом любых документов в системе</p>
+        </header>
+
+        <main>
+            <div class="query-section">
+                <form id="query-form">
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="query-input" 
+                            placeholder="Введите ваш вопрос..." 
+                            required
+                        >
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-search"></i> Найти
+                        </button>
+                    </div>
+                    <div class="query-info">
+                        <p><i class="fas fa-info-circle"></i> Добавьте префикс "Требуется информация" для поиска в документах, или задайте вопрос напрямую для получения ответа от GigaChat.</p>
+                    </div>
+                </form>
+            </div>
+
+            <div class="results-section">
+                <div id="loading" class="hidden">
+                    <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+                </div>
+
+                <div id="results-container" class="hidden">
+                    <h2>Результаты поиска</h2>
+                    <div id="results-list"></div>
+                </div>
+
+                <div id="no-results" class="hidden">
+                    <div class="no-results-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h2>Информация не найдена</h2>
+                    <p>Попробуйте изменить запрос или проверить наличие необходимых документов в системе.</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2024 Анализатор документов | Сделано с <i class="fas fa-heart"></i> на основе GigaChat</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html> 
