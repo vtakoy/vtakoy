@@ -20,6 +20,8 @@ import ssl
 import urllib3
 import httpx
 import shutil
+from chromadb.config import Settings
+
 
 # Отключаем проверку SSL для всех компонентов
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -403,6 +405,13 @@ class DocumentAnalyzer:
         try:
             self.logger.log_operation("Создание векторного хранилища Chroma", f"Обработка {len(documents)} документов")
             
+            # Настройки ChromaDB
+            chroma_settings = Settings(
+                chroma_db_impl="duckdb+parquet",
+                persist_directory="chroma_db",
+                anonymized_telemetry=False
+            )
+            
             # Удаляем существующую базу Chroma, если она есть
             if os.path.exists("./chroma_db"):
                 self.logger.log_operation("Удаление старого хранилища Chroma", "Начало")
@@ -412,7 +421,7 @@ class DocumentAnalyzer:
                 except PermissionError as e:
                     self.logger.log_error("Ошибка доступа к файлу Chroma", str(e))
                     self.logger.log_operation("Повторная попытка удаления через 1 секунду", "")
-                    time.sleep(1)  # Добавляем задержку перед повторной попыткой
+                    time.sleep(1)
                     try:
                         shutil.rmtree("./chroma_db")
                         self.logger.log_operation("Удаление старого хранилища Chroma", "Успешно после повторной попытки")
@@ -420,29 +429,28 @@ class DocumentAnalyzer:
                         self.logger.log_error("Не удалось удалить старую базу Chroma", str(e))
                         raise
             
-            # Добавляем небольшую задержку перед созданием нового хранилища
             time.sleep(0.5)
             
-            # Добавляем инструкцию для эмбеддингов согласно документации GigaChat Embeddings
+            # Добавляем инструкцию для эмбеддингов
             for doc in documents:
-                if not 'instruction' in doc.metadata:
+                if 'instruction' not in doc.metadata:
                     doc.metadata['instruction'] = "Дан вопрос, необходимо найти абзац текста с ответом"
             
             # Создаем векторное хранилище Chroma
             vector_store = Chroma.from_documents(
                 documents=documents,
                 embedding=self.embeddings,
+                client_settings=chroma_settings,
                 persist_directory="./chroma_db"
             )
             
-            # Сохраняем векторное хранилище
             vector_store.persist()
-            
             self.logger.log_operation("Векторное хранилище Chroma создано", "Успешно")
             return vector_store
             
         except Exception as e:
             self.logger.log_error("Ошибка при создании векторного хранилища", str(e))
+            # ... остальной код обработки ошибок
             
             # Создаем резервное простое хранилище без эмбеддингов, чтобы приложение могло работать
             self.logger.log_operation("Создание резервного хранилища", "Попытка создать простое хранилище")

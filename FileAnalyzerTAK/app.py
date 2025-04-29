@@ -11,7 +11,8 @@ import traceback
 import ssl
 import urllib3
 import httpx
-
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 # ФУНДАМЕНТАЛЬНОЕ отключение проверки SSL-сертификатов на всех уровнях
 # 1. Для стандартной библиотеки Python
 import ssl
@@ -63,7 +64,7 @@ load_dotenv()
 # Инициализируем GigaChat клиент
 client_id = os.getenv("GIGACHAT_CLIENT_ID")
 client_secret = os.getenv("GIGACHAT_CLIENT_SECRET")
-client = GigaChatAuth(client_id, client_secret, disable_ssl_verification=True)
+client = GigaChatAuth(client_id, client_secret, verify_ssl=False)
 
 # Инициализируем анализатор документов с GigaChatEmbeddings
 print("Используются эмбеддинги GigaChat для векторного представления текста")
