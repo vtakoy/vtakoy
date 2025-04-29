@@ -5,7 +5,7 @@
 from gigachat_langchain import GigaChatLangchain
 from langchain_core.documents import Document as LangchainDocument
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 from langchain.prompts.prompt import PromptTemplate
 import os
@@ -21,6 +21,10 @@ import urllib3
 import httpx
 import shutil
 from chromadb.config import Settings
+from langchain.vectorstores import Chroma
+
+persist_directory = "./chroma_db"
+vectorstore = Chroma.from_documents(documents, embedding, persist_directory=persist_directory)
 
 
 # Отключаем проверку SSL для всех компонентов
