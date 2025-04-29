@@ -148,3 +148,97 @@
 2025-04-29 22:15:13,213 - ERROR - Ошибка: Векторное хранилище не инициализировано
 2025-04-29 22:15:13,214 - ERROR - Детали: Сначала прочитайте документы
 2025-04-29 22:15:13,219 - INFO - 127.0.0.1 - - [29/Apr/2025 22:15:13] "POST /analyze HTTP/1.1" 200 -
+2025-04-29 22:59:50,298 - INFO - Операция: Инициализация LangChain объектов
+2025-04-29 22:59:50,298 - INFO - Детали: Успешно
+2025-04-29 22:59:50,298 - INFO - Операция: Инициализация анализатора документов
+2025-04-29 22:59:50,299 - INFO - Детали: Выполнена успешно
+2025-04-29 22:59:50,299 - INFO - Операция: Начало чтения документов из директории: documents
+2025-04-29 22:59:50,310 - INFO - Операция: Успешное чтение Word
+2025-04-29 22:59:50,311 - INFO - Детали: Извлечено 1 секций из Документ Microsoft Word по заказу.docx
+2025-04-29 22:59:50,317 - INFO - Операция: Успешное чтение Word
+2025-04-29 22:59:50,317 - INFO - Детали: Извлечено 1 секций из Документ Microsoft Word.docx
+2025-04-29 22:59:50,317 - INFO - Операция: Чтение Excel файла
+2025-04-29 22:59:50,317 - INFO - Детали: Обработка файла: documents\Лист Microsoft Excel.xlsx
+2025-04-29 22:59:50,607 - INFO - Операция: Успешное чтение Excel
+2025-04-29 22:59:50,608 - INFO - Детали: Извлечено 2 секций из Лист Microsoft Excel.xlsx
+2025-04-29 22:59:50,608 - INFO - Операция: Чтение TXT
+2025-04-29 22:59:50,609 - INFO - Детали: Извлечено 7 секций из создание_заказа.txt
+2025-04-29 22:59:50,609 - INFO - Операция: Статистика обработки
+2025-04-29 22:59:50,609 - INFO - Детали: Всего секций: 11, создано чанков: 11
+2025-04-29 22:59:50,610 - INFO - Операция: Создание векторного хранилища
+2025-04-29 22:59:50,610 - INFO - Детали: Начало
+2025-04-29 22:59:50,611 - INFO - Операция: Создание векторного хранилища Chroma
+2025-04-29 22:59:50,611 - INFO - Детали: Обработка 11 документов
+2025-04-29 22:59:50,611 - INFO - Операция: Удаление старого хранилища Chroma
+2025-04-29 22:59:50,618 - INFO - Детали: Начало
+2025-04-29 22:59:50,621 - INFO - Операция: Удаление старого хранилища Chroma
+2025-04-29 22:59:50,622 - INFO - Детали: Успешно
+2025-04-29 22:59:51,219 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-04-29 22:59:51,816 - WARNING - Invalid credentials format. Please use only base64 credentials (Authorization data, not client secret!)
+2025-04-29 22:59:52,069 - INFO - HTTP Request: POST https://ngw.devices.sberbank.ru:9443/api/v2/oauth "HTTP/1.1 400 Bad Request"
+2025-04-29 22:59:52,072 - ERROR - Ошибка: Ошибка при создании векторного хранилища
+2025-04-29 22:59:52,073 - ERROR - Детали: (URL('https://ngw.devices.sberbank.ru:9443/api/v2/oauth'), 400, b'{"code":4,"message":"Can\'t decode \'Authorization\' header"}', Headers([('server', 'SynGX'), ('date', 'Tue, 29 Apr 2025 19:59:52 GMT'), ('content-type', 'application/json'), ('content-length', '58'), ('connection', 'keep-alive'), ('vary', 'Origin'), ('vary', 'Access-Control-Request-Method'), ('vary', 'Access-Control-Request-Headers'), ('cache-control', 'no-cache, no-store, max-age=0, must-revalidate'), ('pragma', 'no-cache'), ('expires', '0'), ('x-content-type-options', 'nosniff'), ('strict-transport-security', 'max-age=31536000 ; includeSubDomains'), ('x-frame-options', 'DENY'), ('x-xss-protection', '1 ; mode=block'), ('referrer-policy', 'no-referrer'), ('allow', 'GET, POST'), ('strict-transport-security', 'max-age=31536000; includeSubDomains')]))
+2025-04-29 22:59:52,076 - INFO - Операция: Создание резервного хранилища
+2025-04-29 22:59:52,077 - INFO - Детали: Попытка создать простое хранилище
+2025-04-29 22:59:52,108 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-04-29 22:59:52,253 - INFO - Backing off send_request(...) for 0.6s (ValueError: check_hostname requires server_hostname)
+2025-04-29 22:59:52,255 - ERROR - Ошибка: Не удалось создать резервное хранилище
+2025-04-29 22:59:52,255 - ERROR - Детали: 'Chroma' object has no attribute 'persist'
+2025-04-29 22:59:52,256 - ERROR - Ошибка: Ошибка при чтении документов: (URL('https://ngw.devices.sberbank.ru:9443/api/v2/oauth'), 400, b'{"code":4,"message":"Can\'t decode \'Authorization\' header"}', Headers([('server', 'SynGX'), ('date', 'Tue, 29 Apr 2025 19:59:52 GMT'), ('content-type', 'application/json'), ('content-length', '58'), ('connection', 'keep-alive'), ('vary', 'Origin'), ('vary', 'Access-Control-Request-Method'), ('vary', 'Access-Control-Request-Headers'), ('cache-control', 'no-cache, no-store, max-age=0, must-revalidate'), ('pragma', 'no-cache'), ('expires', '0'), ('x-content-type-options', 'nosniff'), ('strict-transport-security', 'max-age=31536000 ; includeSubDomains'), ('x-frame-options', 'DENY'), ('x-xss-protection', '1 ; mode=block'), ('referrer-policy', 'no-referrer'), ('allow', 'GET, POST'), ('strict-transport-security', 'max-age=31536000; includeSubDomains')]))
+2025-04-29 22:59:52,285 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2025-04-29 22:59:52,285 - INFO - [33mPress CTRL+C to quit[0m
+2025-04-29 22:59:52,288 - INFO -  * Restarting with stat
+2025-04-29 22:59:53,046 - INFO - Backing off send_request(...) for 0.6s (ValueError: check_hostname requires server_hostname)
+2025-04-29 22:59:53,833 - INFO - Backing off send_request(...) for 3.8s (ValueError: check_hostname requires server_hostname)
+2025-04-29 22:59:55,922 - INFO - Операция: Инициализация LangChain объектов
+2025-04-29 22:59:55,923 - INFO - Детали: Успешно
+2025-04-29 22:59:55,923 - INFO - Операция: Инициализация анализатора документов
+2025-04-29 22:59:55,923 - INFO - Детали: Выполнена успешно
+2025-04-29 22:59:55,923 - INFO - Операция: Начало чтения документов из директории: documents
+2025-04-29 22:59:55,937 - INFO - Операция: Успешное чтение Word
+2025-04-29 22:59:55,937 - INFO - Детали: Извлечено 1 секций из Документ Microsoft Word по заказу.docx
+2025-04-29 22:59:55,943 - INFO - Операция: Успешное чтение Word
+2025-04-29 22:59:55,943 - INFO - Детали: Извлечено 1 секций из Документ Microsoft Word.docx
+2025-04-29 22:59:55,944 - INFO - Операция: Чтение Excel файла
+2025-04-29 22:59:55,944 - INFO - Детали: Обработка файла: documents\Лист Microsoft Excel.xlsx
+2025-04-29 22:59:56,252 - INFO - Операция: Успешное чтение Excel
+2025-04-29 22:59:56,252 - INFO - Детали: Извлечено 2 секций из Лист Microsoft Excel.xlsx
+2025-04-29 22:59:56,253 - INFO - Операция: Чтение TXT
+2025-04-29 22:59:56,254 - INFO - Детали: Извлечено 7 секций из создание_заказа.txt
+2025-04-29 22:59:56,255 - INFO - Операция: Статистика обработки
+2025-04-29 22:59:56,255 - INFO - Детали: Всего секций: 11, создано чанков: 11
+2025-04-29 22:59:56,255 - INFO - Операция: Создание векторного хранилища
+2025-04-29 22:59:56,255 - INFO - Детали: Начало
+2025-04-29 22:59:56,256 - INFO - Операция: Создание векторного хранилища Chroma
+2025-04-29 22:59:56,256 - INFO - Детали: Обработка 11 документов
+2025-04-29 22:59:56,256 - INFO - Операция: Удаление старого хранилища Chroma
+2025-04-29 22:59:56,257 - INFO - Детали: Начало
+2025-04-29 22:59:56,257 - ERROR - Ошибка: Ошибка доступа к файлу Chroma
+2025-04-29 22:59:56,257 - ERROR - Детали: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-29 22:59:56,258 - INFO - Операция: Повторная попытка удаления через 1 секунду
+2025-04-29 22:59:57,259 - ERROR - Ошибка: Не удалось удалить старую базу Chroma
+2025-04-29 22:59:57,259 - ERROR - Детали: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-29 22:59:57,260 - ERROR - Ошибка: Ошибка при создании векторного хранилища
+2025-04-29 22:59:57,260 - ERROR - Детали: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-29 22:59:57,261 - INFO - Операция: Создание резервного хранилища
+2025-04-29 22:59:57,261 - INFO - Детали: Попытка создать простое хранилище
+2025-04-29 22:59:57,310 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2025-04-29 22:59:57,671 - ERROR - Ошибка: Не удалось создать резервное хранилище
+2025-04-29 22:59:57,671 - ERROR - Детали: 'Chroma' object has no attribute 'persist'
+2025-04-29 22:59:57,671 - ERROR - Ошибка: Ошибка при чтении документов: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: './chroma_db\\chroma.sqlite3'
+2025-04-29 22:59:57,692 - WARNING -  * Debugger is active!
+2025-04-29 22:59:57,699 - INFO -  * Debugger PIN: 143-358-790
+2025-04-29 22:59:57,786 - ERROR - Giving up send_request(...) after 4 tries (ValueError: check_hostname requires server_hostname)
+2025-04-29 22:59:58,203 - INFO - Backing off send_request(...) for 0.5s (ValueError: check_hostname requires server_hostname)
+2025-04-29 22:59:58,450 - INFO - Backing off send_request(...) for 0.5s (ValueError: check_hostname requires server_hostname)
+2025-04-29 22:59:58,881 - INFO - Backing off send_request(...) for 1.6s (ValueError: check_hostname requires server_hostname)
+2025-04-29 23:00:00,609 - INFO - Backing off send_request(...) for 3.9s (ValueError: check_hostname requires server_hostname)
+2025-04-29 23:00:04,643 - ERROR - Giving up send_request(...) after 4 tries (ValueError: check_hostname requires server_hostname)
+2025-04-29 23:00:14,157 - INFO - Backing off send_request(...) for 2.0s (ValueError: check_hostname requires server_hostname)
+2025-04-29 23:00:16,304 - INFO - Backing off send_request(...) for 2.1s (ValueError: check_hostname requires server_hostname)
+2025-04-29 23:00:18,551 - ERROR - Giving up send_request(...) after 4 tries (ValueError: check_hostname requires server_hostname)
+2025-04-29 23:02:11,491 - INFO -  * Detected change in 'c:\\Users\\vtako\\Desktop\\GIT\\FileAnalyzerTAK\\auth.py', reloading
+2025-04-29 23:02:12,148 - INFO -  * Restarting with stat
