@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, jsonify
 import os
+from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from auth import GigaChatAuth
-# Дополнительные настройки SSL
 import certifi
 os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
 os.environ['SSL_CERT_FILE'] = certifi.where()
@@ -13,48 +12,7 @@ import threading
 import time
 import traceback
 import ssl
-import urllib3
-import httpx
-import ssl
-
-ssl._create_default_https_context = ssl._create_unverified_context
-# ФУНДАМЕНТАЛЬНОЕ отключение проверки SSL-сертификатов на всех уровнях
-# 1. Для стандартной библиотеки Python
-import ssl
-original_context = ssl.create_default_context
-def patched_create_default_context(*args, **kwargs):
-    ctx = original_context(*args, **kwargs)
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-    return ctx
-ssl.create_default_context = patched_create_default_context
-ssl._create_default_https_context = ssl._create_unverified_context
-
-# 2. Для urllib3, используемого в requests
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-
-# 3. Для httpx, используемого в gigachat
-os.environ["HTTPX_VERIFY"] = "False"
-original_transport = httpx.HTTPTransport
-def patched_transport(*args, **kwargs):
-    kwargs['verify'] = False
-    return original_transport(*args, **kwargs)
-httpx.HTTPTransport = patched_transport
-
-# 4. Для асинхронного httpx
-if hasattr(httpx, 'AsyncHTTPTransport'):
-    original_async_transport = httpx.AsyncHTTPTransport
-    def patched_async_transport(*args, **kwargs):
-        kwargs['verify'] = False
-        return original_async_transport(*args, **kwargs)
-    httpx.AsyncHTTPTransport = patched_async_transport
-
-# 5. Патчим TLS-соединения на самом низком уровне
-original_wrap_socket = ssl.SSLContext.wrap_socket
-def patched_wrap_socket(self, *args, **kwargs):
-    kwargs['server_hostname'] = None
-    return original_wrap_socket(self, *args, **kwargs)
-ssl.SSLContext.wrap_socket = patched_wrap_socket
+# Убраны хаки и патчи SSL. Используется только корректный CA bundle через certifi.
 
 # 6. Отключаем проверку SSL для gigachat через переменные окружения
 os.environ["CURL_CA_BUNDLE"] = ""
@@ -69,7 +27,6 @@ load_dotenv()
 ssl_context = ssl.create_default_context()
 ssl_context.check_hostname = False
 ssl_context.verify_mode = ssl.CERT_NONE
-ssl_context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1  # Отключаем старые версии TLS
 ssl_context.set_ciphers('DEFAULT@SECLEVEL=1')  # Понижаем уровень безопасности для совместимости
 # Инициализируем GigaChat клиент
 client_id = os.getenv("GIGACHAT_CLIENT_ID")

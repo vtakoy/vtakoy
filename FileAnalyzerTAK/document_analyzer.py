@@ -1,6 +1,8 @@
 """
 DocumentAnalyzer - полная реализация с исправлениями ошибок
 """
+from chromadb.config import Settings
+from langchain_community.vectorstores import Chroma
 import ssl
 import os
 import time
@@ -258,61 +260,41 @@ class DocumentAnalyzer:
             return []
 
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
-    @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     def _create_vector_store(self, documents: List[LangchainDocument]) -> Chroma:
-        """Создание векторного хранилища с обработкой SSL ошибок"""
+        """
+        Создание векторного хранилища ChromaDB с использованием нового API (chromadb>=0.4.22)
+        """
         try:
-            # 1. Полная очистка предыдущей базы
+            # 1. Очистка предыдущей базы данных
             if os.path.exists(persist_directory):
                 self.logger.info("Удаление старой базы Chroma...")
                 try:
                     shutil.rmtree(persist_directory, ignore_errors=True)
-                    time.sleep(1)  # Даем время на завершение операций
+                    time.sleep(1)
                 except Exception as e:
                     self.logger.error(f"Ошибка удаления базы: {str(e)}")
                     raise
 
-            # 2. Создание SSL контекста
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-            ssl_context.options |= ssl.OP_NO_TLSv1 | ssl.OP_NO_TLSv1_1  # Только TLS 1.2+
-            
-            # 3. Настройки клиента Chroma
-            client_settings = {
-                "ssl": False,  # Полное отключение SSL проверки для Chroma
-                "headers": {"Accept-Encoding": "gzip"},
-                "anonymized_telemetry": False  # Отключаем телеметрию
-            }
+            # 2. Создание клиента ChromaDB
+            from chromadb import PersistentClient
+            chroma_client = PersistentClient(path=persist_directory)
 
-            # 4. Создание хранилища
+            # 3. Создание векторного хранилища через новый API
             self.logger.info("Создание нового векторного хранилища...")
-            vector_store = Chroma.from_documents(
-                documents=documents,
-                embedding=self.embeddings,
-                persist_directory=persist_directory,
+            vector_store = Chroma(
+                client=chroma_client,
                 collection_name=collection_name,
-                client_settings=client_settings,
-                collection_metadata={"hnsw:space": "cosine"}
+                embedding_function=self.embeddings,
             )
-            
-            self.logger.info("Векторное хранилище успешно создано")
+            # 4. Индексация документов
+            vector_store.add_documents(documents)
+            self.logger.info("Векторное хранилище успешно создано и документы проиндексированы")
             return vector_store
 
         except Exception as e:
             self.logger.error(f"Критическая ошибка при создании хранилища: {str(e)}")
-            self.logger.error("Попытка создать временное хранилище в памяти...")
-            
-            try:
-                # Fallback: создание хранилища в памяти
-                return Chroma.from_documents(
-                    documents=documents,
-                    embedding=self.embeddings,
-                    collection_name="temp_memory_collection"
-                )
-            except Exception as fallback_error:
-                self.logger.critical(f"Не удалось создать временное хранилище: {str(fallback_error)}")
-                raise RuntimeError("Не удалось инициализировать векторное хранилище") from fallback_error
+            raise RuntimeError("Не удалось инициализировать векторное хранилище") from e
+
     def _create_rag_chain(self) -> RetrievalQA:
         """Создание RAG цепочки"""
         prompt_template = """
