@@ -1,30 +1,23 @@
-"""
-Модуль для аутентификации в GigaChat API
-"""
-
 import os
+os.environ['CURL_CA_BUNDLE'] = ''
+os.environ['REQUESTS_CA_BUNDLE'] = ''
+
 import uuid
 import base64
 import logging
-from typing import Optional, Dict, Any
+from typing import Optional, Dict
 from dotenv import load_dotenv
 import requests
 from tenacity import (
     retry,
     stop_after_attempt,
     wait_exponential,
-    retry_if_exception_type,
-    before_log
+    retry_if_exception_type
 )
-from urllib3.exceptions import InsecureRequestWarning
 import urllib3
 
-# Настройка логирования
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-# Отключаем предупреждения SSL
-urllib3.disable_warnings(InsecureRequestWarning)
+# Отключение предупреждений SSL
+urllib3.disable_warnings()
 
 class GigaChatAuth:
     def __init__(
@@ -36,77 +29,90 @@ class GigaChatAuth:
         max_retries: int = 3
     ):
         load_dotenv()
-        
         self.client_id = client_id or os.getenv("GIGACHAT_CLIENT_ID")
         self.client_secret = client_secret or os.getenv("GIGACHAT_CLIENT_SECRET")
-        self.auth_url = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
-        self.api_base_url = "https://gigachat.devices.sberbank.ru/api/v1"
+        self.auth_url = os.getenv("GIGACHAT_AUTH_URL", "https://sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru/api/v2/oauth")
+        self.api_url = os.getenv("GIGACHAT_BASE_URL", "https://gigachat.devices.sberbank.ru/api/v1")
         self.timeout = timeout
         self.max_retries = max_retries
-        self.auth_token: Optional[str] = None
+        self.auth_token = None
         self.scope = "GIGACHAT_API_PERS"
-
+        
         self._validate_credentials()
-        self._initialize_session()
+        self._init_session()
+        self.logger = logging.getLogger('GigaChatAuth')
+        self.logger.setLevel(logging.INFO)
 
-    def _validate_credentials(self) -> None:
+    def _validate_credentials(self):
         if not all([self.client_id, self.client_secret]):
-            raise ValueError("Необходимо указать GIGACHAT_CLIENT_ID и GIGACHAT_CLIENT_SECRET")
+            raise ValueError("Требуются client_id и client_secret")
 
-    def _initialize_session(self) -> None:
+    def _init_session(self):
         self.session = requests.Session()
         self.session.verify = False
-        
-        adapter = requests.adapters.HTTPAdapter(
-            max_retries=self.max_retries
-        )
+        adapter = requests.adapters.HTTPAdapter(max_retries=self.max_retries)
         self.session.mount("https://", adapter)
+
+    def _generate_auth_key(self) -> str:
+        """Generate authorization key for GigaChat API."""
+        auth_string = f"{self.client_id}:{self.client_secret}"
+        return base64.b64encode(auth_string.encode()).decode()
+
+    def _get_auth_headers(self) -> dict:
+        """Get headers for authentication request."""
+        return {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': f'Basic {self._generate_auth_key()}',
+            'RqUID': str(uuid.uuid4())
+        }
 
     @retry(
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=2, max=10),
-        retry=(
-            retry_if_exception_type(requests.exceptions.ConnectionError) |
-            retry_if_exception_type(requests.exceptions.Timeout)
-        )
+        retry=retry_if_exception_type(requests.exceptions.RequestException)
     )
     def get_token(self) -> str:
+        """Получение токена аутентификации"""
         try:
-            credentials = f"{self.client_id}:{self.client_secret}"
-            encoded_credentials = base64.b64encode(credentials.encode()).decode()
-            
-            headers = {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "Accept": "application/json",
-                "RqUID": str(uuid.uuid4()),
-                "Authorization": f"Basic {encoded_credentials}"
+            data = {
+                'scope': self.scope,
+                'grant_type': 'client_credentials'  # Ключевое изменение
             }
 
             response = self.session.post(
                 self.auth_url,
-                headers=headers,
-                data={"scope": self.scope},
+                headers=self._get_auth_headers(),
+                data=data,
                 timeout=self.timeout
             )
 
             response.raise_for_status()
             self.auth_token = response.json().get("access_token")
             if not self.auth_token:
-                raise ValueError("Токен отсутствует в ответе")
+                raise ValueError("Токен не получен")
             
-            logger.info("Токен успешно получен")
+            self.logger.info("Токен успешно получен")
             return self.auth_token
 
+        except requests.exceptions.HTTPError as e:
+            error_msg = f"Ошибка получения токена: {e.response.status_code}"
+            if e.response.text:
+                error_msg += f" - {e.response.text[:200]}"
+            self.logger.error(error_msg)
+            raise
         except Exception as e:
-            logger.error(f"Ошибка получения токена: {str(e)}")
+            self.logger.error(f"Ошибка получения токена: {str(e)}")
             raise
 
     def get_headers(self) -> Dict[str, str]:
+        """Получение заголовков для запросов"""
         if not self.auth_token:
             self.get_token()
         return {
             "Authorization": f"Bearer {self.auth_token}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Accept": "application/json"
         }
 
     @retry(
@@ -115,13 +121,14 @@ class GigaChatAuth:
         retry=retry_if_exception_type(requests.exceptions.HTTPError)
     )
     def chat_completion(self, message: str, **kwargs) -> str:
+        """Запрос к чат-API"""
         try:
             response = self.session.post(
-                f"{self.api_base_url}/chat/completions",
+                f"{self.api_url}/chat/completions",
                 headers=self.get_headers(),
                 json={
                     "messages": [{"role": "user", "content": message}],
-                    "model": kwargs.get("model", "GigaChat"),
+                    "model": kwargs.get("model", "GigaChat:latest"),  # Изменено на :latest
                     "temperature": kwargs.get("temperature", 0.7),
                     "max_tokens": kwargs.get("max_tokens", 1500)
                 },
@@ -136,5 +143,33 @@ class GigaChatAuth:
             return response.json()['choices'][0]['message']['content']
 
         except Exception as e:
-            logger.error(f"Ошибка запроса: {str(e)}")
+            self.logger.error(f"Ошибка запроса: {str(e)}")
             raise
+
+    def get_models(self) -> Optional[dict]:
+        """Получение списка доступных моделей"""
+        try:
+            response = self.session.get(
+                f"{self.api_url}/models",
+                headers=self.get_headers(),
+                timeout=self.timeout
+            )
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            self.logger.error(f"Ошибка получения моделей: {str(e)}")
+            return None
+
+    def get_balance(self) -> Optional[dict]:
+        """Проверка баланса токенов"""
+        try:
+            response = self.session.get(
+                f"{self.api_url}/tokens/balance",
+                headers=self.get_headers(),
+                timeout=self.timeout
+            )
+            response.raise_for_status()
+            return response.json()
+        except Exception as e:
+            self.logger.error(f"Ошибка проверки баланса: {str(e)}")
+            return None

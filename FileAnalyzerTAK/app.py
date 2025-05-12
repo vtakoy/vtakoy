@@ -1,50 +1,107 @@
 import os
+os.environ['CURL_CA_BUNDLE'] = ''
+os.environ['REQUESTS_CA_BUNDLE'] = ''
+os.environ['SSL_CERT_FILE'] = ''
+os.environ['PYTHONHTTPSVERIFY'] = '0'
+
+os.environ['CHROMA_TELEMETRY_ENABLED'] = 'False'
+os.environ['ANONYMIZED_TELEMETRY'] = 'False'
+
+import warnings
+warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
+
+import shutil
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 from auth import GigaChatAuth
-import certifi
-os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
-os.environ['SSL_CERT_FILE'] = certifi.where()
 from document_analyzer import DocumentAnalyzer
-import re
-import sys
 import threading
-import time
-import traceback
-import ssl
-# Убраны хаки и патчи SSL. Используется только корректный CA bundle через certifi.
+import logging
+from datetime import datetime
 
-# 6. Отключаем проверку SSL для gigachat через переменные окружения
-os.environ["CURL_CA_BUNDLE"] = ""
-os.environ["SSL_CERT_FILE"] = ""
-os.environ["REQUESTS_CA_BUNDLE"] = ""
+logging.getLogger('urllib3').setLevel(logging.CRITICAL)
+logging.getLogger('chromadb.telemetry.posthog').setLevel(logging.CRITICAL)
+logging.getLogger('backoff').setLevel(logging.CRITICAL)
+logging.getLogger('httpx').setLevel(logging.WARNING)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler(f"app_{datetime.now().strftime('%Y%m%d')}.log"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
-# Загружаем переменные окружения
+def clean_chroma_dir():
+    """Очистка папки chroma перед запуском"""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    chroma_path = os.path.join(current_dir, "chroma")
+    try:
+        if os.path.exists(chroma_path):
+            shutil.rmtree(chroma_path)
+            logger.info(f"Папка {chroma_path} успешно удалена")
+    except Exception as e:
+        logger.error(f"Ошибка при очистке папки chroma: {str(e)}")
+
 load_dotenv()
-# Дополнительные настройки SSL
-ssl_context = ssl.create_default_context()
-ssl_context.check_hostname = False
-ssl_context.verify_mode = ssl.CERT_NONE
-ssl_context.set_ciphers('DEFAULT@SECLEVEL=1')  # Понижаем уровень безопасности для совместимости
-# Инициализируем GigaChat клиент
-client_id = os.getenv("GIGACHAT_CLIENT_ID")
-client_secret = os.getenv("GIGACHAT_CLIENT_SECRET")
-client = GigaChatAuth(client_id, client_secret, verify_ssl=False)
 
-# Инициализируем анализатор документов с GigaChatEmbeddings
-print("Используются эмбеддинги GigaChat для векторного представления текста")
-analyzer = DocumentAnalyzer(client)
-
-# Читаем документы при запуске
 try:
-    print("Запуск индексации документов...")
-    analyzer.read_documents()
-    print("Индексация завершена!")
+    logger.info("Инициализация GigaChat клиента...")
+    client_id = os.getenv("GIGACHAT_CLIENT_ID")
+    client_secret = os.getenv("GIGACHAT_CLIENT_SECRET")
+    
+    os.environ.update({
+        'GIGACHAT_AUTH_URL': 'https://sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru/api/v2/oauth',
+        'GIGACHAT_BASE_URL': 'https://gigachat.devices.sberbank.ru/api/v1'
+    })
+    
+    client = GigaChatAuth(client_id, client_secret, verify_ssl=False)
+    logger.info("GigaChat клиент успешно инициализирован")
 except Exception as e:
-    print(f"Ошибка при индексации документов: {str(e)}")
-    print("Приложение запущено без индексации документов. Функциональность может быть ограничена.")
+    logger.error(f"Ошибка инициализации GigaChat: {str(e)}")
+    raise
+
+clean_chroma_dir()
+
+try:
+    logger.info("Инициализация DocumentAnalyzer...")
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    documents_path = os.path.join(current_dir, "documents")
+    analyzer = DocumentAnalyzer(client, documents_dir=documents_path)
+    
+    logger.info("Запуск индексации документов...")
+    analyzer.read_documents()
+    
+    chroma_path = os.path.join(current_dir, "chroma")
+    if os.path.exists(chroma_path):
+        db_files = set()
+        for root, dirs, files in os.walk(chroma_path):
+            db_files.update(files)
+        
+        if 'chroma.sqlite3' in db_files:
+            logger.info(f"База данных успешно создана в {chroma_path}")
+            if hasattr(analyzer, 'vector_store') and analyzer.vector_store is not None:
+                collection = analyzer.vector_store._collection
+                if collection:
+                    logger.info(f"Векторная база содержит {collection.count()} документов")
+        else:
+            logger.error(f"Основной файл базы не найден в {chroma_path}")
+    else:
+        logger.error(f"Папка базы данных не создана: {chroma_path}")
+    
+    logger.info("Индексация завершена")
+except Exception as e:
+    logger.error(f"Ошибка инициализации анализатора: {str(e)}")
+    analyzer = None
 
 @app.route('/')
 def index():
@@ -52,336 +109,87 @@ def index():
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    # Получаем запрос от пользователя
     query = request.form.get('query', '')
     
     if not query:
-        print("Получен пустой запрос")
-        return jsonify({
-            "status": "error",
-            "message": "Пустой запрос"
-        }), 400
+        logger.warning("Получен пустой запрос")
+        return jsonify({"status": "error", "message": "Пустой запрос"}), 400
     
-    print(f"Получен запрос: {query}")
+    logger.info(f"Получен запрос: {query}")
     
-    # Проверяем наличие префикса "Требуется информация"
     has_prefix = query.lower().startswith('требуется информация')
     
-    # Если нет префикса, отправляем запрос напрямую в GigaChat без анализа документов
     if not has_prefix:
         try:
-            print("Запрос без префикса, перенаправляю напрямую в GigaChat")
-            # Отправляем запрос напрямую в GigaChat
+            logger.info("Запрос без префикса, перенаправляю напрямую в GigaChat")
             response = client.chat_completion(query)
             return jsonify({
                 "status": "success",
-                "results": [{
-                    "content": response,
-                    "section": "Ответ GigaChat",
-                    "document": "Общая информация"
-                }]
+                "results": [{"content": response, "section": "Ответ GigaChat"}]
             })
         except Exception as e:
-            print(f"Ошибка при запросе к GigaChat: {str(e)}")
-            traceback.print_exc()
-            return jsonify({
-                "status": "error",
-                "message": f"Ошибка при обращении к GigaChat: {str(e)}"
-            }), 500
+            logger.error(f"Ошибка запроса к GigaChat: {str(e)}")
+            return jsonify({"status": "error", "message": f"Ошибка GigaChat: {str(e)}"}), 500
     
-    # Здесь запрос с префиксом, выполняем RAG анализ документов
     try:
-        # Получаем ответ от анализатора с таймаутом 30 секунд
-        print("Запуск RAG анализа документов...")
-        
-        # Устанавливаем максимальное время для анализа
-        max_execution_time = 30  # секунд
-        start_time = time.time()
-        
+        logger.info("Запуск RAG анализа...")
+        max_execution_time = 30
         result = analyze_documents(query, max_execution_time)
         
         if result["status"] == "timeout":
             return jsonify(result), 408
         
         if result["status"] == "error":
-            print(f"Ошибка при анализе: {result['message']}")
             return jsonify(result), 500
         
-        # Получаем текст ответа
-        response_text = result["results"]
-        print(f"Получен ответ от анализатора ({len(response_text) if response_text else 0} символов)")
-        
-        # Обрабатываем ответ для структурированного отображения
-        formatted_response = parse_response(response_text)
-        print(f"Ответ обработан, статус: {formatted_response['status']}")
-        
-        return jsonify(formatted_response)
+        return jsonify(parse_response(result["results"]))
         
     except Exception as e:
-        print(f"Ошибка при обработке запроса: {str(e)}")
-        traceback.print_exc()
-        return jsonify({
-            "status": "error",
-            "message": f"Ошибка при обработке запроса: {str(e)}"
-        }), 500
+        logger.error(f"Ошибка обработки запроса: {str(e)}")
+        return jsonify({"status": "error", "message": f"Ошибка обработки: {str(e)}"}), 500
 
 def analyze_documents(query, max_execution_time=30):
-    """Анализирует документы на основе запроса пользователя с таймаутом, используя RAG"""
-    print(f"Получен запрос: {query}")
-    
-    # Очищаем запрос перед отправкой
-    query = query.strip()
-    if not query:
-        return {"status": "error", "message": "Пустой запрос"}
-    
-    # Инициализируем результат, который будет возвращен, если выполнение займет слишком много времени
-    timeout_result = {
-        "status": "timeout",
-        "message": "Превышено время обработки запроса. Пожалуйста, попробуйте сформулировать вопрос иначе."
-    }
-    
+    timeout_result = {"status": "timeout", "message": "Превышено время обработки"}
     result = None
+    
     def process_query():
         nonlocal result
         try:
-            print(f"Начало RAG анализа документов в отдельном потоке")
-            
-            # Используем глобальный экземпляр analyzer, который уже инициализирован
-            # с правильными учетными данными GigaChat
             global analyzer
-            
-            # Проверяем, что analyzer инициализирован
             if not analyzer:
-                print("Ошибка: Анализатор документов не инициализирован")
-                result = {"status": "error", "message": "Ошибка сервера: анализатор документов не инициализирован"}
+                result = {"status": "error", "message": "Анализатор не инициализирован"}
                 return
             
-            try:
-                print(f"Отправка запроса к RAG: {query}")
-                response = analyzer.analyze_documents(query)
-                print(f"Получен ответ от RAG: {response[:200]}...")
-                
-                result = {
-                    "status": "success",
-                    "results": response
-                }
-                
-            except Exception as e:
-                print(f"Ошибка при выполнении анализа: {str(e)}")
-                traceback.print_exc()
-                result = {"status": "error", "message": f"Ошибка при анализе документов: {str(e)}"}
-        except Exception as outer_e:
-            print(f"Критическая ошибка: {str(outer_e)}")
-            traceback.print_exc()
-            result = {"status": "error", "message": f"Критическая ошибка при обработке запроса: {str(outer_e)}"}
+            response = analyzer.analyze_documents(query)
+            result = {"status": "success", "results": response}
+        except Exception as e:
+            result = {"status": "error", "message": str(e)}
     
-    # Запускаем обработку в отдельном потоке
     thread = threading.Thread(target=process_query)
     thread.daemon = True
     thread.start()
-    
-    # Ждем завершения потока определенное время
     thread.join(timeout=max_execution_time)
     
-    # Если поток все еще активен, возвращаем результат таймаута
     if thread.is_alive():
-        print(f"Превышено время выполнения запроса ({max_execution_time} сек)")
+        logger.warning(f"Таймаут ({max_execution_time} сек)")
         return timeout_result
     
-    if result is None:
-        print("Ошибка: результат не установлен")
-        return {"status": "error", "message": "Ошибка обработки запроса"}
-    
-    return result
+    return result if result else {"status": "error", "message": "Неизвестная ошибка"}
 
 def parse_response(response):
-    """Парсит ответ для структурированного отображения"""
     if not response:
-        return {"status": "error", "message": "Пустой ответ от анализатора"}
+        return {"status": "error", "message": "Пустой ответ"}
     
-    print(f"Парсинг ответа: {response}")
-    
-    # Проверка на отсутствие информации
-    not_found_phrases = [
-        "не найдена",
-        "не найдено",
-        "не содержится",
-        "отсутствует",
-        "нет информации",
-        "информация отсутствует",
-        "не удалось найти"
-    ]
-    
+    not_found_phrases = ["не найдена", "не найдено", "отсутствует"]
     for phrase in not_found_phrases:
         if phrase in response.lower():
-            print(f"Обнаружена фраза отсутствия информации: '{phrase}'")
-            return {
-                "status": "not_found",
-                "message": "Информация по вашему запросу не найдена в документах",
-                "results": response
-            }
-    
-    # Шаблоны для извлечения страницы, раздела и документа (усиливаем)
-    page_pattern = r'(?:на\s+)?странице?[\s:]+(\d+)'
-    section_pattern = r'в разделе [«"]?(.*?)[»"]?[:\.]'
-    
-    # Расширенные шаблоны для поиска документов
-    doc_patterns = [
-        r'в\s+(?:документе|файле)[:\s]+[«"]?([^«".,;]+)[»"]?',
-        r'из (?:документа|файла)[:\s]+[«"]?([^«".,;]+)[»"]?',
-        r'найдено в[:\s]+[«"]?([^«".,;]+)[»"]?',
-        r'согласно[:\s]+[«"]?([^«".,;]+)[»"]?',
-        r'в\s+[«"]([^«"]+)[»"]',
-        r'документ[^:]*?[:\s]+[«"]?([^«".,;]+)[»"]?'
-    ]
-    
-    # Шаблон для поиска названий файлов с расширениями
-    file_ext_pattern = r'\b([a-zA-Zа-яА-Я0-9_\-\s]+\.(pdf|doc|docx|xls|xlsx|txt))\b'
-    
-    # Разбиваем ответ на разделы
-    section_markers = [
-        "Информация найдена",
-        "По вашему запросу",
-        "Согласно документу",
-        "В документе",
-        "Страница",
-        "На странице",
-        "Раздел",
-        "В разделе",
-        "Документ:"
-    ]
-    
-    # Разделяем по маркерам, создавая список разделов
-    sections = []
-    current_text = response
-    
-    for marker in section_markers:
-        parts = current_text.split(marker)
-        if len(parts) > 1:
-            for i in range(1, len(parts)):
-                section_text = marker + parts[i]
-                if section_text.strip():
-                    sections.append(section_text.strip())
-    
-    # Если не удалось разделить на секции, используем весь текст как одну секцию
-    if not sections:
-        sections = [response]
-    
-    print(f"Найдено {len(sections)} разделов в ответе")
-    
-    results = []
-    
-    for i, section in enumerate(sections):
-        print(f"Обработка раздела {i+1}: {section[:100]}...")
-        
-        page_match = re.search(page_pattern, section, re.IGNORECASE)
-        section_match = re.search(section_pattern, section, re.IGNORECASE)
-        
-        # Пробуем найти имя документа в секции (усиленный поиск)
-        doc_name = None
-        
-        # Сначала ищем по расширенным шаблонам
-        for pattern in doc_patterns:
-            doc_match = re.search(pattern, section, re.IGNORECASE)
-            if doc_match:
-                doc_name = doc_match.group(1).strip()
-                print(f"Найдено имя документа по шаблону '{pattern}': '{doc_name}'")
-                break
-        
-        # Если имя документа не найдено, ищем файлы с расширениями
-        if not doc_name:
-            file_match = re.search(file_ext_pattern, section, re.IGNORECASE)
-            if file_match:
-                doc_name = file_match.group(1).strip()
-                print(f"Найдено имя документа по расширению: '{doc_name}'")
-        
-        # Ищем в окрестностях ключевых слов
-        if not doc_name:
-            for keyword in ["документ", "файл", "из", "в", "источник"]:
-                if keyword in section.lower():
-                    # Берем 100 символов после слова и проверяем на подходящие паттерны
-                    pos = section.lower().find(keyword)
-                    substring = section[pos:pos+100]
-                    file_match = re.search(file_ext_pattern, substring, re.IGNORECASE)
-                    if file_match:
-                        doc_name = file_match.group(1).strip()
-                        print(f"Найдено имя документа по ключевому слову '{keyword}': '{doc_name}'")
-                        break
-        
-        page = page_match.group(1) if page_match else "1"  # Используем "1" вместо None для страницы
-        section_name = section_match.group(1) if section_match else "Извлечённая информация"
-        
-        # Если имя документа не найдено, стараемся определить из контекста
-        if not doc_name:
-            # Пытаемся найти формат документа в тексте
-            if 'excel' in section.lower() or 'таблиц' in section.lower() or '.xls' in section.lower():
-                doc_name = "Таблица Excel"
-            elif 'word' in section.lower() or '.doc' in section.lower():
-                doc_name = "Документ Word"
-            elif 'pdf' in section.lower() or '.pdf' in section.lower():
-                doc_name = "Документ PDF"
-            elif 'текстов' in section.lower() or '.txt' in section.lower():
-                doc_name = "Текстовый файл"
-            else:
-                # Если ничего не нашли, извлекаем из названия раздела
-                doc_name = section_name.split(',')[0] if ',' in section_name else "Документ"
-        
-        # Если имя документа является частью названия раздела, разделяем их
-        if section_name and section_name.startswith(doc_name) and ',' in section_name:
-            section_name = section_name.split(',', 1)[1].strip()
-        
-        # Очищаем текст от служебных меток
-        content = section
-        if section_match:
-            # Берем текст после "в разделе X:"
-            content_parts = re.split(section_pattern, section, re.IGNORECASE)
-            if len(content_parts) > 1:
-                content = content_parts[-1].strip()
-                
-        # Если контент слишком короткий или это просто часть маркера, используем весь раздел
-        if len(content) < 20 or content.strip() in section_markers:
-            content = section
-        
-        # Логирование найденной информации
-        print(f"  Результат для раздела {i+1}:")
-        print(f"  - Документ: {doc_name}")
-        print(f"  - Раздел: {section_name}")
-        print(f"  - Страница: {page}")
-        print(f"  - Длина контента: {len(content)}")
-            
-        # Формируем результат
-        result_item = {
-            "content": content.strip(),
-            "page": page,  # Всегда указываем страницу
-            "section": section_name,
-            "document": doc_name or "Неизвестный документ"  # Всегда указываем документ
-        }
-            
-        results.append(result_item)
-    
-    # Если не удалось разобрать структурированно, возвращаем весь текст
-    if not results:
-        print("Не удалось извлечь структурированную информацию, возвращаем весь текст")
-        
-        # Ищем имя файла в тексте
-        file_match = re.search(file_ext_pattern, response, re.IGNORECASE)
-        doc_name = file_match.group(1) if file_match else "Документ с найденной информацией"
-        
-        return {
-            "status": "success",
-            "results": [{
-                "content": response.strip(),
-                "section": "Полученная информация",
-                "document": doc_name,
-                "page": "1"
-            }]
-        }
+            return {"status": "not_found", "message": "Информация не найдена", "results": response}
     
     return {
         "status": "success",
-        "results": results
+        "results": [{"content": response, "section": "Извлеченная информация"}]
     }
 
 if __name__ == '__main__':
-    print("Запуск веб-интерфейса анализатора документов с GigaChat RAG...")
-    app.run(host='0.0.0.0', port=5000, debug=True, threaded=True)
+    logger.info("Запуск веб-сервера...")
+    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
