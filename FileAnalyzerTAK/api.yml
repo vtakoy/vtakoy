@@ -83,122 +83,8 @@ tags:
   description: Запросы для получения данных доступных моделей.
 - name: Чат
   description: Обмен сообщениями с моделью и информация о лимите токенов.
-- name: Функции
-  description: |
-    В этом разделе описаны методы, облегчающие работу с собственными функциями при работе GigaChat API.
-
-    <details>
-      <summary>Подробнее о функциях</summary>
-
-    Функции — ключевой элемент для построения сложных решений с применением LLM, таких, как AI-агенты и ассистенты.
-    Они представляют внешние инструменты (фрагменты кода), к которым могут обращаться модели GigaChat для решения задач пользователей.
-    Модель не исполняет функции, но самостоятельно принимает решение о том как, когда и с какими параметрами их следует вызвать.
-    При принятии решения о вызове функции модель исходит из доступных знаний, данных текущего разговора и описания функции.
-    После обращения к функции модель может обработать результат ее работы.
-
-    </details>
-
-    <ViewMoreBlock>
-      <ViewMoreCard
-        title="Работа с функциями"
-        description="Руководство по описанию и вызову собственных и встроенных функций"
-        href="ru/gigachat/guides/function-calling"
-      />
-    </ViewMoreBlock>
-- name: Хранилище файлов
-  description: |
-    В этом разделе описаны методы для работы с хранилищем файлов, которые можно использовать при запросах на генерацию.
-    Хранилище позволяет:
-
-    * [загружать файлы](/ru/gigachat/api/reference/rest/post-file). Загруженные файлы доступны только вам;
-    * [получать список доступных файлов](/ru/gigachat/api/reference/rest/get-files);
-    * [получать описание выбранного файла](/ru/gigachat/api/reference/rest/get-file);
-    * [скачивать файлы изображений](/ru/gigachat/api/reference/rest/get-file-id);
-    * [удалять файлы](/ru/gigachat/api/reference/rest/file-delete).
-    
-    Кроме загруженных файлов, в хранилище также сохраняются файлы изображений, сгенерированных при выполнении запроса [POST /chat/completions](/ru/gigachat/api/reference/rest/post-chat).
-
-    Хранилище поддерживает текстовые документы и изображения разных форматов.
-
-    <Tabs queryString="ext">
-    <TabItem value="text" label="Текстовые документы" default>
-
-    ```mdx-code-block
-    <APITable colsWidth={['200px']}>
-    ```
-
-    | Формат | MIME-тип   |
-    |--------|------------|
-    | txt    | text/plain  |
-    | doc    | application/vnd.openxmlformats-officedocument.wordprocessingml.document  |
-    | docx   | application/msword |
-    | pdf    | application/pdf  |
-    | epub   | application/epub  |
-    | ppt    | application/ppt  |
-    | pptx   | application/pptx  |
-
-    ```mdx-code-block
-    </APITable>
-    ```
-        
-    </TabItem>
-    <TabItem value="image" label="Изображения" >
-
-    ```mdx-code-block
-    <APITable colsWidth={['200px']}>
-    ```
-        
-    | Формат | MIME-тип   |
-    |--------|------------|
-    | jpg    | image/jpg  |
-    | png    | image/png  |
-    | tiff   | image/tiff |
-    | bmp    | image/bmp  |
-
-    ```mdx-code-block
-    </APITable>
-    ```
-        
-    </TabItem>
-    </Tabs>
-
-    На размеры файлов действуют ограничения:
-
-    * максимальный размер одного текстового файла — 40 Мб;
-    * максимальный размер одного изображения — 15 Мб.
-
-    <ViewMoreBlock>
-      <ViewMoreCard
-        title="Обработка файлов"
-        description="Примеры и способы работы с хранилищем файлов"
-        href="ru/gigachat/guides/working-with-files"
-      />
-    </ViewMoreBlock>
-- name: Мониторинг потребления
-  description: |
-    В разделе описаны методы, которые помогут вам оценить, сколько токенов будет потрачено на ваш запрос, а также узнать остаток токенов для работы с каждой из доступных моделей.
-
-    <details>
-      <summary>Подробнее о токенах</summary>
-
-    Токен — единица измерения стоимости запросов к модели. Токен может быть символом, несколькими символами, фрагментом слова или словом целиком. В среднем в одном токене 3—4 символа, включая пробелы, знаки препинания и специальные символы.
-
-    Кроме текста сообщений в токены преобразуется контент, который используются в контексте запроса. Например, текстовые файлы и изображения, описания функций или история сообщений из массива `messages`.
-
-    </details>
-
-    <ViewMoreBlock>
-      <ViewMoreCard
-        title="Статистка потребления токенов"
-        description="Узнайте как посмотреть статистику в личном кабинете"
-        href="ru/gigachat/guides/token-consumption"
-      />
-      <ViewMoreCard
-        title="Подсчет токенов"
-        description="Примеры оценки количества токенов в запросе"
-        href="ru/gigachat/guides/counting-tokens"
-      />
-    </ViewMoreBlock>
+- name: Файлы
+  description: В разделе описаны методы для работы с файлами с помощью GigaChat.
 paths:
   /oauth:
     post:
@@ -220,7 +106,7 @@ paths:
           schema:
             type: string
             format: uuidv4
-            pattern: (([0-9a-fA-F-]){36})
+            pattern: (([0-9a-fA-F-])36)
             example: 6f0b1291-c7f3-43c6-bb2e-9f3efb2dc98e
       requestBody:
          content:
@@ -243,19 +129,6 @@ paths:
                     example: GIGACHAT_API_PERS
                required:
                  - scope
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>",
-            )
-
-            response = giga.get_token()
-
-            print(response)
       responses:
         '200':
           content:
@@ -288,43 +161,12 @@ paths:
   /tokens/count:
     post:
       tags:
-        - Мониторинг потребления
+      - Чат
       requestBody:
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/TokensCountBody'
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>",
-            )
-
-            response = giga.tokens_count(
-                # Массив строк для подсчета токенов
-                input_=["12345"],
-                # Модель, которая используется для подсчета токенов
-                model="GigaChat-Pro"
-                )
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-              credentials: '<ключ_авторизации>',
-              scope: '<версия_API>',
-            });
-
-            const response = await giga.tokensCount(["Привет! Расскажи о себе в двух словах"]);
-
-            console.log("Количество токенов в запросе: ", response.tokens[0].tokens);
       responses:
         '200':
           content:
@@ -342,38 +184,10 @@ paths:
   /balance:
     get:
       tags:
-        - Мониторинг потребления
+        - Чат
       parameters:
         - $ref: '#/components/parameters/xRequestId'
         - $ref: '#/components/parameters/xSessionId'
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>"
-            )
-
-            # Метод доступен только если вы используете пакеты токенов (купленные или бесплатные)
-            response = giga.get_balance()
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-              credentials: '<ключ_авторизации>',
-              scope: '<версия_API>',
-            });
-
-            # Метод доступен только если вы используете пакеты токенов (купленные или бесплатные)
-            const response = await giga.balance();
-
-            console.log("Остаток токенов: ", response);
       responses:
         '200':
           content:
@@ -399,32 +213,6 @@ paths:
     get:
       tags:
         - Модели
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>",
-            )
-
-            response = giga.get_models()
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-                credentials: '<ключ_авторизации>',
-                scope: '<версия_API>',
-            });
-
-            const response = await giga.getModels();
-
-            console.log(response);
       responses:
         '200':
           content:
@@ -442,33 +230,7 @@ paths:
   /files:
     get:
       tags:
-        - Хранилище файлов
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>"
-            )
-
-            response = giga.get_files()
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-              credentials: '<ключ_авторизации>',
-              scope: '<версия_API>',
-            });
-
-            const files = await giga.getFiles();
-
-            console.log(files);
+        - files
       responses:
         '200':
           content:
@@ -489,20 +251,7 @@ paths:
               $ref: '#/components/schemas/FileUpload'
         required: true
       tags:
-        - Хранилище файлов
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>",
-            )
-
-            response = giga.upload_file(open("/<путь_к_файлу>/<имя_файла>.txt", mode="rb"))
-
-            print(response)
+        - files
       responses:
         '200':
           content:
@@ -574,7 +323,7 @@ paths:
   /files/{file}:
     get:
       tags:
-        - Хранилище файлов
+        - files
       parameters:
         - name: file
           description: Идентификатор файла. Идентификатор содержится в поле найти в поле `id` объекта, который создается при загрузке файла в хранилище.
@@ -582,32 +331,6 @@ paths:
             type: string
           in: path
           required: true
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>"
-            )
-
-            response = giga.get_file("<идентификатор_файла>")
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-              credentials: '<ключ_авторизации>',
-              scope: '<версия_API>',
-            });
-
-            const file = await giga.getFile('<идентификатор_файла>');
-
-            console.log(file);
       responses:
         '200':
           content:
@@ -623,7 +346,7 @@ paths:
   /files/{file_id}/content:
     get:
       tags:
-        - Хранилище файлов
+        - Файлы
       parameters:
         - name: file_id
           description: |
@@ -661,7 +384,7 @@ paths:
       description: |
         Возвращает файл изображения в бинарном представлении в формате JPG.
 
-        Изображения создаются с помощью запроса [`POST /chat/completions`](/ru/gigachat/api/reference/rest/post-chat).
+        Изображения создаются с помощью запроса [POST /chat/completions](/ru/gigachat/api/reference/rest/post-chat).
 
         Подробнее читайте в разделе [Создание изображений](/ru/gigachat/guides/images-generation).
         
@@ -673,7 +396,7 @@ paths:
   /files/{file}/delete:
     post:
       tags:
-        - Хранилище файлов
+        - files
       parameters:
         - name: file
           description: Идентификатор файла, который нужно удалить
@@ -681,32 +404,6 @@ paths:
             type: string
           in: path
           required: true
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>"
-            )
-
-            response = giga.delete_file("<идентификатор_файла>")
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-              credentials: '<ключ_авторизации>',
-              scope: '<версия_API>',
-            });
-
-            const response = await giga.deleteFile('<идентификатор_файла>');
-
-            console.log(response);
       responses:
         '200':
           description: OK
@@ -719,38 +416,6 @@ paths:
       operationId: fileDelete
       summary: Удалить файл
       description: Переводит статус файла в значение `deleted`.
-  /models/model:
-    get:
-      tags:
-        - models
-      parameters: 
-        - $ref: '#/components/parameters/xClientId'
-        - $ref: '#/components/parameters/xRequestId'
-        - $ref: '#/components/parameters/xSessionId'
-        - name: model
-          description: ID модели
-          schema:
-            type: string
-          in: path
-          required: true
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Model'
-          description: OK
-        '400':
-          description: Invalid model version
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          $ref: '#/components/responses/NoSuchModel'
-      security:
-        - bearerAuth: []
-      operationId: getModel
-      summary: Получить указанную модель
-      description: Возвращает объект с описанием указанной модели
   /chat/completions:
     post:
       parameters:
@@ -763,40 +428,8 @@ paths:
             schema:
               $ref: '#/components/schemas/Chat'
               example: {"model": "GigaChat","messages": [{"role": "system","content": "Ты профессиональный переводчик на английский язык. Переведи точно сообщение пользователя."},{"role": "user","content": "GigaChat — это сервис, который умеет взаимодействовать с пользователем в формате диалога, писать код, создавать тексты и картинки по запросу пользователя."}],"stream": false,"update_interval": 0}
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>",
-            )
-
-            response = giga.chat("Расскажи про себя")
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-              credentials: '<ключ_авторизации>',
-              scope: '<версия_API>',
-            });
-
-            giga.chat({
-                messages: [
-                  {
-                     role: 'user',
-                     content: 'Привет! Расскажи о себе в двух словах'
-                  }
-                ],
-              })
-              .then((resp) => {
-                console.log(resp.choices[0]?.message.content);
-              });
+      tags:
+        - Чат
       responses:
         '200':
           content:
@@ -823,10 +456,10 @@ paths:
       description: |
         Возвращает ответ модели, сгенерированный на основе переданных сообщений.
 
-        Передавайте текст сообщений (поле `content`) в кодировке UTF8.
+        Передвайте текст сообщений (поле `content`) в кодировке UTF8.
         Это позволит снизить расход токенов при обработке сообщения.
 
-        При генерации ответа модель может учитывать текстовые документы и изображения, сохраненные в хранилище.
+        При генерации ответа модель может учитывать текстовые докуметы и изображения, сохраненные в хранилище.
         Для этого передайте список идентификаторов файлов в массиве `attachments`.
         В одном сообщении (объект в массиве `messages`) можно передать только одно изображение.
         В одном запросе можно передать до 10 изображений, независимо от количества сообщений.
@@ -854,19 +487,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/aiCheck'
-      x-codeSamples:
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-                credentials: 'ключ_авторизации',
-            });
-
-            const response = await giga.aiCheck('<текст_для_проверки>', '<название_модели>');
-
-            console.log(response);
       responses:
         '200':
           content:
@@ -892,31 +512,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/EmbeddingsBody'
-      x-codeSamples:
-        - lang: "Python"
-          label: "gigachat"
-          source: |
-            from gigachat import GigaChat
-
-            giga = GigaChat(
-               credentials="<ключ_авторизации>"
-            )
-
-            response = giga.embeddings(["Hello world!"])
-
-            print(response)
-        - lang: "TypeScript"
-          label: "gigachat"
-          source: |
-            import GigaChat from 'gigachat';
-
-            const giga = new GigaChat({
-                credentials: 'ключ_авторизации',
-            });
-
-            const response = await giga.embeddings(['Слова слова слова']);
-
-            console.log(response.data);
       responses:
         '200':
           content:
@@ -934,120 +529,6 @@ paths:
         Возвращает векторные представления соответствующих текстовых запросов. Индекс объекта с векторным представлением (поле `index`) соответствует индексу строки в массиве `input` запроса.
 
         Векторное представление выглядит как массив чисел `embedding`. Каждое значение в массиве представляет одну из характеристик или признаков текста, учтенных при вычислении эмбеддинга. Значения образуют числовое представление текста и позволяют анализировать и использовать текст в различных задачах. Как правило, чем ближе значения эмбеддингов друг к другу, тем более семантически близки тексты.
-
-        Для создания эмбеддингов можно использовать [модели Embeddings и EmbeddingsGigaR](/ru/gigachat/models#model-dlya-vektornogo-predstavleniya-teksta).
-        Запросы [тарифицируются](/ru/gigachat/api/tariffs) одинаково, независимо от использованной модели.
-
-        :::tip
-
-        Для улучшения результатов при работе с моделью EmbeddingsGigaR следуйте рекомендациям в разделе [Векторное представление текста](/ru/gigachat/guides/embeddings#embeddingsgigar-recommendations).
-
-        :::
-  /functions/validate:
-    post:
-      parameters:
-        - $ref: '#/components/parameters/xRequestId'
-        - $ref: '#/components/parameters/xSessionId'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomFunction'
-      tags:
-        - Функции
-      responses:
-        '200':
-          description: |
-            Результат валидации функции.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FunctionValidationResult'
-        '400':
-          $ref: '#/components/responses/BadRequestFormat'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '429':
-          $ref: '#/components/responses/TooManyRequests'
-        '500':
-          $ref: '#/components/responses/InternalError'
-      security:
-        - Токен доступа: []
-      operationId: functionValidation
-      summary: Валидировать функцию
-      description: |
-        Проверяет переданное описание функции на соответствие формату функций GigaChat.
-        
-        Пример описания функции GigaChat — в массиве `functions`, в запросе [`POST /chat/completions`](/ru/gigachat/api/reference/rest/post-chat).
-
-        Метод принимает описание функции в формате JSON.
-        
-        В результате проверки возвращается массив ошибок и предупреждений, которые нужно исправить, чтобы описание функции соответствовало формату GigaChat.
-
-        <details>
-        <summary>Пример описания функции в формате JSON Schema</summary>
-
-        ```json
-        {
-            "name": "send_sms",
-            "description": "Отправка SMS контакту по ID",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "contactId": {
-                        "description": "ID контакта",
-                        "format": "int32",
-                        "type": "integer"
-                    },
-                    "text": {
-                        "description": "Текст SMS",
-                        "minLength": 1,
-                        "type": "string"
-                    },
-                    "version": {
-                        "description": "Описание параметра - версия API",
-                        "type": "string"
-                    }
-                },
-                "required": [
-                    "version",
-                    "contactId",
-                    "text"
-                ]
-            },
-            "return_parameters": {
-                "type": "object",
-                "properties": {
-                    "description": {
-                        "description": "Описание статуса",
-                        "nullable": true,
-                        "type": "string"
-                    },
-                    "phone": {
-                        "description": "Номер: маска + 2 последние цифры номера",
-                        "nullable": true,
-                        "type": "string"
-                    },
-                    "status": {
-                        "description": "Отправлено/не отправлено",
-                        "type": "boolean"
-                    }
-                }
-            },
-            "few_shot_examples": [
-                {
-                    "request": "Отправь SMS контакту с ID 111111 с текстом Hello World",
-                    "params": {
-                        "contactId": "111111",
-                        "text": "Hello world"
-                    }
-                }
-            ]
-        }
-        ```
-        </details>
-
-        Подробнее — в разделе [Работа с функциями](/ru/gigachat/guides/function-calling).
 components:
   parameters:
     xClientId:
@@ -1072,129 +553,21 @@ components:
         type: string
         description: Произвольный идентификатор сессии, который используется для логирования.
   schemas:
-    FunctionValidationResult:
-      type: object
-      description: Объект с результатом валидации функции, описанной в формате JSON.
-      properties:
-        status:
-          type: integer
-          default: 200
-          description: HTTP-код ответа.
-        message:
-          type: string
-          description: |
-            Сообщение о результате валидации функции.
-            Возможные значения:
-
-            * `Function is valid` — описание функции полностью соответствует формату GigaChat API или содержит незначительные проблемы (блок `warnings`).
-            * `Incorrect function syntax` — описание функции не соответствует формату GigaChat API (ответ содержит блок `errors`).
-          enum:
-            - Function is valid
-            - Incorrect function syntax
-        json_ai_rules_version:
-          type: string
-          description: |
-            Версия правил, которые используются для валидации функции.
-
-            Передается, если запрос содержит описание функции в формате JSON.
-          example: 1.0.5
-        errors:
-          description: |
-            Массив с описанием ошибок, возникших при валидации функции.
-            В отличие от предупреждений ошибки возникают, когда описание функции нарушает формат GigaChat API.
-            Например, если в описании отсутствуют обязательные блоки `name` или `parameters`.
-
-            Если в описании функции есть ошибки (массив `errors`), то предупреждения (массив `warnings`) не передаются.
-
-            Перед отправкой функции в запросе [`POST /chat/completions`](/ru/gigachat/api/reference/rest/post-chat) ошибки нужно исправить.
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-                description: Описание ошибки.
-                example: name is required
-              schema_location:
-                type: string
-                description: Указывает, где в схеме нужно внести изменения, чтобы исправить ошибку.
-                example: (root)
-        warnings:
-          description: |
-            Массив с описанием предупреждений, возникших при валидации функции.
-            В отличие от предупреждений ошибки возникают, когда описание функции нарушает формат GigaChat API.
-            Например, если в описании отсутствует необязательный массив образцов `few_shot_examples are missing`.
-
-            Предупреждения (массив `warnings`) не передаются, если в описании функции есть ошибки (массив `errors`).
-          type: array
-          items:
-            type: object
-            properties:
-              description:
-                type: string
-                description: Описание предупреждения.
-                example: few_shot_examples are missing
-              schema_location:
-                type: string
-                description: Указывает, где в схеме нужно внести изменения, чтобы исправить предупреждения.
-                example: (root)
-    CustomFunctions:
-      type: array
-      description: Массив с описанием пользовательских функций.
-      items:
-        $ref: '#/components/schemas/CustomFunction'
-    CustomFunction:
-      description: Описание пользовательской функции.
-      type: object
-      required:
-        - "name"
-        - "parameters"
-      properties:
-        name:
-          type: string
-          description: Название пользовательской функции, для которой будут сгенерированы аргументы.
-          example: pizza_order
-        description:
-          type: string
-          description: Текстовое описание функции.
-          example: Функция для заказа пиццы
-        parameters:
-          type: object
-          properties: {}
-          description: Валидный JSON-объект с набором пар `ключ-значение`, которые описывают аргументы функции.
-        few_shot_examples:
-          type: array
-          description: |
-            Объекты с парами `запрос_пользователя`-`параметры_функции`, которые будут служить модели примерами ожидаемого результата.
-          items:
-            type: object
-            required:
-              - "request"
-              - "params"
-            properties:
-              request:
-                type: string
-                description: Запрос пользователя.
-                example: Погода в Москве в ближайшие три дня
-              params:
-                type: object
-                description: Пример заполнения параметров пользовательской функции.
-                properties: {}
-        return_parameters:
-          type: object
-          description: JSON-объект с описанием параметров, которые может вернуть ваша функция.
-          properties: {}
     Model:
       type: object
       properties:
         id:
           description: |
-            Название и версия модели, которая сгенерировала ответ. Описание доступных моделей смотрите в разделе [Модели GigaChat](https://developers.sber.ru/docs/ru/gigachat/models).
+            Название модели. Описание доступных моделей смотрите в разделе [Модели GigaChat](https://developers.sber.ru/docs/ru/gigachat/models).
 
             При обращении к моделям в раннем доступе к названию модели нужно добавлять постфикс `-preview`.
             Например, `GigaChat-Pro-preview`.
           type: string
-          example: GigaChat:1.0.26.20
+          enum:
+            - GigaChat
+            - GigaChat-Pro
+            - GigaChat-Max
+          example: GigaChat
         object:
           description: Тип сущности в ответе, например, модель.
           type: string
@@ -1241,8 +614,7 @@ components:
           - GigaCheckClassification
           - GigaCheckDetection
           description: |
-            Название модели.
-            Модель GigaCheckClassification лучше всего подходит для анализа и разделения текста на два класса: написанный человеком или сгенерированный нейросетью (`ai`/`human`). В модели GigaCheckDetection добавляется третий класс — `mixed` (`ai`+`human`), что позволяет определять тексты, частично созданные с помощью ИИ.
+            Алиас модели. Модель GigaCheckClassification лучше всего подходит для анализа и разделения текста на два класса: написанный человеком или сгенерированный нейросетью (`ai`/`human`). В модели GigaCheckDetection добавляется третий класс — `mixed` (`ai`+`human`), что позволяет определять тексты, частично созданные с помощью ИИ.
           example: "GigaCheckClassification"
     aiCheckResponse:
       type: object
@@ -1274,7 +646,7 @@ components:
             type: array
           description: |
             Части текста, сгенерированные моделью.
-            Обозначаются индексами символов, с которых начинаются и заканчиваются сгенерированные фрагменты.
+            Обзначаются индексами символов, с которых начинаются и заканчиваются сгенерированные фрагменты.
 
             Содержит пустой массив если текст полностью сгенерирован с помощью нейросетевых моделей (`"category": "ai"`) или написан человеком (`"category": "human"`).
     Balance:
@@ -1412,7 +784,7 @@ components:
             Идентификатор созданного изображения, полученный в ответ на запрос пользователя.
             Содержится в ответе модели, в теге `<img>`, в атрибуте `src`.
 
-          # Подробнее в разделе [Генерация изображений](/ru/gigachat/guides/images-generation).
+          # Побробнее в разделе [Генерация изображений](/ru/gigachat/guides/images-generation).
           type: string
           example: 7wy0e9934sbjc09snz40c2gf1mej42ra0r00d8yz4d47r0adb17281t3096qpnamb4eqc1t3bd7qj1jman5q2mtzawfqrmgtbd7dv2bx54
     Chat:
@@ -1446,12 +818,53 @@ components:
             - $ref: '#/components/schemas/function_call_custom_function'
             - $ref: '#/components/schemas/function_call_none_auto'
         functions:
-          $ref: '#/components/schemas/CustomFunctions'
+          type: array
+          description: Массив с описанием пользовательских функций.
+          items:
+            type: object
+            required:
+              - "name"
+              - "parameters"
+            properties:
+              name:
+                type: string
+                description: Название пользовательской функции, для которой будут сгенерированы аргументы.
+                example: pizza_order
+              description:
+                type: string
+                description: Текстовое описание функции.
+                example: Функция для заказа пиццы
+              parameters:
+                type: object
+                properties: {}
+                description: Валидный JSON-объект с набором пар ключ-значение, которые описывают аргументы функции.
+              few_shot_examples:
+                type: array
+                description: |
+                  Объекты с парами `запрос_пользователя`-`параметры_функции`, которые будут служить модели примерами ожидаемого результата.
+                items:
+                  type: object
+                  required:
+                    - "request"
+                    - "params"
+                  properties:
+                    request:
+                      type: string
+                      description: Запрос пользователя.
+                      example: Погода в Москве в ближайшие три дня
+                    params:
+                      type: object
+                      description: Пример заполнения параметров пользовательской функции.
+                      properties: {}
+              return_parameters:
+                type: object
+                description: JSON-объект с описанием параметров, которые может вернуть ваша функция.
+                properties: {}
         temperature:
           format: float
           type: number
           description: |
-            Температура выборки. Чем выше значение, тем более случайным будет ответ модели. Если значение температуры находится в диапазоне от 0 до 0.001, параметры `temperature` и `top_p` будут сброшены в режим, обеспечивающий максимально детерминированный (стабильный) ответ модели. При значениях температуры больше двух, набор токенов в ответе модели может отличаться избыточной случайностью.
+            Температура выборки. Чем выше значение, тем более случайным будет ответ модели. Если значение температуры находится в диапазоне от 0 до 0.001, параметры `temperature` и `top_p` будут сброшены в режим, обеспечивающий максимально детерменированный (стабильный) ответ модели. При значениях температуры больше двух, набор токенов в ответе модели может отличаться избыточной случайностью.
 
             Значение по умолчанию зависит от выбранной модели (поле `model`) и может изменяться с обновлениями модели.
           minimum: 0
@@ -1531,7 +944,7 @@ components:
 
             В остальных случаях содержит либо системный промпт (сообщение с ролью `system`), либо текст сообщения пользователя или модели.
 
-            Передавайте текст в кодировке UTF8.
+            Передвайте текст в кодировке UTF8.
             Это позволит снизить расход токенов при обработке сообщения.
           type: string
           example: "{\"temperature\": \"27\"}"
@@ -1764,13 +1177,13 @@ components:
                 default: embedding
               embedding:
                 type: array
-                description: Массив чисел, представляющий значения эмбеддинга для предоставленного текста. 
+                description: Массив чисел, представляющих значения эмбеддинга для предоставленного текста. 
                 items:
                   type: integer
                   format: float
               index:
                 type: integer
-                description: Индекс, соответствующий индексу текста, полученного в массиве `input` запроса.
+                description: Индекс соответствующий индексу текста, полученного в массиве `input` запроса.
                 example: 0
               usage:
                 type: object
@@ -1782,6 +1195,7 @@ components:
         model:
           type: string
           description: Название модели, которая используется для вычисления эмбеддинга.
+          default: Embeddings
           example: Embeddings
     TokensCountBody:
       type: object
@@ -1811,18 +1225,8 @@ components:
       properties:
         model:
           type: string
-          description: |
-            Название модели, которая будет использована для создания эмбеддинга.
-
-            Возможные значения:
-
-            * `Embeddings` — базовая модель, доступная по умолчанию для векторного представления текстов;
-            * `EmbeddingsGigaR` — продвинутая модель с большим размером контекста.
-
-            Запросы [тарифицируются](/ru/gigachat/api/tariffs) одинаково, независимо от использованной модели.
-
-            Для улучшения результатов при работе с моделью EmbeddingsGigaR следуйте рекомендациям в разделе [Векторное представление текста](/ru/gigachat/guides/embeddings#embeddingsgigar-recommendations).
-          example: Embeddings
+          description: Название модели, которая будет использована для создания эмбеддинга.
+          default: Embeddings
         input:
           type: array
           description: Строка или массив строк, которые будут использованы для генерации эмбеддинга.
@@ -1864,7 +1268,7 @@ components:
                 description: Описание ошибки.
                 example: credentials doesn't match db data
     PermissionDeniedError:
-      description: Ошибка доступа. Возникает при отправке запроса если вы оплачиваете работу с API по схеме [pay-as-you-go](/ru/gigachat/api/tariffs#oplata-pay-as-you-go).
+      description: Ошибка доступа. Возникает возникает при отправке запроса если вы оплачиваете работу с API по схеме [pay-as-you-go](/ru/gigachat/api/tariffs#oplata-pay-as-you-go).
       content:
         application/json:
           schema:

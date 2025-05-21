@@ -59,9 +59,24 @@ try:
     client_id = os.getenv("GIGACHAT_CLIENT_ID")
     client_secret = os.getenv("GIGACHAT_CLIENT_SECRET")
     
+    # Определяем режим работы
+    work_location = os.getenv("WORK_LOCATION", "home").lower()
+    logger.info(f"Режим работы: {'на работе' if work_location == 'work' else 'дома'}")
+    
+    # Устанавливаем URL в зависимости от режима работы
+    if work_location == "work":
+        auth_url = os.getenv("GIGACHAT_AUTH_URL", "https://sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru/api/v2/oauth")
+        base_url = os.getenv("GIGACHAT_BASE_URL", "https://gigachat.devices.sberbank.ru/api/v1")
+    else:
+        auth_url = os.getenv("GIGACHAT_AUTH_URL", "https://ngw.devices.sberbank.ru:9443/api/v2/oauth")
+        base_url = os.getenv("GIGACHAT_BASE_URL", "https://gigachat.devices.sberbank.ru/api/v1")
+    
+    logger.info(f"Используется URL аутентификации: {auth_url}")
+    logger.info(f"Используется URL API: {base_url}")
+    
     os.environ.update({
-        'GIGACHAT_AUTH_URL': 'https://sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru/api/v2/oauth',
-        'GIGACHAT_BASE_URL': 'https://gigachat.devices.sberbank.ru/api/v1'
+        'GIGACHAT_AUTH_URL': auth_url,
+        'GIGACHAT_BASE_URL': base_url
     })
     
     client = GigaChatAuth(client_id, client_secret, verify_ssl=False)
@@ -161,7 +176,10 @@ def analyze_documents(query, max_execution_time=30):
                 return
             
             response = analyzer.analyze_documents(query)
-            result = {"status": "success", "results": response}
+            if isinstance(response, dict) and "error" in response:
+                result = {"status": "error", "message": response["error"]}
+            else:
+                result = {"status": "success", "results": response}
         except Exception as e:
             result = {"status": "error", "message": str(e)}
     
@@ -180,14 +198,83 @@ def parse_response(response):
     if not response:
         return {"status": "error", "message": "Пустой ответ"}
     
-    not_found_phrases = ["не найдена", "не найдено", "отсутствует"]
-    for phrase in not_found_phrases:
-        if phrase in response.lower():
-            return {"status": "not_found", "message": "Информация не найдена", "results": response}
+    # Если response - это словарь с ошибкой
+    if isinstance(response, dict) and "error" in response:
+        return {"status": "error", "message": response["error"]}
     
+    # Если response - это словарь с ответом
+    if isinstance(response, dict):
+        if "answer" in response:
+            answer = response["answer"]
+            if isinstance(answer, dict):
+                # Извлекаем основной текст ответа
+                if "result" in answer:
+                    response_text = answer["result"]
+                else:
+                    return {"status": "error", "message": "Неизвестный формат ответа RAG chain"}
+                
+                # Форматируем источники
+                sources = []
+                if "source_details" in answer:
+                    for source in answer["source_details"]:
+                        source_info = []
+                        if source.get("source"):
+                            source_info.append(f"Документ: {source['source']}")
+                        if source.get("section"):
+                            source_info.append(f"Раздел: {source['section']}")
+                        if source.get("page"):
+                            source_info.append(f"Страница: {source['page']}")
+                        if source.get("sheet"):
+                            source_info.append(f"Лист: {source['sheet']}")
+                        if source_info:
+                            sources.append(" | ".join(source_info))
+                
+                # Проверяем наличие фраз о ненайденной информации
+                not_found_phrases = [
+                    "не найдена", "не найдено", "отсутствует", 
+                    "не могу найти", "не удалось найти", 
+                    "информация отсутствует", "данные не найдены"
+                ]
+                response_lower = response_text.lower()
+                
+                for phrase in not_found_phrases:
+                    if phrase in response_lower:
+                        return {
+                            "status": "not_found",
+                            "message": "Информация не найдена",
+                            "results": [{
+                                "content": response_text,
+                                "section": "Извлеченная информация",
+                                "sources": sources
+                            }]
+                        }
+                
+                # Форматируем успешный ответ
+                return {
+                    "status": "success",
+                    "results": [{
+                        "content": response_text,
+                        "section": "Извлеченная информация",
+                        "sources": sources,
+                        "query": answer.get("query", "")
+                    }]
+                }
+            else:
+                response_text = str(answer)
+        elif "result" in response:
+            response_text = response["result"]
+        else:
+            return {"status": "error", "message": "Неизвестный формат ответа"}
+    else:
+        response_text = str(response)
+    
+    # Для простых ответов (не из RAG chain)
     return {
         "status": "success",
-        "results": [{"content": response, "section": "Извлеченная информация"}]
+        "results": [{
+            "content": response_text,
+            "section": "Ответ"
+        }]
     }
 
 if __name__ == '__main__':

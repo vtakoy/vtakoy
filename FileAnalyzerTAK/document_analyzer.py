@@ -13,10 +13,11 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document as LangchainDocument
 from langchain_gigachat.embeddings import GigaChatEmbeddings
 from langchain_gigachat.chat_models import GigaChat
-from tenacity import retry, stop_after_attempt, wait_fixed
+from tenacity import retry, stop_after_attempt, wait_fixed, wait_exponential, retry_if_exception_type
 from langchain.chains import RetrievalQA
 from langchain.prompts.prompt import PromptTemplate
 from langchain_community.vectorstores import Chroma
+import time
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 CHROMA_DIR = os.path.join(current_dir, "chroma")
@@ -55,18 +56,20 @@ class DocumentAnalyzer:
         self.logger = logging.getLogger('DocumentAnalyzer')
         self.logger.setLevel(logging.INFO)
         
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        os.makedirs("logs", exist_ok=True)
-        
-        file_handler = logging.FileHandler(
-            os.path.join(current_dir, f"logs/document_analyzer_{datetime.now().strftime('%Y%m%d')}.log"),
-            encoding='utf-8'
-        )
-        file_handler.setFormatter(formatter)
-        console_handler = logging.StreamHandler()
-        console_handler.setFormatter(formatter)
-        self.logger.addHandler(file_handler)
-        self.logger.addHandler(console_handler)
+        # Проверяем, есть ли уже хэндлеры у логгера
+        if not self.logger.handlers:
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            os.makedirs("logs", exist_ok=True)
+            
+            file_handler = logging.FileHandler(
+                os.path.join(current_dir, f"logs/document_analyzer_{datetime.now().strftime('%Y%m%d')}.log"),
+                encoding='utf-8'
+            )
+            file_handler.setFormatter(formatter)
+            console_handler = logging.StreamHandler()
+            console_handler.setFormatter(formatter)
+            self.logger.addHandler(file_handler)
+            self.logger.addHandler(console_handler)
         
         self.client = client
         self.documents_dir = documents_dir or os.path.join(current_dir, "documents")
@@ -154,6 +157,8 @@ class DocumentAnalyzer:
                     sections = self._read_word(file_path)
                 elif filename.endswith(('.xlsx', '.xls')):
                     sections = self._read_excel(file_path)
+                elif filename.endswith('.pdf'):
+                    sections = self._read_pdf(file_path)
                 else:
                     self.logger.warning(f"Пропущен файл: {filename}")
                     continue
@@ -195,18 +200,66 @@ class DocumentAnalyzer:
             sections = []
             filename = os.path.basename(file_path)
             
+            # Извлечение текста из свойств документа
+            core_properties = doc.core_properties
+            if core_properties.title or core_properties.subject or core_properties.author:
+                props_text = []
+                if core_properties.title:
+                    props_text.append(f"Заголовок: {core_properties.title}")
+                if core_properties.subject:
+                    props_text.append(f"Тема: {core_properties.subject}")
+                if core_properties.author:
+                    props_text.append(f"Автор: {core_properties.author}")
+                
+                sections.append({
+                    "text": "\n".join(props_text),
+                    "metadata": {"source": filename, "section": "properties"}
+                })
+            
+            # Извлечение основного текста
+            paragraphs_text = []
             for para in doc.paragraphs:
                 if para.text.strip():
-                    sections.append({
-                        "text": para.text,
-                        "metadata": {"source": filename}
-                    })
-                    
-            for table in doc.tables:
-                table_text = "\n".join(" | ".join(cell.text for cell in row.cells) for row in table.rows)
+                    paragraphs_text.append(para.text)
+            
+            # Разбиваем параграфы на логические секции по 10-15 параграфов
+            chunk_size = 15
+            for i in range(0, len(paragraphs_text), chunk_size):
+                chunk = paragraphs_text[i:i+chunk_size]
                 sections.append({
-                    "text": f"Таблица:\n{table_text}",
-                    "metadata": {"source": filename}
+                    "text": "\n".join(chunk),
+                    "metadata": {"source": filename, "section": f"text_{i//chunk_size+1}"}
+                })
+            
+            # Извлечение таблиц с форматированием
+            for i, table in enumerate(doc.tables):
+                table_text = []
+                for row in table.rows:
+                    row_texts = [cell.text.strip() for cell in row.cells]
+                    table_text.append(" | ".join(row_texts))
+                
+                sections.append({
+                    "text": f"Таблица {i+1}:\n" + "\n".join(table_text),
+                    "metadata": {"source": filename, "section": f"table_{i+1}"}
+                })
+            
+            # Извлечение текста из колонтитулов
+            headers_footers = []
+            for section in doc.sections:
+                if section.header.is_linked_to_previous == False:
+                    for paragraph in section.header.paragraphs:
+                        if paragraph.text.strip():
+                            headers_footers.append(f"Верхний колонтитул: {paragraph.text}")
+                
+                if section.footer.is_linked_to_previous == False:
+                    for paragraph in section.footer.paragraphs:
+                        if paragraph.text.strip():
+                            headers_footers.append(f"Нижний колонтитул: {paragraph.text}")
+            
+            if headers_footers:
+                sections.append({
+                    "text": "\n".join(headers_footers),
+                    "metadata": {"source": filename, "section": "headers_footers"}
                 })
             
             return sections
@@ -217,14 +270,21 @@ class DocumentAnalyzer:
 
     def _read_excel(self, file_path: str) -> List[Dict]:
         try:
-            df = pd.read_excel(file_path)
             filename = os.path.basename(file_path)
             sections = []
             
-            sections.append({
-                "text": f"Данные:\n{df.head(10).to_string()}",
-                "metadata": {"source": filename}
-            })
+            # Чтение всех листов Excel файла
+            excel_file = pd.ExcelFile(file_path)
+            sheet_names = excel_file.sheet_names
+            
+            for sheet_name in sheet_names:
+                df = pd.read_excel(file_path, sheet_name=sheet_name)
+                
+                # Считываем весь лист целиком, а не только первые 10 строк
+                sections.append({
+                    "text": f"Лист '{sheet_name}':\n{df.to_string(index=False)}",
+                    "metadata": {"source": filename, "sheet": sheet_name}
+                })
             
             return sections
             
@@ -232,16 +292,69 @@ class DocumentAnalyzer:
             self.logger.error(f"Ошибка чтения Excel: {str(e)}")
             return []
 
+    def _read_pdf(self, file_path: str) -> List[Dict]:
+        try:
+            import PyPDF2
+            
+            filename = os.path.basename(file_path)
+            sections = []
+            
+            with open(file_path, 'rb') as file:
+                pdf_reader = PyPDF2.PdfReader(file)
+                total_pages = len(pdf_reader.pages)
+                
+                # Извлекаем метаданные
+                metadata = pdf_reader.metadata
+                if metadata:
+                    meta_text = []
+                    if hasattr(metadata, 'title') and metadata.title:
+                        meta_text.append(f"Заголовок: {metadata.title}")
+                    if hasattr(metadata, 'author') and metadata.author:
+                        meta_text.append(f"Автор: {metadata.author}")
+                    if hasattr(metadata, 'subject') and metadata.subject:
+                        meta_text.append(f"Тема: {metadata.subject}")
+                    
+                    if meta_text:
+                        sections.append({
+                            "text": "\n".join(meta_text),
+                            "metadata": {"source": filename, "section": "metadata"}
+                        })
+                
+                # Извлекаем текст из каждой страницы
+                for page_num in range(total_pages):
+                    page = pdf_reader.pages[page_num]
+                    text = page.extract_text()
+                    
+                    if text.strip():
+                        sections.append({
+                            "text": text,
+                            "metadata": {"source": filename, "page": page_num + 1}
+                        })
+            
+            return sections
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка чтения PDF: {str(e)}")
+            return []
+
     @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
     def _create_vector_store(self, documents: List[LangchainDocument]) -> Chroma:
         try:
             self._clean_chroma_dir()
             
+            # Настройка Chroma для работы в полном офлайн-режиме
+            chroma_settings = Settings(
+                anonymized_telemetry=False,
+                allow_reset=True,
+                is_persistent=True
+            )
+            
             vector_store = Chroma.from_documents(
                 documents=documents,
                 embedding=self.embedder.embeddings,
                 persist_directory=CHROMA_DIR,
-                collection_name=COLLECTION_NAME
+                collection_name=COLLECTION_NAME,
+                client_settings=chroma_settings
             )
             
             if os.path.exists(CHROMA_DIR):
@@ -260,10 +373,30 @@ class DocumentAnalyzer:
             raise
 
     def _create_rag_chain(self) -> RetrievalQA:
-        prompt_template = """Ты - эксперт по документам. Ответь на вопрос используя контекст:
-        Вопрос: {question}
-        Контекст: {context}
-        Ответ:"""
+        prompt_template = """Ты - эксперт по анализу документов и поиску информации. Твоя задача - дать максимально точный и полный ответ на вопрос пользователя, используя ТОЛЬКО информацию из предоставленного контекста.
+
+Контекст содержит извлеченные фрагменты из документов. Каждый фрагмент имеет свой источник и может содержать метаданные (например, номер страницы, название листа Excel и т.д.).
+
+Вопрос: {question}
+
+Контекст:
+{context}
+
+Инструкции по ответу:
+1. Внимательно проанализируй все предоставленные фрагменты контекста.
+2. Если информация в разных фрагментах противоречит друг другу, укажи это и объясни возможные причины.
+3. Если в контексте есть числовые данные, даты или конкретные значения - используй их точно.
+4. Структурируй ответ логически, используя:
+   - Маркированные списки для перечислений
+   - Подзаголовки для разделения тем
+   - Цитаты из контекста в кавычках, если это важно
+5. В конце ответа укажи источники информации в формате:
+   Источники: [список использованных документов/фрагментов]
+6. Если информация в контексте отсутствует или недостаточна - честно признай это.
+7. НЕ добавляй информацию, которой нет в контексте.
+8. Если вопрос требует уточнения - предложи, какую дополнительную информацию нужно уточнить.
+
+Ответ:"""
         
         prompt = PromptTemplate(
             template=prompt_template,
@@ -273,25 +406,82 @@ class DocumentAnalyzer:
         return RetrievalQA.from_chain_type(
             llm=self.llm,
             chain_type="stuff",
-            retriever=self.vector_store.as_retriever(search_kwargs={"k": 5}),
-            chain_type_kwargs={"prompt": prompt},
+            retriever=self.vector_store.as_retriever(
+                search_kwargs={
+                    "k": 8,  # Количество релевантных фрагментов
+                    "fetch_k": 20,  # Количество фрагментов для первичного отбора
+                    "score_threshold": 0.5  # Порог релевантности
+                }
+            ),
+            chain_type_kwargs={
+                "prompt": prompt,
+                "verbose": True
+            },
             return_source_documents=True
         )
 
-    def analyze_documents(self, query: str) -> str:
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=4, max=10),
+        retry=retry_if_exception_type((Exception,)),
+        reraise=True
+    )
+    def analyze_documents(self, query: str) -> dict:
         try:
-            clean_query = query.replace("Требуется информация", "").strip()
-            self.logger.info(f"Обработка: {clean_query}")
+            if not self.rag_chain:
+                self.logger.error("RAG chain не инициализирован")
+                return {"error": "Анализатор документов не инициализирован. Пожалуйста, сначала загрузите документы."}
             
-            if not self.vector_store:
-                raise ValueError("Хранилище не инициализировано")
-                
+            # Добавляем задержку перед запросом
+            time.sleep(2)  # 2 секунды между запросами
+            
+            # Очищаем запрос от префикса и лишних пробелов
+            clean_query = query.replace("Требуется информация", "").strip()
+            self.logger.info(f"Анализ запроса: {clean_query}")
+            
+            # Получаем ответ от RAG chain
             response = self.rag_chain.invoke({"query": clean_query})
-            return response.get("result", "Ответ не найден")
+            
+            if not response:
+                self.logger.warning("Пустой ответ от RAG chain")
+                return {"error": "Не удалось получить ответ"}
+            
+            # Извлекаем результат и источники
+            result = response.get("result", "")
+            sources = []
+            source_details = []
+            
+            if "source_documents" in response:
+                for doc in response["source_documents"]:
+                    if hasattr(doc, "metadata"):
+                        source_info = {
+                            "source": doc.metadata.get("source", "Неизвестный источник"),
+                            "section": doc.metadata.get("section", ""),
+                            "page": doc.metadata.get("page", ""),
+                            "sheet": doc.metadata.get("sheet", "")
+                        }
+                        source_details.append(source_info)
+                        if source_info["source"] not in sources:
+                            sources.append(source_info["source"])
+            
+            # Удаляем дубликаты и формируем список источников
+            unique_sources = list(set(sources))
+            
+            self.logger.info("Успешно получен ответ от RAG chain")
+            return {
+                "answer": {
+                    "result": result,
+                    "sources": unique_sources,
+                    "source_details": source_details,
+                    "query": clean_query
+                }
+            }
             
         except Exception as e:
-            self.logger.error(f"Ошибка анализа: {str(e)}")
-            return f"Ошибка: {str(e)}"
+            self.logger.error(f"Ошибка при анализе документов: {str(e)}")
+            if "429" in str(e):
+                return {"error": "Превышен лимит запросов. Пожалуйста, подождите немного и попробуйте снова."}
+            return {"error": f"Ошибка при анализе документов: {str(e)}"}
 
     def add_document(self, file_path: str) -> bool:
         try:

@@ -31,8 +31,24 @@ class GigaChatAuth:
         load_dotenv()
         self.client_id = client_id or os.getenv("GIGACHAT_CLIENT_ID")
         self.client_secret = client_secret or os.getenv("GIGACHAT_CLIENT_SECRET")
-        self.auth_url = os.getenv("GIGACHAT_AUTH_URL", "https://sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru/api/v2/oauth")
-        self.api_url = os.getenv("GIGACHAT_BASE_URL", "https://gigachat.devices.sberbank.ru/api/v1")
+        
+        # Определяем режим работы
+        work_location = os.getenv("WORK_LOCATION", "home").lower()
+        self.logger = logging.getLogger('GigaChatAuth')
+        self.logger.setLevel(logging.INFO)
+        self.logger.info(f"Режим работы: {'на работе' if work_location == 'work' else 'дома'}")
+        
+        # Устанавливаем URL в зависимости от режима работы
+        if work_location == "work":
+            self.auth_url = os.getenv("GIGACHAT_AUTH_URL", "https://sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru/api/v2/oauth")
+            self.api_url = os.getenv("GIGACHAT_BASE_URL", "https://gigachat.devices.sberbank.ru/api/v1")
+        else:
+            self.auth_url = os.getenv("GIGACHAT_AUTH_URL", "https://ngw.devices.sberbank.ru:9443/api/v2/oauth")
+            self.api_url = os.getenv("GIGACHAT_BASE_URL", "https://gigachat.devices.sberbank.ru/api/v1")
+        
+        self.logger.info(f"Используется URL аутентификации: {self.auth_url}")
+        self.logger.info(f"Используется URL API: {self.api_url}")
+        
         self.timeout = timeout
         self.max_retries = max_retries
         self.auth_token = None
@@ -40,8 +56,6 @@ class GigaChatAuth:
         
         self._validate_credentials()
         self._init_session()
-        self.logger = logging.getLogger('GigaChatAuth')
-        self.logger.setLevel(logging.INFO)
 
     def _validate_credentials(self):
         if not all([self.client_id, self.client_secret]):
