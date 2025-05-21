@@ -1,6 +1,9 @@
 import os
 import ssl
 import argparse
+import json
+from datetime import datetime
+from typing import Dict, Optional
 
 # Парсим аргументы командной строки
 parser = argparse.ArgumentParser(description='Запуск анализатора документов в консоли')
@@ -67,6 +70,93 @@ ssl._create_default_https_context = ssl._create_unverified_context
 from auth import GigaChatAuth
 from document_analyzer import DocumentAnalyzer
 
+def print_welcome_message():
+    """Вывод приветственного сообщения с информацией о возможностях"""
+    print("\n" + "="*80)
+    print("Добро пожаловать в AI-ассистент для анализа документов!")
+    print("="*80)
+    
+    print("\n📚 Поддерживаемые форматы документов:")
+    print("  • PDF документы (.pdf) - с сохранением структуры и метаданных")
+    print("  • Word документы (.docx) - включая таблицы и форматирование")
+    print("  • Excel файлы (.xlsx, .xls) - с обработкой всех листов")
+    print("  • Текстовые файлы (.txt) - с поддержкой кодировок")
+    print("  • HTML страницы (.html) - с сохранением структуры")
+    print("  • PowerPoint презентации (.pptx) - включая слайды и заметки")
+    
+    print("\n🔍 Возможности системы:")
+    print("  • Мультиагентная обработка запросов")
+    print("  • Умный поиск и анализ информации")
+    print("  • Структурированные и проверенные ответы")
+    print("  • Кэширование результатов для быстрых ответов")
+    print("  • Поддержка многоязычных документов")
+    print("  • Извлечение метаданных и структуры")
+    
+    print("\n💡 Как задавать вопросы:")
+    print("  1. Начните запрос с 'Требуется информация'")
+    print("  2. Будьте конкретны в формулировке")
+    print("  3. При необходимости уточняйте контекст")
+    print("  4. Используйте уточняющие вопросы")
+    
+    print("\n⚙️ Дополнительные команды:")
+    print("  • 'очистить кэш' - очистка кэша ответов")
+    print("  • 'статистика' - информация о загруженных документах")
+    print("  • 'выход' или 'exit' - завершение работы")
+    print("\n" + "="*80 + "\n")
+
+def get_document_stats(analyzer) -> Dict:
+    """Получение статистики по документам"""
+    try:
+        stats = {
+            "total_documents": 0,
+            "by_type": {},
+            "total_sections": 0,
+            "last_update": None
+        }
+        
+        if not os.path.exists(analyzer.documents_dir):
+            return stats
+            
+        for filename in os.listdir(analyzer.documents_dir):
+            file_path = os.path.join(analyzer.documents_dir, filename)
+            if os.path.isfile(file_path):
+                stats["total_documents"] += 1
+                ext = os.path.splitext(filename)[1].lower()
+                stats["by_type"][ext] = stats["by_type"].get(ext, 0) + 1
+                
+                # Обновляем время последнего изменения
+                mtime = os.path.getmtime(file_path)
+                if not stats["last_update"] or mtime > stats["last_update"]:
+                    stats["last_update"] = mtime
+        
+        # Получаем количество секций из векторного хранилища
+        if analyzer.vector_store:
+            stats["total_sections"] = len(analyzer.vector_store.get()["ids"])
+        
+        return stats
+        
+    except Exception as e:
+        print(f"Ошибка получения статистики: {str(e)}")
+        return {}
+
+def print_stats(stats: Dict):
+    """Вывод статистики в красивом формате"""
+    if not stats:
+        print("Статистика недоступна")
+        return
+        
+    print("\n📊 Статистика документов:")
+    print(f"  Всего документов: {stats['total_documents']}")
+    print(f"  Всего секций: {stats['total_sections']}")
+    
+    if stats["last_update"]:
+        last_update = datetime.fromtimestamp(stats["last_update"])
+        print(f"  Последнее обновление: {last_update.strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    print("\n  По типам файлов:")
+    for ext, count in stats["by_type"].items():
+        print(f"    • {ext}: {count}")
+
 def main():
     # Получаем учетные данные GigaChat из переменных окружения
     client_id = os.getenv("GIGACHAT_CLIENT_ID")
@@ -87,33 +177,56 @@ def main():
     print("Запуск индексации документов с улучшенными алгоритмами обработки...")
     analyzer.read_documents()
     
-    print("\nДобро пожаловать в AI-ассистент для анализа документов!")
-    print("Я могу анализировать следующие типы документов:")
-    print("- PDF документы")
-    print("- Word документы (.docx)")
-    print("- Excel файлы (.xlsx, .xls)")
-    print("- Текстовые файлы (.txt)")
-    print("\nЧтобы задать вопрос о документах, начните запрос с 'Требуется информация'")
-    print("Например: 'Требуется информация о методах обработки данных'")
-    print("\nДля выхода введите 'выход' или 'exit'")
+    # Выводим приветственное сообщение
+    print_welcome_message()
     
     while True:
-        user_input = input("\nВаш запрос: ")
-        
-        if user_input.lower() in ["выход", "exit"]:
-            print("До свидания!")
-            break
-        
-        if user_input.lower().startswith("требуется информация"):
-            response = analyzer.analyze_documents(user_input)
-            print(f"\nОтвет: {response['result']}")
+        try:
+            user_input = input("\nВаш запрос: ").strip()
             
-            if response['sources']:
-                print("\nИсточники:")
-                for source in response['sources']:
-                    print(f"- {source}")
-        else:
-            print("Запрос должен начинаться с 'Требуется информация'")
+            if user_input.lower() in ["выход", "exit"]:
+                print("До свидания!")
+                break
+                
+            elif user_input.lower() == "очистить кэш":
+                analyzer.clear_cache()
+                print("Кэш успешно очищен")
+                continue
+                
+            elif user_input.lower() == "статистика":
+                stats = get_document_stats(analyzer)
+                print_stats(stats)
+                continue
+            
+            if user_input.lower().startswith("требуется информация"):
+                response = analyzer.analyze_documents(user_input)
+                
+                if "error" in response:
+                    print(f"\n❌ Ошибка: {response['error']}")
+                else:
+                    answer = response["answer"]
+                    print("\n" + "="*80)
+                    print("📝 Ответ:")
+                    print("="*80)
+                    print(answer["result"])
+                    
+                    if answer.get("research"):
+                        print("\n🔍 Анализ:")
+                        print(answer["research"])
+                    
+                    if answer.get("validation"):
+                        print("\n✅ Проверка:")
+                        print(answer["validation"])
+                    
+                    print("\n" + "="*80)
+            else:
+                print("Запрос должен начинаться с 'Требуется информация'")
+                
+        except KeyboardInterrupt:
+            print("\nПрограмма прервана пользователем")
+            break
+        except Exception as e:
+            print(f"\n❌ Произошла ошибка: {str(e)}")
 
 if __name__ == "__main__":
     main() 

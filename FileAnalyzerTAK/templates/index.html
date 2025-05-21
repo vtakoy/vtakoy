@@ -4,61 +4,490 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Анализатор документов</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+        .document-card {
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .document-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .graph-container {
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .concept-node {
+            fill: #4CAF50;
+            stroke: #388E3C;
+        }
+        .concept-link {
+            stroke: #999;
+            stroke-opacity: 0.6;
+        }
+        .document-preview {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px;
+            border-radius: 2px;
+        }
+        .metadata-panel {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Интеллектуальный анализатор документов</h1>
-            <p class="subtitle">Задайте вопрос о содержимом любых документов в системе</p>
-        </header>
-
-        <main>
-            <div class="query-section">
-                <form id="query-form">
-                    <div class="input-wrapper">
-                        <input 
-                            type="text" 
-                            id="query-input" 
-                            placeholder="Введите ваш вопрос..." 
-                            required
-                        >
-                        <button type="submit" class="submit-btn">
-                            <i class="fas fa-search"></i> Найти
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-file-alt me-2"></i>
+                Анализатор документов
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <button class="btn btn-light" onclick="showUploadModal()">
+                            <i class="fas fa-upload me-2"></i>
+                            Загрузить документ
                         </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Панель документов -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-folder me-2"></i>
+                            Документы
+                        </h5>
                     </div>
-                    <div class="query-info">
-                        <p><i class="fas fa-info-circle"></i> Добавьте префикс "Требуется информация" для поиска в документах, или задайте вопрос напрямую для получения ответа от GigaChat.</p>
+                    <div class="card-body">
+                        <div id="documentsList" class="list-group">
+                            <!-- Документы будут добавлены здесь -->
+                        </div>
                     </div>
-                </form>
+                </div>
             </div>
 
-            <div class="results-section">
-                <div id="loading" class="hidden">
-                    <i class="fas fa-circle-notch fa-spin fa-2x"></i>
-                </div>
-
-                <div id="results-container" class="hidden">
-                    <h2>Результаты поиска</h2>
-                    <div id="results-list"></div>
-                </div>
-
-                <div id="no-results" class="hidden">
-                    <div class="no-results-icon">
-                        <i class="fas fa-exclamation-circle"></i>
+            <!-- Основная панель -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs" id="mainTabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#preview">
+                                    <i class="fas fa-eye me-2"></i>
+                                    Просмотр
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#graph">
+                                    <i class="fas fa-project-diagram me-2"></i>
+                                    Граф знаний
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#embeddings">
+                                    <i class="fas fa-chart-scatter me-2"></i>
+                                    Эмбеддинги
+                                </a>
+                            </li>
+                        </ul>
                     </div>
-                    <h2>Информация не найдена</h2>
-                    <p>Попробуйте изменить запрос или проверить наличие необходимых документов в системе.</p>
+                    <div class="card-body">
+                        <div class="tab-content">
+                            <!-- Просмотр документа -->
+                            <div class="tab-pane fade show active" id="preview">
+                                <div class="metadata-panel" id="documentMetadata">
+                                    <!-- Метаданные будут добавлены здесь -->
+                                </div>
+                                <div class="document-preview" id="documentPreview">
+                                    <!-- Содержимое документа будет добавлено здесь -->
+                                </div>
+                            </div>
+
+                            <!-- Граф знаний -->
+                            <div class="tab-pane fade" id="graph">
+                                <div class="graph-container" id="knowledgeGraph">
+                                    <!-- Граф будет отрисован здесь -->
+                                </div>
+                            </div>
+
+                            <!-- Визуализация эмбеддингов -->
+                            <div class="tab-pane fade" id="embeddings">
+                                <div class="graph-container" id="embeddingsPlot">
+                                    <!-- График эмбеддингов будет отрисован здесь -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
-
-        <footer>
-            <p>© 2024 Анализатор документов | Сделано с <i class="fas fa-heart"></i> на основе GigaChat</p>
-        </footer>
+        </div>
     </div>
 
-    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <!-- Модальное окно загрузки -->
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-upload me-2"></i>
+                        Загрузка документа
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadForm">
+                        <div class="mb-3">
+                            <label class="form-label">Выберите файл</label>
+                            <input type="file" class="form-control" id="documentFile" required>
+                        </div>
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Поддерживаемые форматы: PDF, Word, Excel, PowerPoint, HTML, TXT
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-primary" onclick="uploadDocument()">
+                        <i class="fas fa-upload me-2"></i>
+                        Загрузить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Индикатор загрузки -->
+    <div class="loading d-none" id="loadingIndicator">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Загрузка...</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        // Инициализация WebSocket
+        const socket = io();
+        let currentDocument = null;
+        let uploadModal = null;
+
+        // Обработка подключения
+        socket.on('connect', () => {
+            console.log('Connected to server');
+        });
+
+        // Обработка обновлений задач
+        socket.on('task_update', (data) => {
+            if (data.status === 'completed') {
+                hideLoading();
+                if (data.task_id === currentTaskId) {
+                    updateUI(data);
+                }
+            }
+        });
+
+        // Показ/скрытие индикатора загрузки
+        function showLoading() {
+            document.getElementById('loadingIndicator').classList.remove('d-none');
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingIndicator').classList.add('d-none');
+        }
+
+        // Показ модального окна загрузки
+        function showUploadModal() {
+            if (!uploadModal) {
+                uploadModal = new bootstrap.Modal(document.getElementById('uploadModal'));
+            }
+            uploadModal.show();
+        }
+
+        // Загрузка документа
+        async function uploadDocument() {
+            const fileInput = document.getElementById('documentFile');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                alert('Пожалуйста, выберите файл');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            showLoading();
+            try {
+                const response = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    uploadModal.hide();
+                    currentTaskId = data.task_id;
+                    // Обновляем список документов
+                    loadDocuments();
+                } else {
+                    alert(data.error || 'Ошибка загрузки документа');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Ошибка при загрузке документа');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Загрузка списка документов
+        async function loadDocuments() {
+            try {
+                const response = await fetch('/api/documents');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const documentsList = document.getElementById('documentsList');
+                    documentsList.innerHTML = '';
+                    
+                    data.documents.forEach(doc => {
+                        const item = document.createElement('a');
+                        item.href = '#';
+                        item.className = 'list-group-item list-group-item-action';
+                        item.innerHTML = `
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">
+                                    <i class="fas ${getFileIcon(doc.type)} me-2"></i>
+                                    ${doc.name}
+                                </h6>
+                                <small>${formatFileSize(doc.size)}</small>
+                            </div>
+                            <small class="text-muted">
+                                Изменен: ${new Date(doc.modified).toLocaleString()}
+                            </small>
+                        `;
+                        item.onclick = () => loadDocument(doc.name);
+                        documentsList.appendChild(item);
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки документов:', error);
+            }
+        }
+
+        // Загрузка документа
+        async function loadDocument(filename) {
+            showLoading();
+            currentDocument = filename;
+            
+            try {
+                // Загружаем содержимое документа
+                const docResponse = await fetch(`/api/documents/${filename}`);
+                const docData = await docResponse.json();
+                
+                if (docData.status === 'success') {
+                    // Обновляем метаданные
+                    updateMetadata(docData.document.metadata);
+                    // Обновляем содержимое
+                    updatePreview(docData.document.structure);
+                    
+                    // Загружаем граф знаний
+                    const graphResponse = await fetch(`/api/graph/${filename}`);
+                    const graphBlob = await graphResponse.blob();
+                    const graphUrl = URL.createObjectURL(graphBlob);
+                    
+                    const graphImg = document.createElement('img');
+                    graphImg.src = graphUrl;
+                    graphImg.className = 'img-fluid';
+                    
+                    const graphContainer = document.getElementById('knowledgeGraph');
+                    graphContainer.innerHTML = '';
+                    graphContainer.appendChild(graphImg);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки документа:', error);
+                alert('Ошибка при загрузке документа');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // Обновление метаданных
+        function updateMetadata(metadata) {
+            const container = document.getElementById('documentMetadata');
+            container.innerHTML = `
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6>Основная информация</h6>
+                        <ul class="list-unstyled">
+                            <li><strong>Тип:</strong> ${metadata.type}</li>
+                            <li><strong>Размер:</strong> ${formatFileSize(metadata.size)}</li>
+                            <li><strong>Создан:</strong> ${new Date(metadata.created).toLocaleString()}</li>
+                            <li><strong>Изменен:</strong> ${new Date(metadata.modified).toLocaleString()}</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Дополнительная информация</h6>
+                        <ul class="list-unstyled">
+                            ${Object.entries(metadata)
+                                .filter(([key]) => !['type', 'size', 'created', 'modified'].includes(key))
+                                .map(([key, value]) => `
+                                    <li><strong>${key}:</strong> ${value}</li>
+                                `).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Обновление предпросмотра
+        function updatePreview(structure) {
+            const container = document.getElementById('documentPreview');
+            let content = '';
+            
+            structure.sections.forEach(section => {
+                if (section.type === 'heading') {
+                    content += `<h${section.level}>${section.content}</h${section.level}>`;
+                    if (section.paragraphs) {
+                        content += section.paragraphs.map(p => `<p>${p}</p>`).join('');
+                    }
+                } else if (section.type === 'text') {
+                    content += `<p>${section.content}</p>`;
+                } else if (section.type === 'table') {
+                    content += createTableHtml(section.content);
+                }
+            });
+            
+            container.innerHTML = content;
+        }
+
+        // Создание HTML таблицы
+        function createTableHtml(tableData) {
+            if (!tableData || !tableData.length) return '';
+            
+            const headers = Object.keys(tableData[0]);
+            return `
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            ${headers.map(h => `<th>${h}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableData.map(row => `
+                            <tr>
+                                ${headers.map(h => `<td>${row[h]}</td>`).join('')}
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Вспомогательные функции
+        function getFileIcon(type) {
+            const icons = {
+                'pdf': 'fa-file-pdf',
+                'docx': 'fa-file-word',
+                'doc': 'fa-file-word',
+                'xlsx': 'fa-file-excel',
+                'xls': 'fa-file-excel',
+                'pptx': 'fa-file-powerpoint',
+                'ppt': 'fa-file-powerpoint',
+                'html': 'fa-file-code',
+                'txt': 'fa-file-alt'
+            };
+            return icons[type] || 'fa-file';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDocuments();
+            
+            // Обработка переключения вкладок
+            document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
+                tab.addEventListener('shown.bs.tab', (e) => {
+                    if (e.target.getAttribute('href') === '#embeddings') {
+                        loadEmbeddings();
+                    }
+                });
+            });
+        });
+
+        // Загрузка визуализации эмбеддингов
+        async function loadEmbeddings() {
+            if (!currentDocument) return;
+            
+            showLoading();
+            try {
+                const response = await fetch('/api/visualize/embeddings');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    currentTaskId = data.task_id;
+                    // График будет обновлен через WebSocket
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки эмбеддингов:', error);
+                alert('Ошибка при загрузке визуализации');
+                hideLoading();
+            }
+        }
+
+        // Обновление UI после завершения задачи
+        function updateUI(data) {
+            if (data.plot) {
+                Plotly.newPlot('embeddingsPlot', data.plot.data, data.plot.layout);
+            }
+        }
+    </script>
 </body>
 </html> 

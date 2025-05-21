@@ -16,13 +16,27 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 import shutil
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file, Response
 from dotenv import load_dotenv
 from auth import GigaChatAuth
 from document_analyzer import DocumentAnalyzer
 import threading
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import Dict, Optional, List, Tuple
+import json
+from flask_socketio import SocketIO, emit
+import networkx as nx
+import matplotlib.pyplot as plt
+import io
+import base64
+import queue
+import uuid
+import numpy as np
+from sklearn.manifold import TSNE
+import plotly.graph_objects as go
+import plotly.utils
+from werkzeug.utils import secure_filename
 
 logging.getLogger('urllib3').setLevel(logging.CRITICAL)
 logging.getLogger('chromadb.telemetry.posthog').setLevel(logging.CRITICAL)
@@ -33,13 +47,18 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler(f"app_{datetime.now().strftime('%Y%m%d')}.log"),
+        logging.FileHandler(f'logs/app_{datetime.now().strftime("%Y%m%d")}.log', encoding='utf-8'),
         logging.StreamHandler()
     ]
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('DocumentAnalyzerApp')
 
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
+
+# Очередь для фоновых задач
+task_queue = queue.Queue()
+task_results = {}
 
 def clean_chroma_dir():
     """Очистка папки chroma перед запуском"""
@@ -118,165 +137,284 @@ except Exception as e:
     logger.error(f"Ошибка инициализации анализатора: {str(e)}")
     analyzer = None
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+def process_background_task(task_id: str, task_type: str, data: Dict):
+    """Обработка фоновых задач"""
+    try:
+        if task_type == "analyze_document":
+            # Анализ документа и создание графа знаний
+            doc_path = data.get("path")
+            if doc_path and analyzer:
+                # Создаем граф знаний
+                G = nx.Graph()
+                
+                # Извлекаем ключевые концепции и связи
+                concepts = analyzer.extract_concepts(doc_path)
+                for concept in concepts:
+                    G.add_node(concept["id"], 
+                             label=concept["text"],
+                             type=concept["type"])
+                    
+                    for relation in concept.get("relations", []):
+                        G.add_edge(concept["id"],
+                                 relation["target"],
+                                 label=relation["type"])
+                
+                # Сохраняем результаты
+                task_results[task_id] = {
+                    "status": "completed",
+                    "graph": nx.node_link_data(G),
+                    "concepts": concepts
+                }
+                
+        elif task_type == "visualize_embeddings":
+            # Визуализация эмбеддингов документов
+            if analyzer and analyzer.vector_store:
+                # Получаем все эмбеддинги
+                embeddings = analyzer.vector_store.get()["embeddings"]
+                texts = analyzer.vector_store.get()["documents"]
+                
+                # Уменьшаем размерность
+                tsne = TSNE(n_components=2, random_state=42)
+                coords = tsne.fit_transform(embeddings)
+                
+                # Создаем интерактивный график
+                fig = go.Figure()
+                fig.add_trace(go.Scatter(
+                    x=coords[:, 0],
+                    y=coords[:, 1],
+                    mode='markers+text',
+                    text=[doc.metadata.get("source", "") for doc in texts],
+                    hovertext=[doc.page_content[:100] + "..." for doc in texts],
+                    marker=dict(size=10)
+                ))
+                
+                # Сохраняем результаты
+                task_results[task_id] = {
+                    "status": "completed",
+                    "plot": json.loads(fig.to_json())
+                }
+                
+    except Exception as e:
+        logger.error(f"Ошибка обработки фоновой задачи: {str(e)}")
+        task_results[task_id] = {
+            "status": "error",
+            "error": str(e)
+        }
 
-@app.route('/analyze', methods=['POST'])
-def analyze():
-    query = request.form.get('query', '')
-    
-    if not query:
-        logger.warning("Получен пустой запрос")
-        return jsonify({"status": "error", "message": "Пустой запрос"}), 400
-    
-    logger.info(f"Получен запрос: {query}")
-    
-    has_prefix = query.lower().startswith('требуется информация')
-    
-    if not has_prefix:
+def background_worker():
+    """Фоновый обработчик задач"""
+    while True:
         try:
-            logger.info("Запрос без префикса, перенаправляю напрямую в GigaChat")
-            response = client.chat_completion(query)
-            return jsonify({
-                "status": "success",
-                "results": [{"content": response, "section": "Ответ GigaChat"}]
+            task_id, task_type, data = task_queue.get()
+            process_background_task(task_id, task_type, data)
+            socketio.emit('task_update', {
+                'task_id': task_id,
+                'status': task_results[task_id]['status']
             })
         except Exception as e:
-            logger.error(f"Ошибка запроса к GigaChat: {str(e)}")
-            return jsonify({"status": "error", "message": f"Ошибка GigaChat: {str(e)}"}), 500
-    
+            logger.error(f"Ошибка в фоновом обработчике: {str(e)}")
+        finally:
+            task_queue.task_done()
+
+# Запускаем фоновый обработчик
+worker_thread = threading.Thread(target=background_worker, daemon=True)
+worker_thread.start()
+
+@app.route('/')
+def index():
+    """Главная страница с интерактивным интерфейсом"""
+    return render_template('index.html')
+
+@app.route('/api/upload', methods=['POST'])
+def upload_document():
+    """API для загрузки документов"""
     try:
-        logger.info("Запуск RAG анализа...")
-        max_execution_time = 30
-        result = analyze_documents(query, max_execution_time)
+        if 'file' not in request.files:
+            return jsonify({
+                "status": "error",
+                "error": "Файл не найден"
+            }), 400
+            
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({
+                "status": "error",
+                "error": "Файл не выбран"
+            }), 400
+            
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file_path = os.path.join(analyzer.documents_dir, filename)
+            file.save(file_path)
+            
+            # Добавляем документ в анализатор
+            if analyzer.add_document(file_path):
+                # Запускаем фоновый анализ
+                task_id = str(uuid.uuid4())
+                task_queue.put((
+                    task_id,
+                    "analyze_document",
+                    {"path": file_path}
+                ))
+                
+                return jsonify({
+                    "status": "success",
+                    "message": "Документ успешно загружен",
+                    "task_id": task_id
+                })
+            else:
+                return jsonify({
+                    "status": "error",
+                    "error": "Ошибка добавления документа"
+                }), 500
+                
+    except Exception as e:
+        logger.error(f"Ошибка загрузки документа: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
+@app.route('/api/task/<task_id>', methods=['GET'])
+def get_task_status(task_id: str):
+    """Получение статуса фоновой задачи"""
+    if task_id in task_results:
+        return jsonify(task_results[task_id])
+    return jsonify({
+        "status": "pending"
+    })
+
+@app.route('/api/visualize/embeddings', methods=['GET'])
+def visualize_embeddings():
+    """Визуализация эмбеддингов документов"""
+    try:
+        task_id = str(uuid.uuid4())
+        task_queue.put((
+            task_id,
+            "visualize_embeddings",
+            {}
+        ))
+        return jsonify({
+            "status": "success",
+            "task_id": task_id
+        })
+    except Exception as e:
+        logger.error(f"Ошибка создания визуализации: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
+@app.route('/api/documents/<filename>', methods=['GET'])
+def get_document(filename: str):
+    """Получение содержимого документа с подсветкой"""
+    try:
+        file_path = os.path.join(analyzer.documents_dir, secure_filename(filename))
+        if not os.path.exists(file_path):
+            return jsonify({
+                "status": "error",
+                "error": "Документ не найден"
+            }), 404
+            
+        # Получаем структуру документа
+        doc_type = os.path.splitext(filename)[1].lower().lstrip('.')
+        structure = analyzer.extract_document_structure(file_path, doc_type)
         
-        if result["status"] == "timeout":
-            return jsonify(result), 408
-        
-        if result["status"] == "error":
-            return jsonify(result), 500
-        
-        return jsonify(parse_response(result["results"]))
+        return jsonify({
+            "status": "success",
+            "document": {
+                "name": filename,
+                "type": doc_type,
+                "structure": structure,
+                "metadata": structure.get("metadata", {})
+            }
+        })
         
     except Exception as e:
-        logger.error(f"Ошибка обработки запроса: {str(e)}")
-        return jsonify({"status": "error", "message": f"Ошибка обработки: {str(e)}"}), 500
+        logger.error(f"Ошибка получения документа: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
 
-def analyze_documents(query, max_execution_time=30):
-    timeout_result = {"status": "timeout", "message": "Превышено время обработки"}
-    result = None
-    
-    def process_query():
-        nonlocal result
-        try:
-            global analyzer
-            if not analyzer:
-                result = {"status": "error", "message": "Анализатор не инициализирован"}
-                return
+@app.route('/api/graph/<filename>', methods=['GET'])
+def get_document_graph(filename: str):
+    """Получение графа знаний для документа"""
+    try:
+        file_path = os.path.join(analyzer.documents_dir, secure_filename(filename))
+        if not os.path.exists(file_path):
+            return jsonify({
+                "status": "error",
+                "error": "Документ не найден"
+            }), 404
             
-            response = analyzer.analyze_documents(query)
-            if isinstance(response, dict) and "error" in response:
-                result = {"status": "error", "message": response["error"]}
-            else:
-                result = {"status": "success", "results": response}
-        except Exception as e:
-            result = {"status": "error", "message": str(e)}
-    
-    thread = threading.Thread(target=process_query)
-    thread.daemon = True
-    thread.start()
-    thread.join(timeout=max_execution_time)
-    
-    if thread.is_alive():
-        logger.warning(f"Таймаут ({max_execution_time} сек)")
-        return timeout_result
-    
-    return result if result else {"status": "error", "message": "Неизвестная ошибка"}
+        # Создаем граф знаний
+        G = nx.Graph()
+        concepts = analyzer.extract_concepts(file_path)
+        
+        for concept in concepts:
+            G.add_node(concept["id"],
+                      label=concept["text"],
+                      type=concept["type"])
+            
+            for relation in concept.get("relations", []):
+                G.add_edge(concept["id"],
+                          relation["target"],
+                          label=relation["type"])
+        
+        # Создаем визуализацию
+        plt.figure(figsize=(12, 8))
+        pos = nx.spring_layout(G)
+        nx.draw(G, pos, with_labels=True, node_color='lightblue',
+                node_size=1500, font_size=10, font_weight='bold')
+        
+        # Сохраняем в буфер
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        buf.seek(0)
+        plt.close()
+        
+        return send_file(
+            buf,
+            mimetype='image/png',
+            as_attachment=True,
+            download_name=f'graph_{filename}.png'
+        )
+        
+    except Exception as e:
+        logger.error(f"Ошибка создания графа: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
 
-def parse_response(response):
-    if not response:
-        return {"status": "error", "message": "Пустой ответ"}
-    
-    # Если response - это словарь с ошибкой
-    if isinstance(response, dict) and "error" in response:
-        return {"status": "error", "message": response["error"]}
-    
-    # Если response - это словарь с ответом
-    if isinstance(response, dict):
-        if "answer" in response:
-            answer = response["answer"]
-            if isinstance(answer, dict):
-                # Извлекаем основной текст ответа
-                if "result" in answer:
-                    response_text = answer["result"]
-                else:
-                    return {"status": "error", "message": "Неизвестный формат ответа RAG chain"}
-                
-                # Форматируем источники
-                sources = []
-                if "source_details" in answer:
-                    for source in answer["source_details"]:
-                        source_info = []
-                        if source.get("source"):
-                            source_info.append(f"Документ: {source['source']}")
-                        if source.get("section"):
-                            source_info.append(f"Раздел: {source['section']}")
-                        if source.get("page"):
-                            source_info.append(f"Страница: {source['page']}")
-                        if source.get("sheet"):
-                            source_info.append(f"Лист: {source['sheet']}")
-                        if source_info:
-                            sources.append(" | ".join(source_info))
-                
-                # Проверяем наличие фраз о ненайденной информации
-                not_found_phrases = [
-                    "не найдена", "не найдено", "отсутствует", 
-                    "не могу найти", "не удалось найти", 
-                    "информация отсутствует", "данные не найдены"
-                ]
-                response_lower = response_text.lower()
-                
-                for phrase in not_found_phrases:
-                    if phrase in response_lower:
-                        return {
-                            "status": "not_found",
-                            "message": "Информация не найдена",
-                            "results": [{
-                                "content": response_text,
-                                "section": "Извлеченная информация",
-                                "sources": sources
-                            }]
-                        }
-                
-                # Форматируем успешный ответ
-                return {
-                    "status": "success",
-                    "results": [{
-                        "content": response_text,
-                        "section": "Извлеченная информация",
-                        "sources": sources,
-                        "query": answer.get("query", "")
-                    }]
-                }
-            else:
-                response_text = str(answer)
-        elif "result" in response:
-            response_text = response["result"]
-        else:
-            return {"status": "error", "message": "Неизвестный формат ответа"}
-    else:
-        response_text = str(response)
-    
-    # Для простых ответов (не из RAG chain)
-    return {
-        "status": "success",
-        "results": [{
-            "content": response_text,
-            "section": "Ответ"
-        }]
+def allowed_file(filename: str) -> bool:
+    """Проверка допустимых расширений файлов"""
+    ALLOWED_EXTENSIONS = {
+        'pdf', 'docx', 'doc', 'xlsx', 'xls',
+        'txt', 'html', 'pptx', 'ppt'
     }
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@socketio.on('connect')
+def handle_connect():
+    """Обработка подключения WebSocket"""
+    emit('connection_response', {'data': 'Connected'})
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    """Обработка отключения WebSocket"""
+    pass
 
 if __name__ == '__main__':
-    logger.info("Запуск веб-сервера...")
-    app.run(host='0.0.0.0', port=5000, debug=False, use_reloader=False)
+    # Создаем папку для логов
+    os.makedirs('logs', exist_ok=True)
+    
+    # Запускаем Flask-приложение с поддержкой WebSocket
+    socketio.run(
+        app,
+        host='0.0.0.0',
+        port=int(os.getenv('PORT', 5000)),
+        debug=os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    )
