@@ -1,0 +1,4 @@
+2025-04-02 19:55:35,835 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+
+2025-04-02 19:55:57,386 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+

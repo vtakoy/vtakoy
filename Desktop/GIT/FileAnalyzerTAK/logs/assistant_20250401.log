@@ -1,0 +1,27 @@
+2025-04-01 22:35:47,720 - assistant - ERROR - Ошибка при обращении к GigaChat: 401 Client Error: Unauthorized for url: https://gigachat.devices.sberbank.ru/api/v1/chat/completions
+2025-04-01 22:38:22,745 - assistant - ERROR - Ошибка при обращении к GigaChat: 401 Client Error: Unauthorized for url: https://gigachat.devices.sberbank.ru/api/v1/chat/completions
+2025-04-01 22:42:03,930 - assistant - ERROR - Ошибка при обращении к GigaChat: 401 Client Error: Unauthorized for url: https://gigachat.devices.sberbank.ru/api/v1/chat/completions
+2025-04-01 22:45:59,380 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+
+2025-04-01 22:46:30,720 - assistant - INFO - Найден код станции в кэше для города санкт-петербург: c2
+2025-04-01 22:46:30,720 - assistant - INFO - Найден код станции в кэше для города санкт-петербург: c2
+2025-04-01 22:46:30,720 - assistant - INFO - Отправка запроса к API Яндекс Расписаний: https://api.rasp.yandex.net/v3.0/search/
+2025-04-01 22:46:30,720 - assistant - DEBUG - Параметры запроса: {'format': 'json', 'lang': 'ru_RU', 'from': 'c2', 'to': 'c2', 'date': '2025-04-02', 'transfers': True, 'transport_types': 'train,bus,suburban', 'limit': 10, 'apikey': '***'}
+2025-04-01 22:46:30,947 - assistant - ERROR - Ошибка при выполнении запроса: 400 Client Error: Bad Request for url: https://api.rasp.yandex.net/v3.0/search/?format=json&lang=ru_RU&from=c2&to=c2&date=2025-04-02&transfers=True&transport_types=train%2Cbus%2Csuburban&limit=10&apikey=fd6e2186-94fa-4a9c-99e3-afc9a8e36afb
+2025-04-01 22:46:30,948 - assistant - WARNING - Не найдено расписание для маршрута санкт-петербург → санкт-петербург на 2025-04-02
+2025-04-01 22:50:00,783 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+
+2025-04-01 22:50:08,195 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+
+2025-04-01 22:51:11,149 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+
+2025-04-01 22:51:17,814 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+
+2025-04-01 22:51:25,868 - assistant - ERROR - Ошибка при обращении к GigaChat: Ошибка при отправке сообщения: 404 {"status":404,"message":"No such model"}
+
+2025-04-01 22:51:56,452 - assistant - INFO - Найден код станции в кэше для города санкт-петербург: c2
+2025-04-01 22:51:56,453 - assistant - INFO - Найден код станции в кэше для города санкт-петербург: c2
+2025-04-01 22:51:56,453 - assistant - INFO - Отправка запроса к API Яндекс Расписаний: https://api.rasp.yandex.net/v3.0/search/
+2025-04-01 22:51:56,453 - assistant - DEBUG - Параметры запроса: {'format': 'json', 'lang': 'ru_RU', 'from': 'c2', 'to': 'c2', 'date': '2025-04-02', 'transfers': True, 'transport_types': 'train,bus,suburban', 'limit': 10, 'apikey': '***'}
+2025-04-01 22:51:56,601 - assistant - ERROR - Ошибка при выполнении запроса: 400 Client Error: Bad Request for url: https://api.rasp.yandex.net/v3.0/search/?format=json&lang=ru_RU&from=c2&to=c2&date=2025-04-02&transfers=True&transport_types=train%2Cbus%2Csuburban&limit=10&apikey=fd6e2186-94fa-4a9c-99e3-afc9a8e36afb
+2025-04-01 22:51:56,602 - assistant - WARNING - Не найдено расписание для маршрута санкт-петербург → санкт-петербург на 2025-04-02

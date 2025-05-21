@@ -1,0 +1,106 @@
+2025-05-22 00:58:30,766 - DocumentAnalyzerApp - INFO - Инициализация GigaChat клиента...
+2025-05-22 00:58:30,766 - DocumentAnalyzerApp - INFO - Режим работы: дома
+2025-05-22 00:58:30,766 - DocumentAnalyzerApp - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-22 00:58:30,767 - DocumentAnalyzerApp - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-22 00:58:30,768 - GigaChatAuth - INFO - Режим работы: дома
+2025-05-22 00:58:30,768 - GigaChatAuth - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-22 00:58:30,768 - GigaChatAuth - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-22 00:58:30,769 - DocumentAnalyzerApp - INFO - GigaChat клиент успешно инициализирован
+2025-05-22 00:58:30,780 - DocumentAnalyzerApp - INFO - Папка C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma успешно удалена
+2025-05-22 00:58:30,780 - DocumentAnalyzerApp - INFO - Инициализация DocumentAnalyzer...
+2025-05-22 00:58:30,780 - DocumentAnalyzer - INFO - Используется папка документов: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-22 00:58:30,780 - DocumentAnalyzer - INFO - Используется папка Chroma: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-22 00:58:30,782 - DocumentAnalyzer - INFO - Папка C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-22 00:58:30,951 - DocumentAnalyzer - INFO - Компоненты успешно инициализированы
+2025-05-22 00:58:30,972 - DocumentAnalyzer - INFO - Агенты инициализированы
+2025-05-22 00:58:30,972 - DocumentAnalyzer - INFO - Начало индексации из C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-22 00:58:30,972 - DocumentAnalyzer - INFO - Обработан: orders.txt (0 секций, 0 таблиц)
+2025-05-22 00:58:30,985 - DocumentAnalyzer - INFO - Создано 1 чанков из 1 документов
+2025-05-22 00:58:30,986 - DocumentAnalyzer - INFO - Создано 1 чанков из 1 документов
+2025-05-22 00:58:30,986 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,987 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,987 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,988 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,988 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,988 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,989 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,989 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,989 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,989 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,990 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,990 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,990 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,991 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,991 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,991 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,992 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,992 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,993 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,994 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,994 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,995 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,995 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,996 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,996 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,997 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,998 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,998 - DocumentAnalyzer - INFO - Создано 1 чанков из 1 документов
+2025-05-22 00:58:30,999 - DocumentAnalyzer - INFO - Создано 1 чанков из 1 документов
+2025-05-22 00:58:30,999 - DocumentAnalyzer - INFO - Создано 0 чанков из 1 документов
+2025-05-22 00:58:30,999 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (32 секций, 0 таблиц)
+2025-05-22 00:58:31,366 - DocumentAnalyzer - INFO - Создано 1 чанков из 1 документов
+2025-05-22 00:58:31,367 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций, 0 таблиц)
+2025-05-22 00:58:31,368 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (0 секций, 0 таблиц)
+2025-05-22 00:58:34,840 - DocumentAnalyzer - INFO - Добавлено 5 документов в новое хранилище
+2025-05-22 00:58:34,841 - DocumentAnalyzer - INFO - Успешно проиндексировано 5 секций
+2025-05-22 00:58:34,841 - DocumentAnalyzer - INFO - Индексация завершена
+2025-05-22 00:58:34,906 - DocumentAnalyzer - INFO - Поисковик успешно создан
+2025-05-22 00:58:34,906 - DocumentAnalyzer - INFO - RAG-цепи инициализированы
+2025-05-22 00:58:34,907 - DocumentAnalyzer - INFO - RAG-цепи инициализированы после загрузки документов
+2025-05-22 00:58:34,908 - DocumentAnalyzer - INFO - Поисковик успешно создан
+2025-05-22 00:58:34,909 - DocumentAnalyzer - INFO - RAG-цепи инициализированы
+2025-05-22 00:58:34,909 - DocumentAnalyzer - INFO - RAG-цепи инициализированы
+2025-05-22 00:58:34,909 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-22 00:58:34,910 - DocumentAnalyzerApp - INFO - DocumentAnalyzer успешно инициализирован
+2025-05-22 00:58:34,922 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2025-05-22 00:58:34,924 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-22 00:58:35,391 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "GET /socket.io/?EIO=4&transport=polling&t=PRqsloK HTTP/1.1" 200 -
+2025-05-22 00:58:35,393 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "GET /socket.io/?EIO=4&transport=polling&t=PRqslYk HTTP/1.1" 200 -
+2025-05-22 00:58:35,398 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "GET /socket.io/?EIO=4&transport=polling&t=PRqsm1x HTTP/1.1" 200 -
+2025-05-22 00:58:35,408 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "POST /socket.io/?EIO=4&transport=polling&t=PRqsm2D&sid=vBzvsE-akUVicK-gAAAA HTTP/1.1" 200 -
+2025-05-22 00:58:35,421 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "POST /socket.io/?EIO=4&transport=polling&t=PRqsm2P&sid=cZum5c6mEzFaxTQ0AAAB HTTP/1.1" 200 -
+2025-05-22 00:58:35,424 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "POST /socket.io/?EIO=4&transport=polling&t=PRqsm2P&sid=eF_98gtRxGT6Ix68AAAC HTTP/1.1" 200 -
+2025-05-22 00:58:35,439 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "GET /socket.io/?EIO=4&transport=polling&t=PRqsm2Q&sid=cZum5c6mEzFaxTQ0AAAB HTTP/1.1" 200 -
+2025-05-22 00:58:35,442 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "GET /socket.io/?EIO=4&transport=polling&t=PRqsm2K&sid=vBzvsE-akUVicK-gAAAA HTTP/1.1" 200 -
+2025-05-22 00:58:35,449 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:35] "GET /socket.io/?EIO=4&transport=polling&t=PRqsm2T&sid=eF_98gtRxGT6Ix68AAAC HTTP/1.1" 200 -
+2025-05-22 00:58:36,399 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:36] "GET /socket.io/?EIO=4&transport=polling&t=PRqsmHa HTTP/1.1" 200 -
+2025-05-22 00:58:36,414 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:36] "POST /socket.io/?EIO=4&transport=polling&t=PRqsmHs&sid=HdvTVnGdCVUlDyefAAAG HTTP/1.1" 200 -
+2025-05-22 00:58:36,432 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:36] "GET /socket.io/?EIO=4&transport=polling&t=PRqsmHz&sid=HdvTVnGdCVUlDyefAAAG HTTP/1.1" 200 -
+2025-05-22 00:58:37,396 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:37] "GET /socket.io/?EIO=4&transport=polling&t=PRqsmXB HTTP/1.1" 200 -
+2025-05-22 00:58:37,416 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:37] "POST /socket.io/?EIO=4&transport=polling&t=PRqsmXT&sid=8mkbgBThCQQGn0-yAAAI HTTP/1.1" 200 -
+2025-05-22 00:58:37,438 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:37] "GET /socket.io/?EIO=4&transport=polling&t=PRqsmXc&sid=8mkbgBThCQQGn0-yAAAI HTTP/1.1" 200 -
+2025-05-22 00:58:38,397 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:38] "GET /socket.io/?EIO=4&transport=polling&t=PRqsmmp HTTP/1.1" 200 -
+2025-05-22 00:58:38,416 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:38] "POST /socket.io/?EIO=4&transport=polling&t=PRqsmn3&sid=VKyPGZlDd5RGIcxNAAAK HTTP/1.1" 200 -
+2025-05-22 00:58:38,430 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:38] "GET /socket.io/?EIO=4&transport=polling&t=PRqsmnC&sid=VKyPGZlDd5RGIcxNAAAK HTTP/1.1" 200 -
+2025-05-22 00:58:39,398 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:39] "GET /socket.io/?EIO=4&transport=polling&t=PRqsn0R HTTP/1.1" 200 -
+2025-05-22 00:58:39,403 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:39] "GET /socket.io/?EIO=4&transport=polling&t=PRqsn0T HTTP/1.1" 200 -
+2025-05-22 00:58:39,423 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:39] "POST /socket.io/?EIO=4&transport=polling&t=PRqsn0n&sid=fGvv1uLrNhgjOU34AAAM HTTP/1.1" 200 -
+2025-05-22 00:58:39,444 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:39] "POST /socket.io/?EIO=4&transport=polling&t=PRqsn1G&sid=m8lo5Tu7xAHHKi3YAAAN HTTP/1.1" 200 -
+2025-05-22 00:58:39,452 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:39] "GET /socket.io/?EIO=4&transport=polling&t=PRqsn1I&sid=m8lo5Tu7xAHHKi3YAAAN HTTP/1.1" 200 -
+2025-05-22 00:58:39,454 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:39] "GET /socket.io/?EIO=4&transport=polling&t=PRqsn0_&sid=fGvv1uLrNhgjOU34AAAM HTTP/1.1" 200 -
+2025-05-22 00:58:40,396 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:40] "GET /socket.io/?EIO=4&transport=polling&t=PRqsnG4 HTTP/1.1" 200 -
+2025-05-22 00:58:40,415 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:40] "POST /socket.io/?EIO=4&transport=polling&t=PRqsnGK&sid=H30U-fObf4zm0VgwAAAQ HTTP/1.1" 200 -
+2025-05-22 00:58:40,432 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:40] "GET /socket.io/?EIO=4&transport=polling&t=PRqsnGQ&sid=H30U-fObf4zm0VgwAAAQ HTTP/1.1" 200 -
+2025-05-22 00:58:49,854 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:49] "GET / HTTP/1.1" 200 -
+2025-05-22 00:58:50,106 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:50] "GET /socket.io/?EIO=4&transport=polling&t=PRqspdp HTTP/1.1" 200 -
+2025-05-22 00:58:50,166 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:50] "GET /api/documents HTTP/1.1" 200 -
+2025-05-22 00:58:50,171 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:50] "POST /socket.io/?EIO=4&transport=polling&t=PRqspej&sid=tB6AEJTxSZdIsVM7AAAS HTTP/1.1" 200 -
+2025-05-22 00:58:50,202 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:50] "GET /socket.io/?EIO=4&transport=polling&t=PRqspel&sid=tB6AEJTxSZdIsVM7AAAS HTTP/1.1" 200 -
+2025-05-22 00:58:51,429 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:51] "GET /api/documents/orders.txt HTTP/1.1" 200 -
+2025-05-22 00:58:51,439 - DocumentAnalyzerApp - ERROR - Ошибка создания графа: 'DocumentAnalyzer' object has no attribute 'extract_concepts'
+2025-05-22 00:58:51,439 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:58:51] "[35m[1mGET /api/graph/orders.txt HTTP/1.1[0m" 500 -
+2025-05-22 00:59:08,105 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:59:08] "POST /api/ask HTTP/1.1" 200 -
+2025-05-22 00:59:26,017 - werkzeug - INFO - 127.0.0.1 - - [22/May/2025 00:59:26] "POST /api/ask HTTP/1.1" 200 -

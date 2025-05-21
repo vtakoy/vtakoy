@@ -1,0 +1,146 @@
+2025-05-16 21:52:38,369 - __main__ - INFO - Инициализация GigaChat клиента...
+2025-05-16 21:52:38,371 - __main__ - INFO - GigaChat клиент успешно инициализирован
+2025-05-16 21:52:38,371 - __main__ - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma успешно удалена
+2025-05-16 21:52:38,372 - __main__ - INFO - Инициализация DocumentAnalyzer...
+2025-05-16 21:52:38,372 - DocumentAnalyzer - INFO - Используется папка документов: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 21:52:38,373 - DocumentAnalyzer - INFO - Используется папка Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-16 21:52:38,373 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 21:52:38,574 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-05-16 21:52:38,574 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-16 21:52:38,575 - __main__ - INFO - Запуск индексации документов...
+2025-05-16 21:52:38,576 - DocumentAnalyzer - INFO - Начало индексации из c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 21:52:38,587 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (2 секций)
+2025-05-16 21:52:38,892 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций)
+2025-05-16 21:52:38,893 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (1 секций)
+2025-05-16 21:52:38,894 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 21:52:38,896 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: 1 validation error for Settings
+telemetry_client
+  extra fields not permitted (type=value_error.extra)
+2025-05-16 21:52:40,899 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 21:52:40,906 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: 1 validation error for Settings
+telemetry_client
+  extra fields not permitted (type=value_error.extra)
+2025-05-16 21:52:42,913 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 21:52:42,921 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: 1 validation error for Settings
+telemetry_client
+  extra fields not permitted (type=value_error.extra)
+2025-05-16 21:52:42,926 - DocumentAnalyzer - ERROR - Ошибка индексации: RetryError[<Future at 0x24d6ddfd450 state=finished raised ValidationError>]
+2025-05-16 21:52:42,928 - __main__ - ERROR - Ошибка инициализации анализатора: RetryError[<Future at 0x24d6ddfd450 state=finished raised ValidationError>]
+2025-05-16 21:52:42,937 - __main__ - INFO - Запуск веб-сервера...
+2025-05-16 21:52:42,969 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2025-05-16 21:52:42,971 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-16 22:02:29,996 - __main__ - INFO - Инициализация GigaChat клиента...
+2025-05-16 22:02:29,998 - __main__ - INFO - GigaChat клиент успешно инициализирован
+2025-05-16 22:02:29,998 - __main__ - INFO - Инициализация DocumentAnalyzer...
+2025-05-16 22:02:29,999 - DocumentAnalyzer - INFO - Используется папка документов: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 22:02:29,999 - DocumentAnalyzer - INFO - Используется папка Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-16 22:02:30,000 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 22:02:30,203 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-05-16 22:02:30,203 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-16 22:02:30,204 - __main__ - INFO - Запуск индексации документов...
+2025-05-16 22:02:30,204 - DocumentAnalyzer - INFO - Начало индексации из c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 22:02:30,216 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (2 секций)
+2025-05-16 22:02:30,533 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций)
+2025-05-16 22:02:30,534 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (1 секций)
+2025-05-16 22:02:30,536 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 22:02:30,538 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: 1 validation error for Settings
+telemetry_client
+  extra fields not permitted (type=value_error.extra)
+2025-05-16 22:02:32,540 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 22:02:32,548 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: 1 validation error for Settings
+telemetry_client
+  extra fields not permitted (type=value_error.extra)
+2025-05-16 22:02:34,554 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-16 22:02:34,557 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: 1 validation error for Settings
+telemetry_client
+  extra fields not permitted (type=value_error.extra)
+2025-05-16 22:02:34,559 - DocumentAnalyzer - ERROR - Ошибка индексации: RetryError[<Future at 0x1ef08b5a090 state=finished raised ValidationError>]
+2025-05-16 22:02:34,560 - __main__ - ERROR - Ошибка инициализации анализатора: RetryError[<Future at 0x1ef08b5a090 state=finished raised ValidationError>]
+2025-05-16 22:02:34,562 - __main__ - INFO - Запуск веб-сервера...
+2025-05-16 22:02:34,580 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2025-05-16 22:02:34,581 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-16 22:02:37,236 - werkzeug - INFO - 127.0.0.1 - - [16/May/2025 22:02:37] "GET / HTTP/1.1" 200 -
+2025-05-16 22:02:37,278 - werkzeug - INFO - 127.0.0.1 - - [16/May/2025 22:02:37] "GET /static/css/style.css HTTP/1.1" 200 -
+2025-05-16 22:02:37,283 - werkzeug - INFO - 127.0.0.1 - - [16/May/2025 22:02:37] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-05-16 22:02:41,281 - werkzeug - INFO - 127.0.0.1 - - [16/May/2025 22:02:41] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-05-16 22:02:42,094 - __main__ - INFO - Получен запрос: привет
+2025-05-16 22:02:42,095 - __main__ - INFO - Запрос без префикса, перенаправляю напрямую в GigaChat
+2025-05-16 22:02:42,368 - GigaChatAuth - ERROR - Ошибка получения токена: HTTPSConnectionPool(host='sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru', port=443): Max retries exceeded with url: /api/v2/oauth (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001EF08E021D0>: Failed to resolve 'sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru' ([Errno 11001] getaddrinfo failed)"))
+2025-05-16 22:02:44,377 - GigaChatAuth - ERROR - Ошибка получения токена: HTTPSConnectionPool(host='sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru', port=443): Max retries exceeded with url: /api/v2/oauth (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001EF08E28450>: Failed to resolve 'sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru' ([Errno 11001] getaddrinfo failed)"))
+2025-05-16 22:02:44,908 - __main__ - INFO - Получен запрос: привет
+2025-05-16 22:02:44,908 - __main__ - INFO - Запрос без префикса, перенаправляю напрямую в GigaChat
+2025-05-16 22:02:44,916 - GigaChatAuth - ERROR - Ошибка получения токена: HTTPSConnectionPool(host='sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru', port=443): Max retries exceeded with url: /api/v2/oauth (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001EF08E2EA90>: Failed to resolve 'sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru' ([Errno 11001] getaddrinfo failed)"))
+2025-05-16 22:02:46,396 - GigaChatAuth - ERROR - Ошибка получения токена: HTTPSConnectionPool(host='sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru', port=443): Max retries exceeded with url: /api/v2/oauth (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001EF08E02A50>: Failed to resolve 'sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru' ([Errno 11001] getaddrinfo failed)"))
+2025-05-16 22:02:46,399 - GigaChatAuth - ERROR - Ошибка запроса: RetryError[<Future at 0x1ef08e28650 state=finished raised ConnectionError>]
+2025-05-16 22:02:46,400 - __main__ - ERROR - Ошибка запроса к GigaChat: RetryError[<Future at 0x1ef08e28650 state=finished raised ConnectionError>]
+2025-05-16 22:02:46,402 - werkzeug - INFO - 127.0.0.1 - - [16/May/2025 22:02:46] "[35m[1mPOST /analyze HTTP/1.1[0m" 500 -
+2025-05-16 22:02:46,933 - GigaChatAuth - ERROR - Ошибка получения токена: HTTPSConnectionPool(host='sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru', port=443): Max retries exceeded with url: /api/v2/oauth (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001EF08E2F690>: Failed to resolve 'sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru' ([Errno 11001] getaddrinfo failed)"))
+2025-05-16 22:02:48,947 - GigaChatAuth - ERROR - Ошибка получения токена: HTTPSConnectionPool(host='sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru', port=443): Max retries exceeded with url: /api/v2/oauth (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001EF08E39B50>: Failed to resolve 'sm-auth-sd.prom-88-89-apps.ocp-geo.ocp.sigma.sbrf.ru' ([Errno 11001] getaddrinfo failed)"))
+2025-05-16 22:02:48,948 - GigaChatAuth - ERROR - Ошибка запроса: RetryError[<Future at 0x1ef08e2f950 state=finished raised ConnectionError>]
+2025-05-16 22:02:48,949 - __main__ - ERROR - Ошибка запроса к GigaChat: RetryError[<Future at 0x1ef08e2f950 state=finished raised ConnectionError>]
+2025-05-16 22:02:48,950 - werkzeug - INFO - 127.0.0.1 - - [16/May/2025 22:02:48] "[35m[1mPOST /analyze HTTP/1.1[0m" 500 -
+2025-05-16 22:09:34,595 - __main__ - INFO - Р РµР¶РёРј СЂР°Р±РѕС‚С‹: РґРѕРјР°
+2025-05-16 22:09:34,595 - __main__ - INFO - РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ GigaChat РєР»РёРµРЅС‚Р°...
+2025-05-16 22:09:34,597 - __main__ - INFO - GigaChat РєР»РёРµРЅС‚ СѓСЃРїРµС€РЅРѕ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ
+2025-05-16 22:09:34,597 - __main__ - INFO - РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ DocumentAnalyzer...
+2025-05-16 22:09:34,597 - DocumentAnalyzer - INFO - РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїР°РїРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 22:09:34,598 - DocumentAnalyzer - INFO - РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїР°РїРєР° Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-16 22:09:34,598 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+2025-05-16 22:09:34,791 - DocumentAnalyzer - INFO - РљРѕРјРїРѕРЅРµРЅС‚С‹ LangChain РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅС‹
+2025-05-16 22:09:34,792 - DocumentAnalyzer - INFO - РђРЅР°Р»РёР·Р°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚РѕРІ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ
+2025-05-16 22:09:34,792 - __main__ - INFO - Р—Р°РїСѓСЃРє РёРЅРґРµРєСЃР°С†РёРё РґРѕРєСѓРјРµРЅС‚РѕРІ...
+2025-05-16 22:09:34,793 - DocumentAnalyzer - INFO - РќР°С‡Р°Р»Рѕ РёРЅРґРµРєСЃР°С†РёРё РёР· c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 22:09:34,803 - DocumentAnalyzer - INFO - РћР±СЂР°Р±РѕС‚Р°РЅ: Р”РѕРєСѓРјРµРЅС‚ Microsoft Word РїРѕ Р·Р°РєР°Р·Сѓ.docx (2 СЃРµРєС†РёР№)
+2025-05-16 22:09:35,111 - DocumentAnalyzer - INFO - Р¤Р°Р№Р» Р›РёСЃС‚ Microsoft Excel.xlsx: РѕР±СЂР°Р±РѕС‚Р°РЅ Р»РёСЃС‚ 'Р›РёСЃС‚1' (2 СЃС‚СЂРѕРє)
+2025-05-16 22:09:35,111 - DocumentAnalyzer - INFO - РћР±СЂР°Р±РѕС‚Р°РЅ: Р›РёСЃС‚ Microsoft Excel.xlsx (1 СЃРµРєС†РёР№)
+2025-05-16 22:09:35,112 - DocumentAnalyzer - INFO - РћР±СЂР°Р±РѕС‚Р°РЅ: СЃРѕР·РґР°РЅРёРµ_Р·Р°РєР°Р·Р°.txt (1 СЃРµРєС†РёР№)
+2025-05-16 22:09:35,114 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+2025-05-16 22:09:35,643 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С…СЂР°РЅРёР»РёС‰Р°: [Errno 11002] getaddrinfo failed
+2025-05-16 22:09:37,648 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РѕС‡РёС‰РµРЅР°
+2025-05-16 22:09:37,819 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С…СЂР°РЅРёР»РёС‰Р°: [Errno 11002] getaddrinfo failed
+2025-05-16 22:09:39,821 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РѕС‡РёС‰РµРЅР°
+2025-05-16 22:09:39,975 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С…СЂР°РЅРёР»РёС‰Р°: [Errno 11002] getaddrinfo failed
+2025-05-16 22:09:39,976 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° РёРЅРґРµРєСЃР°С†РёРё: RetryError[<Future at 0x22a69ff7fd0 state=finished raised ConnectError>]
+2025-05-16 22:09:39,977 - __main__ - ERROR - РћС€РёР±РєР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р°РЅР°Р»РёР·Р°С‚РѕСЂР°: RetryError[<Future at 0x22a69ff7fd0 state=finished raised ConnectError>]
+2025-05-16 22:09:40,211 - __main__ - INFO - Р—Р°РїСѓСЃРє РІРµР±-СЃРµСЂРІРµСЂР°...
+2025-05-16 22:09:40,226 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2025-05-16 22:09:40,227 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-05-16 22:12:05,626 - __main__ - INFO - Р РµР¶РёРј СЂР°Р±РѕС‚С‹: РґРѕРјР°
+2025-05-16 22:12:05,626 - __main__ - INFO - РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ GigaChat РєР»РёРµРЅС‚Р°...
+2025-05-16 22:12:05,627 - __main__ - INFO - GigaChat РєР»РёРµРЅС‚ СѓСЃРїРµС€РЅРѕ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ
+2025-05-16 22:12:05,628 - __main__ - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma СѓСЃРїРµС€РЅРѕ СѓРґР°Р»РµРЅР°
+2025-05-16 22:12:05,629 - __main__ - INFO - РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ DocumentAnalyzer...
+2025-05-16 22:12:05,629 - DocumentAnalyzer - INFO - РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїР°РїРєР° РґРѕРєСѓРјРµРЅС‚РѕРІ: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 22:12:05,630 - DocumentAnalyzer - INFO - РСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РїР°РїРєР° Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-16 22:12:05,630 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+2025-05-16 22:12:05,827 - DocumentAnalyzer - INFO - РљРѕРјРїРѕРЅРµРЅС‚С‹ LangChain РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅС‹
+2025-05-16 22:12:05,828 - DocumentAnalyzer - INFO - РђРЅР°Р»РёР·Р°С‚РѕСЂ РґРѕРєСѓРјРµРЅС‚РѕРІ РёРЅРёС†РёР°Р»РёР·РёСЂРѕРІР°РЅ
+2025-05-16 22:12:05,829 - __main__ - INFO - Р—Р°РїСѓСЃРє РёРЅРґРµРєСЃР°С†РёРё РґРѕРєСѓРјРµРЅС‚РѕРІ...
+2025-05-16 22:12:05,829 - DocumentAnalyzer - INFO - РќР°С‡Р°Р»Рѕ РёРЅРґРµРєСЃР°С†РёРё РёР· c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-16 22:12:05,840 - DocumentAnalyzer - INFO - РћР±СЂР°Р±РѕС‚Р°РЅ: Р”РѕРєСѓРјРµРЅС‚ Microsoft Word РїРѕ Р·Р°РєР°Р·Сѓ.docx (2 СЃРµРєС†РёР№)
+2025-05-16 22:12:06,193 - DocumentAnalyzer - INFO - Р¤Р°Р№Р» Р›РёСЃС‚ Microsoft Excel.xlsx: РѕР±СЂР°Р±РѕС‚Р°РЅ Р»РёСЃС‚ 'Р›РёСЃС‚1' (2 СЃС‚СЂРѕРє)
+2025-05-16 22:12:06,194 - DocumentAnalyzer - INFO - РћР±СЂР°Р±РѕС‚Р°РЅ: Р›РёСЃС‚ Microsoft Excel.xlsx (1 СЃРµРєС†РёР№)
+2025-05-16 22:12:06,195 - DocumentAnalyzer - INFO - РћР±СЂР°Р±РѕС‚Р°РЅ: СЃРѕР·РґР°РЅРёРµ_Р·Р°РєР°Р·Р°.txt (1 СЃРµРєС†РёР№)
+2025-05-16 22:12:06,197 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚
+2025-05-16 22:12:06,715 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С…СЂР°РЅРёР»РёС‰Р°: [Errno 11002] getaddrinfo failed
+2025-05-16 22:12:08,716 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РѕС‡РёС‰РµРЅР°
+2025-05-16 22:12:08,868 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С…СЂР°РЅРёР»РёС‰Р°: [Errno 11002] getaddrinfo failed
+2025-05-16 22:12:10,870 - DocumentAnalyzer - INFO - РџР°РїРєР° c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma РѕС‡РёС‰РµРЅР°
+2025-05-16 22:12:11,024 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° СЃРѕР·РґР°РЅРёСЏ С…СЂР°РЅРёР»РёС‰Р°: [Errno 11002] getaddrinfo failed
+2025-05-16 22:12:11,025 - DocumentAnalyzer - ERROR - РћС€РёР±РєР° РёРЅРґРµРєСЃР°С†РёРё: RetryError[<Future at 0x190bf140e10 state=finished raised ConnectError>]
+2025-05-16 22:12:11,026 - __main__ - ERROR - РћС€РёР±РєР° РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р°РЅР°Р»РёР·Р°С‚РѕСЂР°: RetryError[<Future at 0x190bf140e10 state=finished raised ConnectError>]
+2025-05-16 22:12:11,049 - __main__ - INFO - Р—Р°РїСѓСЃРє РІРµР±-СЃРµСЂРІРµСЂР°...
+2025-05-16 22:12:11,061 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2025-05-16 22:12:11,062 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

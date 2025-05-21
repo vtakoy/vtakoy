@@ -1,0 +1,61 @@
+2025-05-21 20:47:40,336 - DocumentAnalyzer - INFO - Используется папка документов: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 20:47:40,338 - DocumentAnalyzer - INFO - Используется папка Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 20:47:40,340 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 20:47:40,402 - DocumentAnalyzer - ERROR - Ошибка инициализации: 'GigaChatAuth' object has no attribute 'auth_url'
+2025-05-21 20:52:54,282 - DocumentAnalyzer - INFO - Используется папка документов: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 20:52:54,283 - DocumentAnalyzer - INFO - Используется папка Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 20:52:54,283 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 20:52:54,324 - DocumentAnalyzer - ERROR - Ошибка инициализации: 'GigaChatAuth' object has no attribute 'auth_url'
+2025-05-21 20:55:44,342 - DocumentAnalyzer - INFO - Используется папка документов: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 20:55:44,342 - DocumentAnalyzer - INFO - Используется папка Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 20:55:44,343 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 20:55:44,798 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-05-21 20:55:44,798 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-21 20:55:44,799 - DocumentAnalyzer - INFO - Начало индексации из c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 20:55:45,076 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (2 секций)
+2025-05-21 20:55:46,389 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций)
+2025-05-21 20:55:46,390 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (1 секций)
+2025-05-21 20:55:46,391 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 20:55:50,146 - DocumentAnalyzer - INFO - Созданы файлы БД: ['441a497b-155d-46b4-af73-1208d5b4ae30', 'chroma.sqlite3']
+2025-05-21 20:55:50,147 - DocumentAnalyzer - INFO - Векторное хранилище создано в c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 20:55:50,198 - DocumentAnalyzer - INFO - Успешно проиндексировано 5 секций
+2025-05-21 20:56:46,538 - DocumentAnalyzer - INFO - Обработка запроса: как создать заказ ?
+2025-05-21 20:56:49,369 - DocumentAnalyzer - INFO - Обработка запроса: как создать заказ ?
+2025-05-21 20:56:49,390 - DocumentAnalyzer - ERROR - Ошибка анализа: (URL('https://gigachat.devices.sberbank.ru/api/v1/embeddings'), 429, b'{"status":429,"message":"Too Many Requests"}\n', Headers({'server': 'SynGX', 'date': 'Wed, 21 May 2025 17:56:49 GMT', 'content-type': 'application/json; charset=utf-8', 'content-length': '45', 'connection': 'keep-alive', 'x-request-id': 'bc42e59d-7b3f-4282-aee6-81f5ef9bd540', 'x-session-id': '371dd811-900b-4c46-a27d-46aba5f302b0', 'allow': 'GET, POST', 'strict-transport-security': 'max-age=31536000; includeSubDomains'}))
+2025-05-21 20:56:56,472 - DocumentAnalyzer - INFO - Обработка запроса: как создать заказ ?
+2025-05-21 20:57:15,791 - DocumentAnalyzer - INFO - Обработка запроса: что такое оплата улыбкой
+2025-05-21 20:58:33,175 - DocumentAnalyzer - INFO - Обработка запроса: что такое оплата улыбкой
+2025-05-21 20:58:44,675 - DocumentAnalyzer - INFO - Используется папка документов: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 20:58:44,676 - DocumentAnalyzer - INFO - Используется папка Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 20:58:44,677 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 20:58:44,891 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-05-21 20:58:44,892 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-21 20:58:44,893 - DocumentAnalyzer - INFO - Начало индексации из c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 20:58:44,904 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (2 секций)
+2025-05-21 20:58:45,263 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций)
+2025-05-21 20:58:45,264 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (1 секций)
+2025-05-21 20:58:45,267 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 20:58:46,892 - DocumentAnalyzer - INFO - Созданы файлы БД: ['3bd06758-2438-46e9-a941-e85e209184a2', 'chroma.sqlite3']
+2025-05-21 20:58:46,893 - DocumentAnalyzer - INFO - Векторное хранилище создано в c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 20:58:46,895 - DocumentAnalyzer - INFO - Успешно проиндексировано 5 секций
+2025-05-21 20:59:03,597 - DocumentAnalyzer - INFO - Анализ запроса: Требуется информация как создать заказ ?
+2025-05-21 20:59:07,576 - DocumentAnalyzer - INFO - Успешно получен ответ от RAG chain
+2025-05-21 21:02:20,911 - DocumentAnalyzer - INFO - Используется папка документов: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 21:02:20,911 - DocumentAnalyzer - INFO - Используется папка Chroma: c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 21:02:20,913 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 21:02:21,120 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-05-21 21:02:21,121 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-21 21:02:21,122 - DocumentAnalyzer - INFO - Начало индексации из c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 21:02:21,134 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (2 секций)
+2025-05-21 21:02:21,439 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций)
+2025-05-21 21:02:21,440 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (1 секций)
+2025-05-21 21:02:21,441 - DocumentAnalyzer - INFO - Папка c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma не существует
+2025-05-21 21:02:23,190 - DocumentAnalyzer - INFO - Созданы файлы БД: ['aef1b133-0e09-4be5-8590-b9cfd639dbaf', 'chroma.sqlite3']
+2025-05-21 21:02:23,191 - DocumentAnalyzer - INFO - Векторное хранилище создано в c:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 21:02:23,193 - DocumentAnalyzer - INFO - Успешно проиндексировано 5 секций
+2025-05-21 21:02:32,690 - DocumentAnalyzer - INFO - Анализ запроса: Требуется информация как создать заказ ?
+2025-05-21 21:02:36,357 - DocumentAnalyzer - INFO - Успешно получен ответ от RAG chain
+2025-05-21 21:03:51,088 - DocumentAnalyzer - INFO - Анализ запроса: Требуется информация где находится караганда
+2025-05-21 21:03:52,388 - DocumentAnalyzer - INFO - Успешно получен ответ от RAG chain
+2025-05-21 21:04:13,667 - DocumentAnalyzer - INFO - Анализ запроса: Требуется информация до скольки лет я буду жить ?
+2025-05-21 21:04:15,000 - DocumentAnalyzer - INFO - Успешно получен ответ от RAG chain
