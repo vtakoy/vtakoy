@@ -1,0 +1,132 @@
+2025-05-21 22:35:02,691 - DocumentAnalyzerApp - INFO - Инициализация GigaChat клиента...
+2025-05-21 22:35:02,691 - DocumentAnalyzerApp - INFO - Режим работы: дома
+2025-05-21 22:35:02,692 - DocumentAnalyzerApp - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-21 22:35:02,692 - DocumentAnalyzerApp - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-21 22:35:02,693 - GigaChatAuth - INFO - Режим работы: дома
+2025-05-21 22:35:02,694 - GigaChatAuth - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-21 22:35:02,695 - GigaChatAuth - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-21 22:35:02,695 - DocumentAnalyzerApp - INFO - GigaChat клиент успешно инициализирован
+2025-05-21 22:35:02,696 - DocumentAnalyzerApp - INFO - Папка C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma успешно удалена
+2025-05-21 22:35:02,696 - DocumentAnalyzerApp - INFO - Инициализация DocumentAnalyzer...
+2025-05-21 22:35:02,697 - DocumentAnalyzer - INFO - Используется папка документов: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 22:35:02,697 - DocumentAnalyzer - INFO - Используется папка Chroma: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 22:35:02,884 - DocumentAnalyzer - INFO - Компоненты LangChain инициализированы
+2025-05-21 22:35:03,086 - DocumentAnalyzer - INFO - Векторное хранилище инициализировано
+2025-05-21 22:35:03,125 - DocumentAnalyzer - ERROR - Ошибка создания поисковика: not enough values to unpack (expected 3, got 0)
+2025-05-21 22:35:03,125 - DocumentAnalyzer - INFO - RAG-цепи инициализированы
+2025-05-21 22:35:03,125 - DocumentAnalyzer - INFO - RAG-цепи инициализированы
+2025-05-21 22:35:03,126 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-21 22:35:03,126 - DocumentAnalyzerApp - INFO - Запуск индексации документов...
+2025-05-21 22:35:03,126 - DocumentAnalyzer - INFO - Начало индексации из C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 22:35:03,139 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (32 секций, 0 таблиц)
+2025-05-21 22:35:03,439 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций, 0 таблиц)
+2025-05-21 22:35:03,439 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (0 секций, 0 таблиц)
+2025-05-21 22:35:05,430 - DocumentAnalyzer - INFO - Добавлено 5 документов в существующее хранилище
+2025-05-21 22:43:23,389 - DocumentAnalyzerApp - INFO - Инициализация GigaChat клиента...
+2025-05-21 22:43:23,390 - DocumentAnalyzerApp - INFO - Режим работы: дома
+2025-05-21 22:43:23,390 - DocumentAnalyzerApp - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-21 22:43:23,390 - DocumentAnalyzerApp - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-21 22:43:23,391 - GigaChatAuth - INFO - Режим работы: дома
+2025-05-21 22:43:23,392 - GigaChatAuth - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-21 22:43:23,392 - GigaChatAuth - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-21 22:43:23,393 - DocumentAnalyzerApp - INFO - GigaChat клиент успешно инициализирован
+2025-05-21 22:43:23,393 - DocumentAnalyzerApp - ERROR - Ошибка при очистке папки chroma: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: 'C:\\Users\\vtako\\Desktop\\GIT\\FileAnalyzerTAK\\chroma\\a1e526ee-5b74-41ee-ad2d-c7d776433ae2\\data_level0.bin'
+2025-05-21 22:43:23,394 - DocumentAnalyzerApp - INFO - Инициализация DocumentAnalyzer...
+2025-05-21 22:43:23,394 - DocumentAnalyzer - INFO - Используется папка документов: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 22:43:23,395 - DocumentAnalyzer - INFO - Используется папка Chroma: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 22:43:23,397 - DocumentAnalyzer - INFO - Папка C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma очищена
+2025-05-21 22:43:23,570 - DocumentAnalyzer - INFO - Векторное хранилище инициализировано или загружено
+2025-05-21 22:43:23,594 - DocumentAnalyzer - INFO - Агенты инициализированы
+2025-05-21 22:43:23,595 - DocumentAnalyzer - INFO - Начало индексации из C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 22:43:23,904 - DocumentAnalyzer - INFO - Обработан: Microsoft_Excel.xlsx (1 секций, 0 таблиц)
+2025-05-21 22:43:23,915 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (32 секций, 0 таблиц)
+2025-05-21 22:43:23,932 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций, 0 таблиц)
+2025-05-21 22:43:23,933 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (0 секций, 0 таблиц)
+2025-05-21 22:43:23,934 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: You must provide an embedding function to compute embeddings.https://docs.trychroma.com/guides/embeddings in upsert.
+2025-05-21 22:43:23,934 - DocumentAnalyzer - ERROR - Ошибка индексации: You must provide an embedding function to compute embeddings.https://docs.trychroma.com/guides/embeddings in upsert.
+2025-05-21 22:43:23,935 - DocumentAnalyzerApp - ERROR - Ошибка инициализации: You must provide an embedding function to compute embeddings.https://docs.trychroma.com/guides/embeddings in upsert.
+2025-05-21 22:45:01,966 - DocumentAnalyzerApp - INFO - Инициализация GigaChat клиента...
+2025-05-21 22:45:01,967 - DocumentAnalyzerApp - INFO - Режим работы: дома
+2025-05-21 22:45:01,967 - DocumentAnalyzerApp - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-21 22:45:01,967 - DocumentAnalyzerApp - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-21 22:45:01,968 - GigaChatAuth - INFO - Режим работы: дома
+2025-05-21 22:45:01,969 - GigaChatAuth - INFO - Используется URL аутентификации: https://ngw.devices.sberbank.ru:9443/api/v2/oauth
+2025-05-21 22:45:01,969 - GigaChatAuth - INFO - Используется URL API: https://gigachat.devices.sberbank.ru/api/v1
+2025-05-21 22:45:01,970 - DocumentAnalyzerApp - INFO - GigaChat клиент успешно инициализирован
+2025-05-21 22:45:01,971 - DocumentAnalyzerApp - ERROR - Ошибка при очистке папки chroma: [WinError 32] Процесс не может получить доступ к файлу, так как этот файл занят другим процессом: 'C:\\Users\\vtako\\Desktop\\GIT\\FileAnalyzerTAK\\chroma\\a1e526ee-5b74-41ee-ad2d-c7d776433ae2\\data_level0.bin'
+2025-05-21 22:45:01,972 - DocumentAnalyzerApp - INFO - Инициализация DocumentAnalyzer...
+2025-05-21 22:45:01,973 - DocumentAnalyzer - INFO - Используется папка документов: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 22:45:01,974 - DocumentAnalyzer - INFO - Используется папка Chroma: C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma
+2025-05-21 22:45:01,977 - DocumentAnalyzer - INFO - Папка C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma очищена
+2025-05-21 22:45:01,999 - DocumentAnalyzer - INFO - Агенты инициализированы
+2025-05-21 22:45:02,000 - DocumentAnalyzer - INFO - Начало индексации из C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 22:45:02,290 - DocumentAnalyzer - INFO - Обработан: Microsoft_Excel.xlsx (1 секций, 0 таблиц)
+2025-05-21 22:45:02,301 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (32 секций, 0 таблиц)
+2025-05-21 22:45:02,315 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций, 0 таблиц)
+2025-05-21 22:45:02,315 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (0 секций, 0 таблиц)
+2025-05-21 22:45:02,317 - DocumentAnalyzer - WARNING - Не удалось удалить C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma. Возможно, используется другим процессом. Попробуем создать новое хранилище в другом месте или использовать существующее с осторожностью.
+2025-05-21 22:45:02,320 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: [91mYou are using a deprecated configuration of Chroma.
+
+[94mIf you do not have data you wish to migrate, you only need to change how you construct
+your Chroma client. Please see the "New Clients" section of https://docs.trychroma.com/deployment/migration.
+________________________________________________________________________________________________
+
+If you do have data you wish to migrate, we have a migration tool you can use in order to
+migrate your data to the new Chroma architecture.
+Please `pip install chroma-migrate` and run `chroma-migrate` to migrate your data and then
+change how you construct your Chroma client.
+
+See https://docs.trychroma.com/deployment/migration for more information or join our discord at https://discord.gg/MMeYNTmh3x for help![0m
+2025-05-21 22:45:02,322 - DocumentAnalyzer - ERROR - Ошибка индексации: [91mYou are using a deprecated configuration of Chroma.
+
+[94mIf you do not have data you wish to migrate, you only need to change how you construct
+your Chroma client. Please see the "New Clients" section of https://docs.trychroma.com/deployment/migration.
+________________________________________________________________________________________________
+
+If you do have data you wish to migrate, we have a migration tool you can use in order to
+migrate your data to the new Chroma architecture.
+Please `pip install chroma-migrate` and run `chroma-migrate` to migrate your data and then
+change how you construct your Chroma client.
+
+See https://docs.trychroma.com/deployment/migration for more information or join our discord at https://discord.gg/MMeYNTmh3x for help![0m
+2025-05-21 22:45:02,324 - DocumentAnalyzer - INFO - Индексация завершена
+2025-05-21 22:45:02,324 - DocumentAnalyzer - WARNING - Векторное хранилище не инициализировано, RAG-цепи не будут инициализированы.
+2025-05-21 22:45:02,325 - DocumentAnalyzer - INFO - Анализатор документов инициализирован
+2025-05-21 22:45:02,325 - DocumentAnalyzerApp - INFO - Запуск индексации документов...
+2025-05-21 22:45:02,326 - DocumentAnalyzer - INFO - Начало индексации из C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\documents
+2025-05-21 22:45:02,341 - DocumentAnalyzer - INFO - Обработан: Microsoft_Excel.xlsx (1 секций, 0 таблиц)
+2025-05-21 22:45:02,353 - DocumentAnalyzer - INFO - Обработан: Документ Microsoft Word по заказу.docx (32 секций, 0 таблиц)
+2025-05-21 22:45:02,365 - DocumentAnalyzer - INFO - Обработан: Лист Microsoft Excel.xlsx (1 секций, 0 таблиц)
+2025-05-21 22:45:02,366 - DocumentAnalyzer - INFO - Обработан: создание_заказа.txt (0 секций, 0 таблиц)
+2025-05-21 22:45:02,367 - DocumentAnalyzer - WARNING - Не удалось удалить C:\Users\vtako\Desktop\GIT\FileAnalyzerTAK\chroma. Возможно, используется другим процессом. Попробуем создать новое хранилище в другом месте или использовать существующее с осторожностью.
+2025-05-21 22:45:02,370 - DocumentAnalyzer - ERROR - Ошибка создания хранилища: [91mYou are using a deprecated configuration of Chroma.
+
+[94mIf you do not have data you wish to migrate, you only need to change how you construct
+your Chroma client. Please see the "New Clients" section of https://docs.trychroma.com/deployment/migration.
+________________________________________________________________________________________________
+
+If you do have data you wish to migrate, we have a migration tool you can use in order to
+migrate your data to the new Chroma architecture.
+Please `pip install chroma-migrate` and run `chroma-migrate` to migrate your data and then
+change how you construct your Chroma client.
+
+See https://docs.trychroma.com/deployment/migration for more information or join our discord at https://discord.gg/MMeYNTmh3x for help![0m
+2025-05-21 22:45:02,403 - DocumentAnalyzer - ERROR - Ошибка индексации: [91mYou are using a deprecated configuration of Chroma.
+
+[94mIf you do not have data you wish to migrate, you only need to change how you construct
+your Chroma client. Please see the "New Clients" section of https://docs.trychroma.com/deployment/migration.
+________________________________________________________________________________________________
+
+If you do have data you wish to migrate, we have a migration tool you can use in order to
+migrate your data to the new Chroma architecture.
+Please `pip install chroma-migrate` and run `chroma-migrate` to migrate your data and then
+change how you construct your Chroma client.
+
+See https://docs.trychroma.com/deployment/migration for more information or join our discord at https://discord.gg/MMeYNTmh3x for help![0m
+2025-05-21 22:45:02,424 - DocumentAnalyzer - INFO - Индексация завершена
+2025-05-21 22:45:02,425 - DocumentAnalyzerApp - INFO - Индексация завершена
+2025-05-21 22:45:02,438 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.14:5000
+2025-05-21 22:45:02,439 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

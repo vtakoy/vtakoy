@@ -44,11 +44,13 @@
             stroke-opacity: 0.6;
         }
         .document-preview {
-            max-height: 400px;
+            max-height: 600px;
             overflow-y: auto;
             border: 1px solid #ddd;
-            padding: 15px;
+            padding: 20px;
             border-radius: 4px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .highlight {
             background-color: #fff3cd;
@@ -57,9 +59,91 @@
         }
         .metadata-panel {
             background-color: #f8f9fa;
-            padding: 15px;
+            padding: 20px;
             border-radius: 4px;
             margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        /* New styles */
+        .document-list-item {
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            padding: 12px 15px;
+        }
+        .document-list-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: #0d6efd;
+        }
+        .document-list-item.active {
+            background-color: #e9ecef;
+            border-left-color: #0d6efd;
+            font-weight: 500;
+        }
+        .document-search {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .document-search input {
+            padding-left: 35px;
+        }
+        .document-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .document-preview h1, .document-preview h2, .document-preview h3 {
+            color: #2c3e50;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .document-preview p {
+            line-height: 1.6;
+            margin-bottom: 1em;
+            color: #34495e;
+        }
+        .document-preview table {
+            margin: 1em 0;
+            width: 100%;
+        }
+        .document-preview table th {
+            background-color: #f8f9fa;
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+        .document-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .document-actions button {
+            padding: 5px 10px;
+            font-size: 0.9em;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #dee2e6;
         }
     </style>
 </head>
@@ -91,15 +175,31 @@
             <!-- Панель документов -->
             <div class="col-md-4">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="card-title mb-0">
                             <i class="fas fa-folder me-2"></i>
                             Документы
                         </h5>
+                        <button class="btn btn-sm btn-outline-primary" onclick="showUploadModal()">
+                            <i class="fas fa-plus"></i>
+                        </button>
                     </div>
                     <div class="card-body">
+                        <div class="document-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" class="form-control" id="documentSearch" placeholder="Поиск документов...">
+                        </div>
                         <div id="documentsList" class="list-group">
                             <!-- Документы будут добавлены здесь -->
+                        </div>
+                        <div id="emptyState" class="empty-state d-none">
+                            <i class="fas fa-folder-open"></i>
+                            <h5>Нет документов</h5>
+                            <p>Загрузите документ, чтобы начать работу</p>
+                            <button class="btn btn-primary" onclick="showUploadModal()">
+                                <i class="fas fa-upload me-2"></i>
+                                Загрузить документ
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -139,6 +239,35 @@
                                 </div>
                                 <div class="document-preview" id="documentPreview">
                                     <!-- Содержимое документа будет добавлено здесь -->
+                                </div>
+                                <!-- Панель вопросов -->
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">
+                                            <i class="fas fa-question-circle me-2"></i>
+                                            Задать вопрос по документу
+                                        </h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="mb-3">
+                                            <textarea class="form-control" id="questionInput" rows="3" 
+                                                      placeholder="Введите ваш вопрос..."></textarea>
+                                        </div>
+                                        <button class="btn btn-primary" onclick="askQuestion()">
+                                            <i class="fas fa-paper-plane me-2"></i>
+                                            Отправить вопрос
+                                        </button>
+                                        <div id="answerContainer" class="mt-3 d-none">
+                                            <div class="card">
+                                                <div class="card-header bg-light">
+                                                    <h6 class="mb-0">Ответ:</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div id="answerText"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -286,32 +415,161 @@
                 const response = await fetch('/api/documents');
                 const data = await response.json();
                 
+                const documentsList = document.getElementById('documentsList');
+                const emptyState = document.getElementById('emptyState');
+                
                 if (data.status === 'success') {
-                    const documentsList = document.getElementById('documentsList');
                     documentsList.innerHTML = '';
                     
+                    if (data.documents.length === 0) {
+                        documentsList.classList.add('d-none');
+                        emptyState.classList.remove('d-none');
+                        return;
+                    }
+                    
+                    documentsList.classList.remove('d-none');
+                    emptyState.classList.add('d-none');
+                    
                     data.documents.forEach(doc => {
-                        const item = document.createElement('a');
-                        item.href = '#';
-                        item.className = 'list-group-item list-group-item-action';
+                        const item = document.createElement('div');
+                        item.className = 'list-group-item document-list-item';
+                        item.dataset.filename = doc.name;
                         item.innerHTML = `
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">
-                                    <i class="fas ${getFileIcon(doc.type)} me-2"></i>
-                                    ${doc.name}
-                                </h6>
-                                <small>${formatFileSize(doc.size)}</small>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">
+                                        <i class="fas ${getFileIcon(doc.type)} me-2"></i>
+                                        ${doc.name}
+                                    </h6>
+                                    <small class="text-muted">
+                                        Изменен: ${new Date(doc.modified).toLocaleString()}
+                                    </small>
+                                </div>
+                                <small class="text-muted">${formatFileSize(doc.size)}</small>
                             </div>
-                            <small class="text-muted">
-                                Изменен: ${new Date(doc.modified).toLocaleString()}
-                            </small>
+                            <div class="document-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="event.stopPropagation(); loadDocument('${doc.name}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="event.stopPropagation(); deleteDocument('${doc.name}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         `;
-                        item.onclick = () => loadDocument(doc.name);
+                        
+                        item.addEventListener('click', () => {
+                            // Remove active class from all items
+                            document.querySelectorAll('.document-list-item').forEach(el => {
+                                el.classList.remove('active');
+                            });
+                            // Add active class to clicked item
+                            item.classList.add('active');
+                            loadDocument(doc.name);
+                        });
+                        
                         documentsList.appendChild(item);
                     });
+                    
+                    // Initialize search functionality
+                    initializeSearch();
                 }
             } catch (error) {
                 console.error('Ошибка загрузки документов:', error);
+                showError('Ошибка при загрузке списка документов');
+            }
+        }
+
+        // Initialize search functionality
+        function initializeSearch() {
+            const searchInput = document.getElementById('documentSearch');
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const items = document.querySelectorAll('.document-list-item');
+                
+                items.forEach(item => {
+                    const filename = item.dataset.filename.toLowerCase();
+                    if (filename.includes(searchTerm)) {
+                        item.style.display = '';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        // Show error message
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'alert alert-danger alert-dismissible fade show';
+            errorDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            // Вставляем сообщение в начало контейнера
+            const container = document.querySelector('.container');
+            container.insertBefore(errorDiv, container.firstChild);
+            
+            // Автоматически скрываем через 5 секунд
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+                setTimeout(() => errorDiv.remove(), 150);
+            }, 5000);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.className = 'alert alert-success alert-dismissible fade show';
+            successDiv.innerHTML = `
+                <i class="fas fa-check-circle me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            // Вставляем сообщение в начало контейнера
+            const container = document.querySelector('.container');
+            container.insertBefore(successDiv, container.firstChild);
+            
+            // Автоматически скрываем через 5 секунд
+            setTimeout(() => {
+                successDiv.classList.remove('show');
+                setTimeout(() => successDiv.remove(), 150);
+            }, 5000);
+        }
+
+        // Delete document
+        async function deleteDocument(filename) {
+            if (!confirm(`Вы уверены, что хотите удалить документ "${filename}"?`)) {
+                return;
+            }
+            
+            showLoading();
+            try {
+                const response = await fetch(`/api/documents/${filename}`, {
+                    method: 'DELETE'
+                });
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    showSuccess('Документ успешно удален');
+                    loadDocuments();
+                    if (currentDocument === filename) {
+                        currentDocument = null;
+                        document.getElementById('documentPreview').innerHTML = '';
+                        document.getElementById('documentMetadata').innerHTML = '';
+                        document.getElementById('knowledgeGraph').innerHTML = '';
+                        document.getElementById('embeddingsPlot').innerHTML = '';
+                    }
+                } else {
+                    showError(data.error || 'Ошибка при удалении документа');
+                }
+            } catch (error) {
+                console.error('Ошибка удаления документа:', error);
+                showError('Ошибка при удалении документа');
+            } finally {
+                hideLoading();
             }
         }
 
@@ -486,6 +744,55 @@
         function updateUI(data) {
             if (data.plot) {
                 Plotly.newPlot('embeddingsPlot', data.plot.data, data.plot.layout);
+            }
+        }
+
+        // Функция для задавания вопроса
+        async function askQuestion() {
+            const questionInput = document.getElementById('questionInput');
+            const question = questionInput.value.trim();
+            
+            if (!question) {
+                showError('Пожалуйста, введите вопрос');
+                return;
+            }
+            
+            if (!currentDocument) {
+                showError('Пожалуйста, выберите документ');
+                return;
+            }
+            
+            showLoading();
+            try {
+                const response = await fetch('/api/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        question: question,
+                        document: currentDocument
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    const answerContainer = document.getElementById('answerContainer');
+                    const answerText = document.getElementById('answerText');
+                    
+                    answerText.innerHTML = data.answer.replace(/\n/g, '<br>');
+                    answerContainer.classList.remove('d-none');
+                    
+                    // Прокручиваем к ответу
+                    answerContainer.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    showError(data.error || 'Ошибка при получении ответа');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                showError('Ошибка при отправке вопроса');
+            } finally {
+                hideLoading();
             }
         }
     </script>

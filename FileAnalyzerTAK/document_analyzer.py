@@ -25,7 +25,7 @@ from langchain_gigachat.chat_models import GigaChat
 from tenacity import retry, stop_after_attempt, wait_fixed, wait_exponential, retry_if_exception_type
 from langchain.chains import RetrievalQA
 from langchain.prompts.prompt import PromptTemplate
-from langchain_community.vectorstores import Chroma
+from langchain_chroma import Chroma
 from langchain_community.retrievers import BM25Retriever
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import DocumentCompressorPipeline, EmbeddingsFilter
@@ -45,6 +45,14 @@ from cachetools import TTLCache, cached
 import networkx as nx
 from sklearn.manifold import TSNE
 import plotly.graph_objects as go
+from langchain_community.document_loaders import (
+    UnstructuredPDFLoader,
+    UnstructuredWordDocumentLoader,
+    UnstructuredExcelLoader,
+    TextLoader
+)
+from chromadb.config import Settings as ChromaSettings
+from chromadb import PersistentClient
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 CHROMA_DIR = os.path.join(current_dir, "chroma")
@@ -166,177 +174,6 @@ def extract_text_with_ocr(file_path: str) -> str:
         logging.error(f"Ошибка OCR: {str(e)}")
         return ""
 
-def extract_document_structure(file_path: str, file_type: str) -> Dict:
-    """Извлечение структуры документа с учетом его типа"""
-    structure = {
-        "sections": [],
-        "tables": [],
-        "images": [],
-        "metadata": {}
-    }
-    
-    try:
-        if file_type == 'pdf':
-            # Используем PyPDF2 для извлечения структуры
-            with open(file_path, 'rb') as f:
-                pdf = PyPDF2.PdfReader(f)
-                structure["metadata"].update({
-                    "pages": len(pdf.pages),
-                    "title": pdf.metadata.get('/Title', ''),
-                    "author": pdf.metadata.get('/Author', '')
-                })
-                
-                # Анализируем структуру каждой страницы
-                for i, page in enumerate(pdf.pages):
-                    # Извлекаем текст с сохранением позиции
-                    text = page.extract_text()
-                    if text.strip():
-                        structure["sections"].append({
-                            "type": "text",
-                            "page": i + 1,
-                            "content": text
-                        })
-                    
-                    # Ищем таблицы
-                    tables = tabula.read_pdf(file_path, pages=i+1)
-                    for j, table in enumerate(tables):
-                        if not table.empty:
-                            structure["tables"].append({
-                                "page": i + 1,
-                                "table_index": j + 1,
-                                "content": table.to_dict('records')
-                            })
-        
-        elif file_type in ['docx', 'doc']:
-            doc = Document(file_path)
-            
-            # Извлекаем метаданные
-            core_props = doc.core_properties
-            structure["metadata"].update({
-                "title": core_props.title,
-                "author": core_props.author,
-                "created": core_props.created,
-                "modified": core_props.modified
-            })
-            
-            # Анализируем структуру документа
-            current_section = None
-            for para in doc.paragraphs:
-                if para.style.name.startswith('Heading'):
-                    if current_section:
-                        structure["sections"].append(current_section)
-                    current_section = {
-                        "type": "heading",
-                        "level": int(para.style.name[-1]),
-                        "content": para.text,
-                        "paragraphs": []
-                    }
-                elif current_section:
-                    current_section["paragraphs"].append(para.text)
-                else:
-                    structure["sections"].append({
-                        "type": "text",
-                        "content": para.text
-                    })
-            
-            # Добавляем последнюю секцию
-            if current_section:
-                structure["sections"].append(current_section)
-            
-            # Извлекаем таблицы
-            for i, table in enumerate(doc.tables):
-                table_data = []
-                for row in table.rows:
-                    table_data.append([cell.text for cell in row.cells])
-                structure["tables"].append({
-                    "table_index": i + 1,
-                    "content": table_data
-                })
-        
-        elif file_type in ['xlsx', 'xls']:
-            excel = pd.ExcelFile(file_path)
-            structure["metadata"]["sheets"] = excel.sheet_names
-            
-            for sheet_name in excel.sheet_names:
-                df = pd.read_excel(file_path, sheet_name=sheet_name)
-                structure["sections"].append({
-                    "type": "sheet",
-                    "name": sheet_name,
-                    "content": df.to_dict('records')
-                })
-        
-        return structure
-        
-    except Exception as e:
-        logging.error(f"Ошибка извлечения структуры документа: {str(e)}")
-        return structure
-
-def smart_chunking(text: str, metadata: Dict, doc_type: str) -> List[Dict]:
-    """Улучшенное разбиение текста на чанки с учетом структуры и типа документа"""
-    # Выбираем стратегию чанкинга в зависимости от типа документа
-    strategy = CHUNK_STRATEGIES.get(doc_type, CHUNK_STRATEGIES['default'])
-    
-    # Создаем сплиттер с учетом стратегии
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=strategy['chunk_size'],
-        chunk_overlap=strategy['chunk_overlap'],
-        length_function=len,
-        separators=strategy['separators']
-    )
-    
-    # Разбиваем текст на чанки
-    chunks = splitter.split_text(text)
-    
-    # Добавляем метаданные и информацию о структуре
-    return [
-        {
-            "text": chunk,
-            "metadata": {
-                **metadata,
-                "chunk_index": i,
-                "doc_type": doc_type,
-                "chunk_size": len(chunk),
-                "position": i / len(chunks)  # Относительная позиция в документе
-            }
-        }
-        for i, chunk in enumerate(chunks)
-    ]
-
-class GigaChatEmbedder:
-    def __init__(self, client):
-        credentials = base64.b64encode(
-            f"{client.client_id}:{client.client_secret}".encode()
-        ).decode()
-        
-        ssl_context = ssl.create_default_context()
-        ssl_context.check_hostname = False
-        ssl_context.verify_mode = ssl.CERT_NONE
-        
-        # Используем модель EmbeddingsGigaR для лучшей точности
-        self.embeddings = GigaChatEmbeddings(
-            credentials=credentials,
-            auth_url=client.auth_url,
-            base_url=client.api_url,
-            verify_ssl_certs=False,
-            scope="GIGACHAT_API_PERS",
-            model="EmbeddingsGigaR",  # Используем продвинутую модель
-            timeout=30,
-            ssl_context=ssl_context
-        )
-    
-    def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        """Получение эмбеддингов для документов"""
-        return self.embeddings.embed_documents(texts)
-    
-    def embed_query(self, text: str) -> List[float]:
-        """Получение эмбеддинга для запроса с добавлением инструкции"""
-        # Добавляем инструкцию для улучшения точности поиска
-        instruction = "Дан вопрос, необходимо найти абзац текста с ответом\nвопрос: "
-        return self.embeddings.embed_query(f"{instruction}{text}")
-    
-    def __call__(self, input: List[str]) -> List[List[float]]:
-        return self.embed_documents(input)
-
 class HybridSearchRetriever:
     """Реализация гибридного поиска, сочетающего семантический и ключевой поиск"""
     def __init__(self, vector_retriever, bm25_retriever, weights=None):
@@ -344,7 +181,10 @@ class HybridSearchRetriever:
         self.bm25_retriever = bm25_retriever
         self.weights = weights or {"vector": 0.7, "keyword": 0.3}
     
-    def get_relevant_documents(self, query: str, k: int = 5) -> List[Document]:
+    def get_relevant_documents(self, query: str, k: int = 5) -> List[LangchainDocument]:
+        return self.invoke(query, k=k)
+    
+    def invoke(self, query: str, k: int = 5) -> List[LangchainDocument]:
         # Получаем результаты от обоих поисковиков
         vector_docs = self.vector_retriever.get_relevant_documents(query, k=k*2)
         bm25_docs = self.bm25_retriever.get_relevant_documents(query, k=k*2)
@@ -378,53 +218,65 @@ class HybridSearchRetriever:
 
 class DocumentAnalyzer:
     def __init__(self, client, documents_dir: str = "documents"):
-        self.client = client
-        self.documents_dir = documents_dir
         self.logger = logging.getLogger('DocumentAnalyzer')
-        
-        # Инициализация кэшей
-        self.text_cache = TTLCache(maxsize=MAX_CACHE_SIZE, ttl=CACHE_TTL)
-        self.embedding_cache = TTLCache(maxsize=MAX_CACHE_SIZE, ttl=CACHE_TTL)
-        self.search_cache = TTLCache(maxsize=MAX_CACHE_SIZE, ttl=CACHE_TTL)
-        
-        # Инициализация эмбеддингов и векторного хранилища
-        self.embeddings = GigaChatEmbedder(client)
-        self.vector_store = None
-        self.bm25_retriever = None
-        
-        # Инициализация цепочек RAG
-        self.retrieval_chain = None
-        self.generation_chain = None
-        
-        # Создание директории для документов
-        os.makedirs(documents_dir, exist_ok=True)
-        
+        self.client = client  # GigaChat client
+        self.documents_dir = os.path.abspath(documents_dir)
+        self.chroma_dir = CHROMA_DIR
+        self.cache_dir = os.path.join(current_dir, '.cache')
+        self.embeddings = None  # Инициализируется в _init_components
+        self.llm = None  # Инициализируется в _init_components
+        self.vector_store = None # Инициализируется в read_documents
+        self.retrieval_chain = None # Инициализируется в _init_rag_chains
+        self.generation_chain = None # Инициализируется в _init_rag_chains
+        self.agent_orchestrator = None # Инициализируется в _init_agents
+        self.bm25_retriever = None # Инициализируется в _create_retriever
+
         self.logger.info(f"Используется папка документов: {self.documents_dir}")
-        self.logger.info(f"Используется папка Chroma: {CHROMA_DIR}")
-        
+        self.logger.info(f"Используется папка Chroma: {self.chroma_dir}")
+
+        # Убедимся, что директории существуют
+        os.makedirs(self.documents_dir, exist_ok=True)
+
+        # Удаление Chroma директории, если она существует и не используется
+        # Это делается для обеспечения чистого состояния при каждом запуске для отладки
+        # В продакшене, возможно, потребуется другая логика
         self._clean_chroma_dir()
-        self.cache_dir = os.path.join(current_dir, "cache")
-        os.makedirs(self.cache_dir, exist_ok=True)
+
+        # Инициализация базовых компонентов (embeddings, llm)
         self._init_components()
-        self._init_rag_chains()
+
+        # Инициализация агентов (зависит от llm)
         self._init_agents()
-        
+        self.logger.info("Агенты инициализированы")
+
+        # Чтение и индексация существующих документов
+        self.read_documents()
+
+        # Инициализация RAG-цепочек (зависит от vector_store)
+        # Это должно произойти после того, как vector_store инициализирован в read_documents
+        if self.vector_store:
+             self._init_rag_chains()
+             self.logger.info("RAG-цепи инициализированы")
+        else:
+             self.logger.warning("Векторное хранилище не инициализировано, RAG-цепи не будут инициализированы.")
+
         self.logger.info("Анализатор документов инициализирован")
 
-    def _clean_chroma_dir(self):
-        try:
-            if os.path.exists(CHROMA_DIR):
-                shutil.rmtree(CHROMA_DIR, ignore_errors=True)
-                self.logger.info(f"Папка {CHROMA_DIR} очищена")
-            else:
-                self.logger.info(f"Папка {CHROMA_DIR} не существует")
-        except Exception as e:
-            self.logger.error(f"Ошибка очистки chroma: {str(e)}")
-
     def _init_components(self):
+        """Инициализация базовых компонентов"""
         try:
-            self.embedder = GigaChatEmbedder(self.client)
+            # Создаем сплиттер для текста
+            self.text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=CHUNK_SIZE,
+                chunk_overlap=CHUNK_OVERLAP,
+                length_function=len,
+                separators=["\n\n", "\n", ".", "!", "?", ";", ":", " ", ""]
+            )
             
+            # Инициализируем кэш
+            self.cache = TTLCache(maxsize=MAX_CACHE_SIZE, ttl=CACHE_TTL)
+            
+            # Инициализируем эмбеддинги GigaChat
             credentials = base64.b64encode(
                 f"{self.client.client_id}:{self.client.client_secret}".encode()
             ).decode()
@@ -433,49 +285,61 @@ class DocumentAnalyzer:
             ssl_context.check_hostname = False
             ssl_context.verify_mode = ssl.CERT_NONE
             
+            self.embeddings = GigaChatEmbeddings(
+                credentials=credentials,
+                auth_url=self.client.auth_url,
+                base_url=self.client.api_url,
+                verify_ssl_certs=False,
+                scope="GIGACHAT_API_PERS",
+                model="EmbeddingsGigaR",  # Используем продвинутую модель
+                timeout=30,
+                ssl_context=ssl_context
+            )
+            
+            # Инициализируем LLM
             self.llm = GigaChat(
                 credentials=credentials,
                 auth_url=self.client.auth_url,
                 base_url=self.client.api_url,
                 verify_ssl_certs=False,
                 scope="GIGACHAT_API_PERS",
-                temperature=0.7,
-                max_tokens=1500,
+                model="GigaChat-Pro",  # Используем продвинутую модель
+                timeout=30,
                 ssl_context=ssl_context
             )
             
-            self.logger.info("Компоненты LangChain инициализированы")
+            self.logger.info("Компоненты успешно инициализированы")
             
         except Exception as e:
-            self.logger.error(f"Ошибка инициализации: {str(e)}")
+            self.logger.error(f"Ошибка инициализации компонентов: {str(e)}")
             raise
 
-    @lru_cache(maxsize=100)
-    def _get_cached_response(self, query_hash: str) -> Optional[Dict]:
-        """Получение кэшированного ответа"""
-        cache_file = os.path.join(self.cache_dir, f"{query_hash}.json")
-        if os.path.exists(cache_file):
-            try:
-                with open(cache_file, 'r', encoding='utf-8') as f:
-                    cached_data = json.load(f)
-                    if datetime.fromisoformat(cached_data['timestamp']) > datetime.now() - timedelta(days=1):
-                        return cached_data['response']
-            except Exception as e:
-                self.logger.warning(f"Ошибка чтения кэша: {str(e)}")
-        return None
-
-    def _save_to_cache(self, query_hash: str, response: Dict):
-        """Сохранение ответа в кэш"""
-        cache_file = os.path.join(self.cache_dir, f"{query_hash}.json")
+    def _clean_chroma_dir(self):
+        """Очистка директории Chroma с учетом возможных блокировок"""
         try:
-            cache_data = {
-                'timestamp': datetime.now().isoformat(),
-                'response': response
-            }
-            with open(cache_file, 'w', encoding='utf-8') as f:
-                json.dump(cache_data, f, ensure_ascii=False, indent=2)
+            if os.path.exists(self.chroma_dir):
+                # Сначала пытаемся просто удалить содержимое директории
+                for item in os.listdir(self.chroma_dir):
+                    item_path = os.path.join(self.chroma_dir, item)
+                    try:
+                        if os.path.isfile(item_path):
+                            os.unlink(item_path)
+                        elif os.path.isdir(item_path):
+                            shutil.rmtree(item_path, ignore_errors=True)
+                    except Exception as e:
+                        self.logger.warning(f"Не удалось удалить {item_path}: {str(e)}")
+                
+                # Если директория пуста, удаляем её
+                if not os.listdir(self.chroma_dir):
+                    try:
+                        os.rmdir(self.chroma_dir)
+                        self.logger.info(f"Папка {self.chroma_dir} очищена")
+                    except Exception as e:
+                        self.logger.warning(f"Не удалось удалить пустую директорию {self.chroma_dir}: {str(e)}")
+            else:
+                self.logger.info(f"Папка {self.chroma_dir} не существует")
         except Exception as e:
-            self.logger.warning(f"Ошибка сохранения в кэш: {str(e)}")
+            self.logger.error(f"Ошибка очистки chroma: {str(e)}")
 
     def _init_agents(self):
         """Инициализация специализированных агентов"""
@@ -535,60 +399,51 @@ class DocumentAnalyzer:
         
         return levels
 
-    def _smart_chunking(self, text: str, doc_type: str) -> List[str]:
-        """Умное разделение на чанки с учетом структуры документа"""
-        chunks = []
-        
-        # Определяем стратегию чанкинга в зависимости от типа документа
-        if doc_type == 'pdf':
-            # Для PDF используем разделение по страницам и параграфам
-            splitter = RecursiveCharacterTextSplitter(
-                chunk_size=CHUNK_SIZE,
-                chunk_overlap=CHUNK_OVERLAP,
-                separators=["\n\n", "\n", ".", "!", "?", ";", ":", " ", ""]
-            )
-        elif doc_type in ['docx', 'doc']:
-            # Для Word используем разделение по разделам и параграфам
-            splitter = RecursiveCharacterTextSplitter(
-                chunk_size=CHUNK_SIZE,
-                chunk_overlap=CHUNK_OVERLAP,
-                separators=["\n\n", "\n", ".", "!", "?", ";", ":", " ", ""]
-            )
-        elif doc_type in ['xlsx', 'xls']:
-            # Для Excel используем разделение по таблицам
-            splitter = RecursiveCharacterTextSplitter(
-                chunk_size=CHUNK_SIZE,
-                chunk_overlap=CHUNK_OVERLAP,
-                separators=["\n", "\t", " ", ""]
-            )
-        else:
-            # Для остальных типов используем стандартное разделение
-            splitter = RecursiveCharacterTextSplitter(
-                chunk_size=CHUNK_SIZE,
-                chunk_overlap=CHUNK_OVERLAP
-            )
-        
-        # Разбиваем текст на чанки
-        raw_chunks = splitter.split_text(text)
-        
-        # Обрабатываем каждый чанк
-        for chunk in raw_chunks:
-            # Добавляем метаданные к чанку
-            chunk_metadata = {
-                'type': doc_type,
-                'timestamp': datetime.now().isoformat(),
-                'chunk_size': len(chunk)
-            }
+    def _smart_chunking(self, docs: List[LangchainDocument], doc_type: str) -> List[LangchainDocument]:
+        """Улучшенное разбиение на чанки с учетом структуры документа"""
+        try:
+            # Выбираем стратегию чанкинга
+            strategy = CHUNK_STRATEGIES.get(doc_type, CHUNK_STRATEGIES['default'])
             
-            # Создаем документ с метаданными
-            doc = Document(
-                page_content=chunk,
-                metadata=chunk_metadata
+            # Создаем сплиттер с учетом типа документа
+            splitter = RecursiveCharacterTextSplitter(
+                chunk_size=strategy['chunk_size'],
+                chunk_overlap=strategy['chunk_overlap'],
+                length_function=len,
+                separators=strategy['separators'],
+                is_separator_regex=False
             )
             
-            chunks.append(doc)
-        
-        return chunks[:MAX_CHUNKS_PER_DOC]
+            # Разбиваем документы на чанки
+            chunks = []
+            for doc in docs:
+                # Сохраняем оригинальные метаданные
+                metadata = doc.metadata.copy()
+                
+                # Разбиваем текст на чанки
+                doc_chunks = splitter.split_text(doc.page_content)
+                
+                # Создаем новые документы с обогащенными метаданными
+                for i, chunk in enumerate(doc_chunks):
+                    chunk_metadata = metadata.copy()
+                    chunk_metadata.update({
+                        "chunk_index": i,
+                        "total_chunks": len(doc_chunks),
+                        "chunk_size": len(chunk),
+                        "position": i / len(doc_chunks)
+                    })
+                    
+                    chunks.append(LangchainDocument(
+                        page_content=chunk,
+                        metadata=chunk_metadata
+                    ))
+            
+            self.logger.info(f"Создано {len(chunks)} чанков из {len(docs)} документов")
+            return chunks[:MAX_CHUNKS_PER_DOC]
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка при разбиении на чанки: {str(e)}")
+            raise
 
     def hybrid_search(self, query: str, k: int = 5) -> List[Dict]:
         """Гибридный поиск с реранжировкой результатов"""
@@ -688,28 +543,30 @@ class DocumentAnalyzer:
             }
 
     def read_documents(self):
-        try:
-            self.logger.info(f"Начало индексации из {self.documents_dir}")
-            
-            if not os.path.exists(self.documents_dir):
-                os.makedirs(self.documents_dir)
-                self.logger.warning(f"Создана папка документов: {self.documents_dir}")
-                return
-                
-            documents = self._load_all_documents()
-            if documents:
+        """Чтение и индексация документов из папки"""
+        if not os.path.exists(self.documents_dir):
+            self.logger.warning(f"Папка документов {self.documents_dir} не найдена.")
+            return
+
+        self.logger.info(f"Начало индексации из {self.documents_dir}")
+        documents = self._load_all_documents() # Загружаем все документы
+
+        if documents:
+            # Создаем векторное хранилище с загруженными документами
+            try:
                 self.vector_store = self._create_vector_store(documents)
-                self.rag_chain = self._create_rag_chain()
-                # Инициализируем оркестратор агентов
-                from agents import AgentOrchestrator
-                self.agent_orchestrator = AgentOrchestrator(self.llm, self.vector_store)
                 self.logger.info(f"Успешно проиндексировано {len(documents)} секций")
-            else:
-                self.logger.warning("Нет документов для индексации")
-                
-        except Exception as e:
-            self.logger.error(f"Ошибка индексации: {str(e)}")
-            raise
+            except Exception as e:
+                 self.logger.error(f"Ошибка индексации: {str(e)}")
+        else:
+            self.logger.info("В папке документов нет файлов для индексации.")
+
+        self.logger.info("Индексация завершена")
+
+        # После успешной загрузки документов и создания хранилища, инициализируем RAG-цепочки, если они еще не были инициализированы
+        if self.vector_store and not self.retrieval_chain:
+             self._init_rag_chains()
+             self.logger.info("RAG-цепи инициализированы после загрузки документов")
 
     def _load_all_documents(self) -> List[LangchainDocument]:
         """Улучшенная загрузка документов с учетом структуры"""
@@ -721,19 +578,21 @@ class DocumentAnalyzer:
             
             try:
                 # Извлекаем структуру документа
-                structure = extract_document_structure(file_path, doc_type)
+                structure = self.extract_document_structure(file_path, doc_type)
                 
                 # Обрабатываем секции
                 for section in structure["sections"]:
                     if section["type"] == "text":
-                        chunks = smart_chunking(
-                            section["content"],
-                            {
-                                "source": filename,
-                                "section": "text",
-                                "page": section.get("page"),
-                                "structure": "text"
-                            },
+                        chunks = self._smart_chunking(
+                            [LangchainDocument(
+                                page_content=section["content"],
+                                metadata={
+                                    "source": filename,
+                                    "section": "text",
+                                    "page": section.get("page"),
+                                    "structure": "text"
+                                }
+                            )],
                             doc_type
                         )
                         all_sections.extend(chunks)
@@ -741,26 +600,30 @@ class DocumentAnalyzer:
                         # Обрабатываем заголовки и связанные параграфы
                         heading_text = section["content"]
                         paragraphs_text = "\n".join(section["paragraphs"])
-                        chunks = smart_chunking(
-                            f"{heading_text}\n{paragraphs_text}",
-                            {
-                                "source": filename,
-                                "section": f"heading_{section['level']}",
-                                "structure": "heading"
-                            },
+                        chunks = self._smart_chunking(
+                            [LangchainDocument(
+                                page_content=f"{heading_text}\n{paragraphs_text}",
+                                metadata={
+                                    "source": filename,
+                                    "section": f"heading_{section['level']}",
+                                    "structure": "heading"
+                                }
+                            )],
                             doc_type
                         )
                         all_sections.extend(chunks)
                     elif section["type"] == "sheet":
                         # Обрабатываем листы Excel
                         content = json.dumps(section["content"], ensure_ascii=False)
-                        chunks = smart_chunking(
-                            content,
-                            {
-                                "source": filename,
-                                "section": f"sheet_{section['name']}",
-                                "structure": "table"
-                            },
+                        chunks = self._smart_chunking(
+                            [LangchainDocument(
+                                page_content=content,
+                                metadata={
+                                    "source": filename,
+                                    "section": f"sheet_{section['name']}",
+                                    "structure": "table"
+                                }
+                            )],
                             doc_type
                         )
                         all_sections.extend(chunks)
@@ -768,14 +631,16 @@ class DocumentAnalyzer:
                 # Обрабатываем таблицы
                 for table in structure["tables"]:
                     table_text = json.dumps(table["content"], ensure_ascii=False)
-                    chunks = smart_chunking(
-                        table_text,
-                        {
-                            "source": filename,
-                            "section": f"table_{table['table_index']}",
-                            "page": table.get("page"),
-                            "structure": "table"
-                        },
+                    chunks = self._smart_chunking(
+                        [LangchainDocument(
+                            page_content=table_text,
+                            metadata={
+                                "source": filename,
+                                "section": f"table_{table['table_index']}",
+                                "page": table.get("page"),
+                                "structure": "table"
+                            }
+                        )],
                         doc_type
                     )
                     all_sections.extend(chunks)
@@ -786,266 +651,140 @@ class DocumentAnalyzer:
                 self.logger.error(f"Ошибка обработки файла {filename}: {str(e)}")
                 continue
         
-        # Преобразуем секции в документы LangChain
-        documents = [
-            LangchainDocument(
-                page_content=section["text"],
-                metadata=section["metadata"]
-            ) for section in all_sections
-        ]
-        
-        return documents
+        return all_sections
 
     def _create_vector_store(self, documents: List[LangchainDocument]) -> Chroma:
-        """Создание векторного хранилища с гибридным поиском"""
+        """Создание или загрузка векторного хранилища Chroma"""
         try:
-            self._clean_chroma_dir()
-            
-            # Настройка Chroma
-            chroma_settings = Settings(
-                anonymized_telemetry=False,
-                allow_reset=True,
-                is_persistent=True
-            )
-            
-            # Создаем TF-IDF векторизатор для полнотекстового поиска
-            texts = [doc.page_content for doc in documents]
-            tfidf = TfidfVectorizer()
-            tfidf_matrix = tfidf.fit_transform(texts)
-            
-            # Создаем векторное хранилище
-            vector_store = Chroma.from_documents(
-                documents=documents,
-                embedding=self.embedder.embeddings,
-                persist_directory=CHROMA_DIR,
+            # Всегда создаем новое хранилище с переданными документами
+            # Удаляем старое, если существует
+            if os.path.exists(self.chroma_dir):
+                try:
+                    shutil.rmtree(self.chroma_dir)
+                    self.logger.info(f"Папка {self.chroma_dir} очищена для создания нового хранилища")
+                except PermissionError:
+                    self.logger.warning(f"Не удалось удалить {self.chroma_dir}. Возможно, используется другим процессом. Попробуем создать новое хранилище в другом месте или использовать существующее с осторожностью.")
+
+            # Создаем новую папку если её нет
+            os.makedirs(self.chroma_dir, exist_ok=True)
+
+            # Создаем клиент Chroma с новыми настройками
+            client = PersistentClient(path=self.chroma_dir)
+
+            # Создаем хранилище с новым клиентом
+            vector_store = Chroma(
+                client=client,
                 collection_name=COLLECTION_NAME,
-                client_settings=chroma_settings
+                embedding_function=self.embeddings
             )
-            
-            # Сохраняем TF-IDF матрицу для гибридного поиска
-            self.tfidf_matrix = tfidf_matrix
-            self.tfidf_vectorizer = tfidf
-            
-            if os.path.exists(CHROMA_DIR):
-                db_files = os.listdir(CHROMA_DIR)
-                self.logger.info(f"Созданы файлы БД: {db_files}")
-                if not db_files:
-                    raise Exception("Файлы БД отсутствуют")
-            else:
-                raise Exception(f"Папка {CHROMA_DIR} не создана")
-            
-            self.logger.info(f"Векторное хранилище создано в {CHROMA_DIR}")
+
+            # Добавляем документы в новое хранилище, если они есть
+            if documents:
+                vector_store.add_documents(documents)
+                self.logger.info(f"Добавлено {len(documents)} документов в новое хранилище")
+
             return vector_store
-            
+
         except Exception as e:
             self.logger.error(f"Ошибка создания хранилища: {str(e)}")
+            # Важно поднять исключение, чтобы предотвратить дальнейшую работу с некорректным хранилищем
             raise
 
-    def _create_rag_chain(self) -> RetrievalQA:
-        prompt_template = """Ты - эксперт по анализу документов и поиску информации. Твоя задача - дать максимально точный и полный ответ на вопрос пользователя, используя ТОЛЬКО информацию из предоставленного контекста.
-
-Контекст содержит извлеченные фрагменты из документов. Каждый фрагмент имеет свой источник и может содержать метаданные (например, номер страницы, название листа Excel и т.д.).
-
-Вопрос: {question}
-
-Контекст:
-{context}
-
-Инструкции по ответу:
-1. Внимательно проанализируй все предоставленные фрагменты контекста.
-2. Если информация в разных фрагментах противоречит друг другу, укажи это и объясни возможные причины.
-3. Если в контексте есть числовые данные, даты или конкретные значения - используй их точно.
-4. Структурируй ответ логически, используя:
-   - Маркированные списки для перечислений
-   - Подзаголовки для разделения тем
-   - Цитаты из контекста в кавычках, если это важно
-5. В конце ответа укажи источники информации в формате:
-   Источники: [список использованных документов/фрагментов]
-6. Если информация в контексте отсутствует или недостаточна - честно признай это.
-7. НЕ добавляй информацию, которой нет в контексте.
-8. Если вопрос требует уточнения - предложи, какую дополнительную информацию нужно уточнить.
-
-Ответ:"""
-        
-        prompt = PromptTemplate(
-            template=prompt_template,
-            input_variables=["context", "question"]
-        )
-        
-        return RetrievalQA.from_chain_type(
-            llm=self.llm,
-            chain_type="stuff",
-            retriever=self.vector_store.as_retriever(
-                search_kwargs={
-                    "k": 8,  # Количество релевантных фрагментов
-                    "fetch_k": 20,  # Количество фрагментов для первичного отбора
-                    "score_threshold": 0.5  # Порог релевантности
-                }
-            ),
-            chain_type_kwargs={
-                "prompt": prompt,
-                "verbose": True
-            },
-            return_source_documents=True
-        )
-
-    def multi_way_search(self, query: str, k: int = SEARCH_SETTINGS['initial_k']) -> List[Tuple[LangchainDocument, float]]:
-        """Многопроходный поиск с переранжированием"""
+    def _create_retriever(self):
+        """Создание улучшенного поисковика с гибридным поиском"""
         try:
-            # Первый проход: семантический поиск
-            semantic_results = self.vector_store.similarity_search_with_score(
-                query,
-                k=k
+            # Базовая конфигурация векторного поисковика
+            vector_retriever = self.vector_store.as_retriever(
+                search_type="similarity",
+                search_kwargs={
+                    "k": SEARCH_SETTINGS['initial_k']
+                }
+            )
+
+            # Получаем документы из Chroma и преобразуем их в формат LangchainDocument
+            docs = []
+            chroma_docs = self.vector_store.get()
+            
+            # Проверяем, что у нас есть документы
+            if not chroma_docs or not chroma_docs.get('documents'):
+                self.logger.warning("В хранилище нет документов для создания BM25 поисковика")
+                return vector_retriever
+
+            # Преобразуем документы в формат LangchainDocument
+            for i, doc_text in enumerate(chroma_docs['documents']):
+                metadata = chroma_docs.get('metadatas', [{}])[i] if chroma_docs.get('metadatas') else {}
+                docs.append(LangchainDocument(
+                    page_content=doc_text,
+                    metadata=metadata
+                ))
+
+            # Создаем BM25 поисковик для ключевых слов
+            self.bm25_retriever = BM25Retriever.from_documents(docs)
+            
+            # Создаем гибридный поисковик
+            hybrid_retriever = HybridSearchRetriever(
+                vector_retriever=vector_retriever,
+                bm25_retriever=self.bm25_retriever,
+                weights={
+                    "vector": SEARCH_SETTINGS['hybrid_weight'],
+                    "keyword": 1 - SEARCH_SETTINGS['hybrid_weight']
+                }
             )
             
-            # Второй проход: полнотекстовый поиск
-            query_vector = self.tfidf_vectorizer.transform([query])
-            scores = cosine_similarity(query_vector, self.tfidf_matrix).flatten()
-            
-            # Объединяем результаты
-            combined_results = []
-            for (doc, sem_score), tfidf_score in zip(semantic_results, scores):
-                # Нормализуем и комбинируем скоры
-                combined_score = (
-                    SEARCH_SETTINGS['hybrid_weight'] * (1 - sem_score) +
-                    (1 - SEARCH_SETTINGS['hybrid_weight']) * tfidf_score
-                )
-                
-                # Учитываем метаданные документа
-                metadata_score = 0.0
-                if doc.metadata.get('position') is not None:
-                    # Предпочитаем чанки из начала документа
-                    metadata_score = 1 - doc.metadata['position']
-                
-                # Финальный скор с учетом метаданных
-                final_score = 0.8 * combined_score + 0.2 * metadata_score
-                
-                if final_score >= SEARCH_SETTINGS['min_relevance']:
-                    combined_results.append((doc, final_score))
-            
-            # Сортируем по финальному скору
-            combined_results.sort(key=lambda x: x[1], reverse=True)
-            
-            return combined_results[:SEARCH_SETTINGS['rerank_k']]
+            self.logger.info("Поисковик успешно создан")
+            return hybrid_retriever
             
         except Exception as e:
-            self.logger.error(f"Ошибка многопроходного поиска: {str(e)}")
-            # Возвращаем результаты только семантического поиска в случае ошибки
-            return self.vector_store.similarity_search_with_score(query, k=k)
-
-    def analyze_documents(self, query: str) -> dict:
-        """Улучшенный анализ документов с многопроходным поиском"""
-        try:
-            if not self.agent_orchestrator:
-                self.logger.error("Агенты не инициализированы")
-                return {"error": "Анализатор документов не инициализирован"}
-            
-            # Очищаем запрос
-            clean_query = query.replace("Требуется информация", "").strip()
-            self.logger.info(f"Анализ запроса: {clean_query}")
-            
-            # Проверяем кэш
-            query_hash = hashlib.md5(clean_query.encode()).hexdigest()
-            cached_response = self._get_cached_response(query_hash)
-            if cached_response:
-                self.logger.info("Используется кэшированный ответ")
-                return cached_response
-            
-            # Выполняем многопроходный поиск
-            search_results = self.multi_way_search(clean_query)
-            
-            # Формируем контекст с учетом структуры
-            context_parts = []
-            for doc, score in search_results:
-                structure_type = doc.metadata.get("structure", "text")
-                source_info = f"Источник: {doc.metadata.get('source', 'Неизвестно')}"
-                section_info = f"Раздел: {doc.metadata.get('section', 'Основной текст')}"
-                relevance_info = f"Релевантность: {score:.2f}"
-                
-                if structure_type == "table":
-                    context_parts.append(
-                        f"{source_info}\n{section_info}\n{relevance_info}\n"
-                        f"Тип: Таблица\n{doc.page_content}"
-                    )
-                elif structure_type == "heading":
-                    context_parts.append(
-                        f"{source_info}\n{section_info}\n{relevance_info}\n"
-                        f"Тип: Заголовок и связанный текст\n{doc.page_content}"
-                    )
-                else:
-                    context_parts.append(
-                        f"{source_info}\n{section_info}\n{relevance_info}\n"
-                        f"Тип: Текст\n{doc.page_content}"
-                    )
-            
-            context = "\n\n".join(context_parts)
-            
-            # Получаем ответ через агентов
-            response = self.agent_orchestrator.process_query(clean_query, context)
-            
-            if response["status"] == "error":
-                return {"error": response["error"]}
-            
-            # Сохраняем в кэш
-            self._save_to_cache(query_hash, response)
-            
-            # Форматируем ответ
-            result = {
-                "answer": {
-                    "result": response["result"],
-                    "research": response.get("research", ""),
-                    "validation": response.get("validation", ""),
-                    "query": clean_query,
-                    "sources": [
-                        {
-                            "source": doc.metadata.get("source", "Неизвестно"),
-                            "section": doc.metadata.get("section", "Основной текст"),
-                            "structure": doc.metadata.get("structure", "text"),
-                            "relevance": float(score),
-                            "preview": doc.page_content[:200] + "..."
-                        }
-                        for doc, score in search_results
-                    ]
-                }
-            }
-            
-            return result
-            
-        except Exception as e:
-            self.logger.error(f"Ошибка при анализе документов: {str(e)}")
-            return {"error": str(e)}
+            self.logger.error(f"Ошибка создания поисковика: {str(e)}")
+            return vector_retriever
 
     def add_document(self, file_path: str) -> bool:
+        """Добавление нового документа и обновление индекса"""
         try:
             target_path = os.path.join(self.documents_dir, os.path.basename(file_path))
-            shutil.copy(file_path, target_path)
-            self.read_documents()
-            return True
-        except Exception as e:
-            self.logger.error(f"Ошибка добавления: {str(e)}")
-            return False
 
-    def clear_cache(self):
-        """Очистка кэша"""
-        try:
-            if os.path.exists(self.cache_dir):
-                shutil.rmtree(self.cache_dir)
-                os.makedirs(self.cache_dir)
-                self.logger.info("Кэш очищен")
+            # Проверяем, существует ли файл уже в директории документов
+            if os.path.exists(target_path):
+                self.logger.warning(f"Файл {os.path.basename(file_path)} уже существует в папке документов.")
+                return False
+
+            # Копируем файл в папку документов
+            shutil.copy(file_path, target_path)
+            self.logger.info(f"Файл {os.path.basename(file_path)} скопирован в {self.documents_dir}")
+
+            # Загружаем документ
+            doc_result = self._load_document(target_path)
+            if not doc_result or not doc_result.get("documents"):
+                self.logger.warning(f"Не удалось загрузить документ {os.path.basename(file_path)}")
+                try:
+                    os.remove(target_path)
+                except Exception as remove_e:
+                    self.logger.error(f"Ошибка удаления файла {os.path.basename(file_path)}: {str(remove_e)}")
+                return False
+
+            # Добавляем документы в хранилище
+            if self.vector_store:
+                self.vector_store.add_documents(doc_result["documents"])
+                self.logger.info(f"Добавлено {len(doc_result['documents'])} секций из файла {os.path.basename(file_path)} в индекс")
+                
+                # Обновляем BM25 индекс
+                if self.bm25_retriever:
+                    self.bm25_retriever.add_documents(doc_result["documents"])
+            else:
+                # Если хранилище еще не создано, создаем его
+                self.vector_store = self._create_vector_store(doc_result["documents"])
+                self.logger.info(f"Создано новое хранилище с {len(doc_result['documents'])} секциями")
+                self._init_rag_chains()
+
+            return True
+
         except Exception as e:
-            self.logger.error(f"Ошибка очистки кэша: {str(e)}")
+            self.logger.error(f"Ошибка добавления документа: {str(e)}")
+            return False
 
     def _init_rag_chains(self):
         """Инициализация цепочек RAG для индексации и поиска"""
         try:
-            # Инициализируем базовые компоненты
-            if not self.vector_store:
-                self.vector_store = Chroma(
-                    collection_name=COLLECTION_NAME,
-                    embedding_function=self.embeddings,
-                    persist_directory=CHROMA_DIR
-                )
-            
             # Создаем поисковик
             retriever = self._create_retriever()
             
@@ -1071,52 +810,6 @@ class DocumentAnalyzer:
             self.logger.error(f"Ошибка инициализации RAG-цепей: {str(e)}")
             raise
 
-    def _create_retriever(self):
-        """Создание улучшенного поисковика с гибридным поиском"""
-        try:
-            # Базовая конфигурация векторного поисковика
-            vector_retriever = self.vector_store.as_retriever(
-                search_type="similarity",
-                search_kwargs={
-                    "k": SEARCH_SETTINGS['initial_k'],
-                    "score_threshold": SEARCH_SETTINGS['min_relevance']
-                }
-            )
-            
-            # Создаем BM25 поисковик для ключевых слов
-            texts = [doc.page_content for doc in self.vector_store.get()]
-            self.bm25_retriever = BM25Retriever.from_documents(
-                [Document(page_content=text) for text in texts]
-            )
-            
-            # Создаем гибридный поисковик
-            hybrid_retriever = HybridSearchRetriever(
-                vector_retriever=vector_retriever,
-                bm25_retriever=self.bm25_retriever,
-                weights={
-                    "vector": SEARCH_SETTINGS['hybrid_weight'],
-                    "keyword": 1 - SEARCH_SETTINGS['hybrid_weight']
-                }
-            )
-            
-            # Добавляем реранжировку результатов
-            reranker = ContextualCompressionRetriever(
-                base_retriever=hybrid_retriever,
-                document_compressor=DocumentCompressorPipeline.from_transformers(
-                    embeddings=self.embeddings,
-                    base_compressor=EmbeddingsFilter(
-                        embeddings=self.embeddings,
-                        similarity_threshold=SEARCH_SETTINGS['min_relevance']
-                    )
-                )
-            )
-            
-            return reranker
-            
-        except Exception as e:
-            self.logger.error(f"Ошибка создания поисковика: {str(e)}")
-            return vector_retriever
-
     def _create_reranker(self):
         """Создание компонента для реранжировки результатов"""
         return {
@@ -1129,7 +822,7 @@ class DocumentAnalyzer:
             "structure_score": lambda doc: self._calculate_structure_score(doc)
         }
 
-    def _build_context(self, query: str, retrieved_docs: List[Document]) -> str:
+    def _build_context(self, query: str, retrieved_docs: List[LangchainDocument]) -> str:
         """Построение контекста из найденных документов"""
         try:
             # Группируем документы по источникам
@@ -1228,7 +921,7 @@ class DocumentAnalyzer:
                 return cached_response
             
             # Шаг 1: Поиск релевантных документов
-            retrieved_docs = self.retrieval_chain["retriever"].get_relevant_documents(query)
+            retrieved_docs = self.retrieval_chain["retriever"].invoke(query)
             
             # Шаг 2: Реранжировка результатов
             reranked_docs = self._rerank_documents(query, retrieved_docs)
@@ -1261,45 +954,402 @@ class DocumentAnalyzer:
             self.logger.error(f"Ошибка в RAG-конвейере: {str(e)}")
             return {"error": str(e)}
 
+    def _rerank_documents(self, query: str, docs: List[LangchainDocument]) -> List[LangchainDocument]:
+        """Реранжировка документов с учетом релевантности"""
+        try:
+            scored_docs = []
+            for doc in docs:
+                # Семантическая релевантность
+                semantic_score = self.retrieval_chain["reranker"]["similarity"](query, doc.page_content)
+                
+                # Перекрытие ключевых слов
+                keyword_score = self.retrieval_chain["reranker"]["keyword_match"](query, doc.page_content)
+                
+                # Оценка структуры
+                structure_score = self.retrieval_chain["reranker"]["structure_score"](doc)
+                
+                # Позиционная оценка
+                position_score = self.retrieval_chain["reranker"]["position_score"](doc)
+                
+                # Вычисляем финальный скор
+                final_score = (
+                    0.4 * semantic_score +
+                    0.3 * keyword_score +
+                    0.2 * structure_score +
+                    0.1 * position_score
+                )
+                
+                # Обновляем метаданные
+                doc.metadata["score"] = final_score
+                scored_docs.append(doc)
+            
+            # Сортируем по финальному скору
+            scored_docs.sort(key=lambda x: x.metadata.get("score", 0), reverse=True)
+            
+            return scored_docs[:SEARCH_SETTINGS['rerank_k']]
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка реранжировки документов: {str(e)}")
+            return docs
+
     def _load_document(self, file_path: str) -> Dict:
-        """Загрузка и первичная обработка документа"""
+        """Улучшенная загрузка документов с использованием Unstructured loaders"""
         try:
             file_type = os.path.splitext(file_path)[1].lower().lstrip('.')
+            self.logger.info(f"Загрузка документа: {file_path} (тип: {file_type})")
             
-            # Извлекаем структуру документа
-            structure = extract_document_structure(file_path, file_type)
-            
-            # Извлекаем текст в зависимости от типа файла
+            # Выбираем подходящий загрузчик
             if file_type == 'pdf':
-                # Для PDF используем OCR если нужно
-                text = ""
-                with open(file_path, 'rb') as f:
-                    pdf = PyPDF2.PdfReader(f)
-                    for page in pdf.pages:
-                        page_text = page.extract_text()
-                        if not page_text.strip():  # Если текст пустой, пробуем OCR
-                            page_text = extract_text_with_ocr(file_path)
-                        text += page_text + "\n"
+                loader = UnstructuredPDFLoader(
+                    file_path,
+                    mode="single",  # или "elements" для более детальной структуры
+                    strategy="fast"  # или "accurate" для лучшего качества
+                )
             elif file_type in ['docx', 'doc']:
-                doc = Document(file_path)
-                text = "\n".join([para.text for para in doc.paragraphs])
+                loader = UnstructuredWordDocumentLoader(file_path)
             elif file_type in ['xlsx', 'xls']:
-                df = pd.read_excel(file_path)
-                text = df.to_string()
+                loader = UnstructuredExcelLoader(file_path)
             else:
-                with open(file_path, 'r', encoding='utf-8') as f:
-                    text = f.read()
+                loader = TextLoader(file_path, encoding='utf-8')
+            
+            # Загружаем документ
+            docs = loader.load()
+            
+            # Извлекаем структуру
+            structure = self.extract_document_structure(file_path, file_type)
+            
+            # Обогащаем метаданные
+            for doc in docs:
+                doc.metadata.update({
+                    "source": os.path.basename(file_path),
+                    "type": file_type,
+                    "timestamp": datetime.now().isoformat(),
+                    "structure": structure
+                })
             
             return {
-                "text": clean_text(text),
+                "documents": docs,
                 "structure": structure,
                 "metadata": {
                     "source": os.path.basename(file_path),
                     "type": file_type,
-                    "timestamp": datetime.now().isoformat()
+                    "timestamp": datetime.now().isoformat(),
+                    "pages_count": len(docs)
                 }
             }
             
         except Exception as e:
             self.logger.error(f"Ошибка загрузки документа {file_path}: {str(e)}")
             raise
+
+    def _update_index(self, new_docs: List[LangchainDocument]) -> None:
+        """Инкрементальное обновление индекса"""
+        try:
+            if not self.vector_store:
+                self.vector_store = self._create_vector_store(new_docs)
+                return
+            
+            # Добавляем новые документы в существующий индекс
+            self.vector_store.add_documents(new_docs)
+            
+            # Обновляем BM25 индекс
+            if self.bm25_retriever:
+                texts = [doc.page_content for doc in new_docs]
+                self.bm25_retriever.add_documents(
+                    [LangchainDocument(page_content=text) for text in texts]
+                )
+            
+            self.logger.info(f"Индекс обновлен: добавлено {len(new_docs)} документов")
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка обновления индекса: {str(e)}")
+            raise
+
+    def ask_question(self, question: str, doc_path: Optional[str] = None) -> str:
+        """Задавание вопроса по документу или всем документам"""
+        try:
+            # Используем существующий метод analyze_documents
+            result = self.analyze_documents(question)
+            
+            if "error" in result:
+                raise Exception(result["error"])
+                
+            return result["answer"]
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка при задавании вопроса: {str(e)}")
+            return f"Извините, произошла ошибка при обработке вопроса: {str(e)}"
+
+    def extract_document_structure(self, file_path: str, doc_type: str) -> Dict:
+        """Извлечение структуры документа с учетом его типа"""
+        structure = {
+            "sections": [],
+            "tables": [],
+            "images": [],
+            "metadata": {}
+        }
+        
+        try:
+            if doc_type == 'pdf':
+                # Используем PyPDF2 для извлечения структуры
+                with open(file_path, 'rb') as f:
+                    pdf = PyPDF2.PdfReader(f)
+                    structure["metadata"].update({
+                        "pages": len(pdf.pages),
+                        "title": pdf.metadata.get('/Title', ''),
+                        "author": pdf.metadata.get('/Author', '')
+                    })
+                    
+                    # Анализируем структуру каждой страницы
+                    for i, page in enumerate(pdf.pages):
+                        # Извлекаем текст с сохранением позиции
+                        text = page.extract_text()
+                        if text.strip():
+                            structure["sections"].append({
+                                "type": "text",
+                                "page": i + 1,
+                                "content": text
+                            })
+                        
+                        # Ищем таблицы
+                        tables = tabula.read_pdf(file_path, pages=i+1)
+                        for j, table in enumerate(tables):
+                            if not table.empty:
+                                structure["tables"].append({
+                                    "page": i + 1,
+                                    "table_index": j + 1,
+                                    "content": table.to_dict('records')
+                                })
+            
+            elif doc_type in ['docx', 'doc']:
+                doc = Document(file_path)
+                
+                # Извлекаем метаданные
+                core_props = doc.core_properties
+                structure["metadata"].update({
+                    "title": core_props.title,
+                    "author": core_props.author,
+                    "created": core_props.created,
+                    "modified": core_props.modified
+                })
+                
+                # Анализируем структуру документа
+                current_section = None
+                for para in doc.paragraphs:
+                    if para.style.name.startswith('Heading'):
+                        if current_section:
+                            structure["sections"].append(current_section)
+                        current_section = {
+                            "type": "heading",
+                            "level": int(para.style.name[-1]),
+                            "content": para.text,
+                            "paragraphs": []
+                        }
+                    elif current_section:
+                        current_section["paragraphs"].append(para.text)
+                    else:
+                        structure["sections"].append({
+                            "type": "text",
+                            "content": para.text
+                        })
+                
+                # Добавляем последнюю секцию
+                if current_section:
+                    structure["sections"].append(current_section)
+                
+                # Извлекаем таблицы
+                for i, table in enumerate(doc.tables):
+                    table_data = []
+                    for row in table.rows:
+                        table_data.append([cell.text for cell in row.cells])
+                    structure["tables"].append({
+                        "table_index": i + 1,
+                        "content": table_data
+                    })
+            
+            elif doc_type in ['xlsx', 'xls']:
+                excel = pd.ExcelFile(file_path)
+                structure["metadata"]["sheets"] = excel.sheet_names
+                
+                for sheet_name in excel.sheet_names:
+                    df = pd.read_excel(file_path, sheet_name=sheet_name)
+                    structure["sections"].append({
+                        "type": "sheet",
+                        "name": sheet_name,
+                        "content": df.to_dict('records')
+                    })
+            
+            # Добавляем метаданные файла
+            stat = os.stat(file_path)
+            structure["metadata"].update({
+                "name": os.path.basename(file_path),
+                "type": doc_type,
+                "size": stat.st_size,
+                "created": stat.st_ctime,
+                "modified": stat.st_mtime
+            })
+            
+            return structure
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка извлечения структуры документа: {str(e)}")
+            return {
+                "sections": [],
+                "tables": [],
+                "images": [],
+                "metadata": {
+                    "name": os.path.basename(file_path),
+                    "type": doc_type,
+                    "error": str(e)
+                }
+            }
+
+    def _get_cached_response(self, query_hash: str) -> Optional[Dict]:
+        """Получение ответа из кэша"""
+        try:
+            return self.cache.get(query_hash)
+        except Exception as e:
+            self.logger.warning(f"Ошибка получения из кэша: {str(e)}")
+            return None
+
+    def _save_to_cache(self, query_hash: str, response: Dict) -> None:
+        """Сохранение ответа в кэш"""
+        try:
+            self.cache[query_hash] = response
+        except Exception as e:
+            self.logger.warning(f"Ошибка сохранения в кэш: {str(e)}")
+
+    def _extract_concepts(self, text: str) -> List[Dict]:
+        """Извлечение ключевых концептов из текста для построения графа"""
+        try:
+            # Используем GigaChat для извлечения концептов
+            prompt = f"""Извлеки ключевые концепты из следующего текста. 
+            Для каждого концепта укажи:
+            1. Название
+            2. Описание
+            3. Связанные концепты
+            4. Важность (от 0 до 1)
+            
+            Текст:
+            {text}
+            
+            Ответ должен быть в формате JSON:
+            {{
+                "concepts": [
+                    {{
+                        "name": "название концепта",
+                        "description": "описание",
+                        "related": ["связанный концепт 1", "связанный концепт 2"],
+                        "importance": 0.8
+                    }}
+                ]
+            }}
+            """
+            
+            response = self.client.chat(prompt)
+            concepts_data = json.loads(response.choices[0].message.content)
+            
+            # Создаем граф концептов
+            concepts = []
+            for concept in concepts_data.get("concepts", []):
+                concepts.append({
+                    "id": hashlib.md5(concept["name"].encode()).hexdigest(),
+                    "name": concept["name"],
+                    "description": concept["description"],
+                    "importance": concept["importance"],
+                    "related": concept["related"]
+                })
+            
+            return concepts
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка извлечения концептов: {str(e)}")
+            return []
+
+    def _extract_semantic_units(self, text: str) -> List[Dict]:
+        """Извлечение семантических единиц из текста"""
+        try:
+            # Разбиваем текст на предложения
+            sentences = re.split(r'[.!?]+', text)
+            sentences = [s.strip() for s in sentences if s.strip()]
+            
+            units = []
+            for i, sentence in enumerate(sentences):
+                # Определяем тип единицы
+                unit_type = "statement"
+                if sentence.endswith("?"):
+                    unit_type = "question"
+                elif sentence.endswith("!"):
+                    unit_type = "exclamation"
+                
+                # Извлекаем ключевые слова
+                words = re.findall(r'\w+', sentence.lower())
+                keywords = [w for w in words if len(w) > 3]  # Игнорируем короткие слова
+                
+                units.append({
+                    "id": f"unit_{i}",
+                    "type": unit_type,
+                    "content": sentence,
+                    "keywords": keywords,
+                    "position": i / len(sentences)
+                })
+            
+            return units
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка извлечения семантических единиц: {str(e)}")
+            return []
+
+    def _calculate_structure_score(self, doc: LangchainDocument) -> float:
+        """Расчет оценки структуры документа"""
+        try:
+            # Базовые веса для разных типов структур
+            structure_weights = {
+                "heading": 1.0,
+                "table": 0.8,
+                "text": 0.6
+            }
+            
+            # Получаем тип структуры
+            structure_type = doc.metadata.get("structure", "text")
+            
+            # Базовая оценка на основе типа
+            base_score = structure_weights.get(structure_type, 0.5)
+            
+            # Корректируем оценку на основе позиции
+            position = doc.metadata.get("position", 0.5)
+            position_factor = 1 - abs(position - 0.5) * 0.5  # Предпочитаем середину документа
+            
+            # Корректируем на основе размера чанка
+            chunk_size = doc.metadata.get("chunk_size", 0)
+            size_factor = min(chunk_size / 1000, 1.0)  # Нормализуем размер
+            
+            return base_score * position_factor * (0.7 + 0.3 * size_factor)
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка расчета оценки структуры: {str(e)}")
+            return 0.5
+
+    def _calculate_keyword_overlap(self, query: str, text: str) -> float:
+        """Расчет перекрытия ключевых слов"""
+        try:
+            # Извлекаем ключевые слова из запроса и текста
+            query_words = set(re.findall(r'\w+', query.lower()))
+            text_words = set(re.findall(r'\w+', text.lower()))
+            
+            # Игнорируем короткие слова
+            query_words = {w for w in query_words if len(w) > 3}
+            text_words = {w for w in text_words if len(w) > 3}
+            
+            if not query_words or not text_words:
+                return 0.0
+            
+            # Считаем пересечение
+            overlap = len(query_words & text_words)
+            
+            # Нормализуем результат
+            return overlap / len(query_words)
+            
+        except Exception as e:
+            self.logger.error(f"Ошибка расчета перекрытия ключевых слов: {str(e)}")
+            return 0.0

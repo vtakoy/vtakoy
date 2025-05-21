@@ -70,16 +70,20 @@ class BaseAgent:
 class ResearchAgent(BaseAgent):
     """Агент для поиска и анализа информации в документах"""
     def __init__(self, llm: GigaChat, vector_store):
+        self.vector_store = vector_store  # Инициализируем vector_store до вызова super()
         super().__init__(
             llm=llm,
             name="Research Agent",
             description="Ты - эксперт по поиску и анализу информации в документах. "
                        "Твоя задача - находить релевантную информацию и структурировать её."
         )
-        self.vector_store = vector_store
         self._setup_tools()
 
     def _setup_tools(self):
+        """Настройка инструментов агента"""
+        if not hasattr(self, 'vector_store'):
+            raise ValueError("vector_store не инициализирован")
+            
         self.tools = [
             Tool(
                 name="search_documents",

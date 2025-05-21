@@ -73,10 +73,14 @@ def clean_chroma_dir():
 
 load_dotenv()
 
+# Инициализация приложения
 try:
     logger.info("Инициализация GigaChat клиента...")
     client_id = os.getenv("GIGACHAT_CLIENT_ID")
     client_secret = os.getenv("GIGACHAT_CLIENT_SECRET")
+    
+    if not client_id or not client_secret:
+        raise ValueError("Не найдены учетные данные GigaChat (GIGACHAT_CLIENT_ID или GIGACHAT_CLIENT_SECRET)")
     
     # Определяем режим работы
     work_location = os.getenv("WORK_LOCATION", "home").lower()
@@ -93,49 +97,25 @@ try:
     logger.info(f"Используется URL аутентификации: {auth_url}")
     logger.info(f"Используется URL API: {base_url}")
     
-    os.environ.update({
-        'GIGACHAT_AUTH_URL': auth_url,
-        'GIGACHAT_BASE_URL': base_url
-    })
-    
+    # Инициализируем клиент GigaChat
     client = GigaChatAuth(client_id, client_secret, verify_ssl=False)
     logger.info("GigaChat клиент успешно инициализирован")
-except Exception as e:
-    logger.error(f"Ошибка инициализации GigaChat: {str(e)}")
-    raise
-
-clean_chroma_dir()
-
-try:
+    
+    # Очищаем папку chroma перед запуском
+    clean_chroma_dir()
+    
+    # Инициализируем анализатор документов
     logger.info("Инициализация DocumentAnalyzer...")
     current_dir = os.path.dirname(os.path.abspath(__file__))
     documents_path = os.path.join(current_dir, "documents")
     analyzer = DocumentAnalyzer(client, documents_dir=documents_path)
     
-    logger.info("Запуск индексации документов...")
-    analyzer.read_documents()
+    # Убираем лишний вызов индексации, так как она уже выполнена в конструкторе
+    logger.info("DocumentAnalyzer успешно инициализирован")
     
-    chroma_path = os.path.join(current_dir, "chroma")
-    if os.path.exists(chroma_path):
-        db_files = set()
-        for root, dirs, files in os.walk(chroma_path):
-            db_files.update(files)
-        
-        if 'chroma.sqlite3' in db_files:
-            logger.info(f"База данных успешно создана в {chroma_path}")
-            if hasattr(analyzer, 'vector_store') and analyzer.vector_store is not None:
-                collection = analyzer.vector_store._collection
-                if collection:
-                    logger.info(f"Векторная база содержит {collection.count()} документов")
-        else:
-            logger.error(f"Основной файл базы не найден в {chroma_path}")
-    else:
-        logger.error(f"Папка базы данных не создана: {chroma_path}")
-    
-    logger.info("Индексация завершена")
 except Exception as e:
-    logger.error(f"Ошибка инициализации анализатора: {str(e)}")
-    analyzer = None
+    logger.error(f"Ошибка инициализации: {str(e)}")
+    raise
 
 def process_background_task(task_id: str, task_type: str, data: Dict):
     """Обработка фоновых задач"""
@@ -225,6 +205,35 @@ def index():
     """Главная страница с интерактивным интерфейсом"""
     return render_template('index.html')
 
+@app.route('/api/documents', methods=['GET'])
+def get_documents():
+    """Получение списка документов"""
+    try:
+        documents = []
+        for filename in os.listdir(analyzer.documents_dir):
+            file_path = os.path.join(analyzer.documents_dir, filename)
+            if os.path.isfile(file_path):
+                stat = os.stat(file_path)
+                doc_type = os.path.splitext(filename)[1].lower().lstrip('.')
+                documents.append({
+                    "name": filename,
+                    "type": doc_type,
+                    "size": stat.st_size,
+                    "created": stat.st_ctime,
+                    "modified": stat.st_mtime
+                })
+        
+        return jsonify({
+            "status": "success",
+            "documents": documents
+        })
+    except Exception as e:
+        logger.error(f"Ошибка получения списка документов: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
 @app.route('/api/upload', methods=['POST'])
 def upload_document():
     """API для загрузки документов"""
@@ -245,6 +254,15 @@ def upload_document():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file_path = os.path.join(analyzer.documents_dir, filename)
+            
+            # Проверяем, существует ли файл
+            if os.path.exists(file_path):
+                return jsonify({
+                    "status": "error",
+                    "error": f"Файл {filename} уже существует"
+                }), 400
+            
+            # Сохраняем файл
             file.save(file_path)
             
             # Добавляем документ в анализатор
@@ -263,10 +281,21 @@ def upload_document():
                     "task_id": task_id
                 })
             else:
+                # Удаляем файл, если не удалось добавить в анализатор
+                try:
+                    os.remove(file_path)
+                except Exception as e:
+                    logger.error(f"Ошибка удаления файла {filename}: {str(e)}")
+                
                 return jsonify({
                     "status": "error",
                     "error": "Ошибка добавления документа"
                 }), 500
+        else:
+            return jsonify({
+                "status": "error",
+                "error": "Неподдерживаемый формат файла"
+            }), 400
                 
     except Exception as e:
         logger.error(f"Ошибка загрузки документа: {str(e)}")
@@ -383,6 +412,46 @@ def get_document_graph(filename: str):
         
     except Exception as e:
         logger.error(f"Ошибка создания графа: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "error": str(e)
+        }), 500
+
+@app.route('/api/ask', methods=['POST'])
+def ask_question():
+    """API для задавания вопросов по документам"""
+    try:
+        data = request.get_json()
+        if not data or 'question' not in data:
+            return jsonify({
+                "status": "error",
+                "error": "Вопрос не указан"
+            }), 400
+            
+        question = data['question']
+        document_name = data.get('document')  # Опционально - конкретный документ
+        
+        # Получаем ответ от RAG-цепи
+        if document_name:
+            # Если указан конкретный документ
+            file_path = os.path.join(analyzer.documents_dir, secure_filename(document_name))
+            if not os.path.exists(file_path):
+                return jsonify({
+                    "status": "error",
+                    "error": "Документ не найден"
+                }), 404
+            answer = analyzer.ask_question(question, file_path)
+        else:
+            # По всем документам
+            answer = analyzer.ask_question(question)
+            
+        return jsonify({
+            "status": "success",
+            "answer": answer
+        })
+        
+    except Exception as e:
+        logger.error(f"Ошибка обработки вопроса: {str(e)}")
         return jsonify({
             "status": "error",
             "error": str(e)
